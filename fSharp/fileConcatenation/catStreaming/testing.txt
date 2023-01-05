@@ -1,0 +1,4 @@
+Naviger til mappen catStreaming
+
+skriv i terminal: dotnet build
+skriv i terminal: dotnet run "testFiles\testfile1" "testFiles\testfile2" "out"
