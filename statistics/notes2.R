@@ -17,6 +17,11 @@ plot(cdfDiscreteRV,
      xlab = "Outcome",
      main = "Cumulative Distribution"
 )
+##### -- Binominial -- #####
+#X ~ Bin(10,03)
+#P(X >= 3)
+pbinom(q=3, size=10, prob=0.3) 
+
 
 ##### -- Bernouli -- #####
 #Succses / fail (50/50)

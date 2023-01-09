@@ -1,4 +1,3 @@
-
 #Differentiate functions
 f=expression(x^2+3*x)
 D(f,'x')
