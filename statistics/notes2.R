@@ -65,11 +65,20 @@ var(1:6)
 
 
 ##### -- Normal distribution-- #####
+#pmf
+curve(dnorm(x),
+      xlim = c(-3.5, 3.5),
+      ylab = "Density", 
+      main = "Standard Normal Density Function") 
 
+#Density of certain positions
+dnorm(x = c(-1.96, 0, 1.96))
 
-
-
-
+#cdf
+curve(pnorm(x), 
+      xlim = c(-3.5, 3.5), 
+      ylab = "Probability", 
+      main = "Standard Normal Cumulative Distribution Function")
 
 
 
