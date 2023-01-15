@@ -10,3 +10,9 @@ curve(dnorm(x),
       xlim = c(-3.5, 3.5),
       ylab = "Density", 
       main = "Standard Normal Density Function") 
+
+100*(1/2)*(1/2)
+
+#intergrate functions
+integrand <- function(x) {x}
+integrate(integrand, lower = 0, upper = 20)
