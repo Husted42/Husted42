@@ -105,3 +105,10 @@ curve(pnorm(x),
       xlim = c(-3.5, 3.5), 
       ylab = "Probability", 
       main = "Standard Normal Cumulative Distribution Function")
+
+
+#Poisson distribution
+# Bike accidents with an average rate of 4.3 pr, day.
+# P(X>5) = 1 - F(5)
+1-ppois(5,lambda = 4.3)
+
