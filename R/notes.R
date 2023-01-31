@@ -22,7 +22,6 @@ mean(sample(1:6, 10000, replace = T))
 var(1:6)
 
 
-
 ########## -- Discrete RV pmf -- ##########
 #Roll of a dice
 #
@@ -83,6 +82,7 @@ plot(x = k,
 
 
 ########## -- Normal distribution-- ##########
+#### Mean = 0 & sd = 1
 #pmf
 curve(dnorm(x),
       xlim = c(-3.5, 3.5),
@@ -98,7 +98,6 @@ curve(pnorm(x),
       ylab = "Probability", 
       main = "Standard Normal Cumulative Distribution Function")
 
-
-
-
+curve(dnorm(x, 0, 1), from=-4, to=4)
+curve(dnorm(x, 2, 1), from=-4, to=4, add = TRUE)
 
