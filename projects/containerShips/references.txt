@@ -1,0 +1,4 @@
+Emmsion class 1 based on Maersk Line, Triple E. other classes derives from 1st class.
+https://backend.orbit.dtu.dk/ws/files/158911010/Working_Paper_4_Emissions_from_Shipping.pdf
+- Table 1
+
