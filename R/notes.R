@@ -47,8 +47,9 @@ plot(cdfDiscreteRV,
 ########## -- Binominial -- ##########
 #X ~ Bin(10,03)
 #P(X >= 3)
-pbinom(q=3, size=10, prob=0.3) 
+pbinom(q=100, size=142, prob=0.66) - pbinom(q=90, size=142, prob=0.66) 
 
+dbinom(x=100, size=142, prob=0.66) 
 
 
 ########## -- Bernouli -- ##########

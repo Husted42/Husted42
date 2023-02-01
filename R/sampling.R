@@ -28,3 +28,8 @@ set.seed(1)
 poissDis
 set.seed(42)
 poissDis
+
+rnorm
+
+SS <- 654321
+sum(rnorm(n = SS, mean = 0, sd = 1) > 2)/SS

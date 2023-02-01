@@ -35,3 +35,62 @@ EXY = (-2*0.15*2) + (1*-1*0.1) + (0.25) + (2*2*0.3)
 0.75-0.25*2.95
 
 0.125 / (1.6993*1.178)
+
+1-0.59-0.1
+(0.16+0.2)*(-1) + (0.13+0.18)*1
+0.36*(-1)+0.58*0.31*1
+(-0.18)-(0.58*(-0.05))
+0.2/0.58
+3*2^3
+2+2+4+3+1+6+4+6
+
+qt(0.025, df = 2)
+qt(0.975, df = 2)
+
+data <- c(-6, -7, -4)
+n <- 3
+muHat <- mean(data)
+sigmaHat <- sqrt(var(data))
+(sqrt(n) / sigmaHat) * muHat
+
+
+0.3*(-3)+0.7*7
+27.2-27.2^2
+27.2^2
+
+1*0.1+2*0.3+3*0.6
+-1*0.8+1*0.2
+-1*0.8+1*0.3+2*0.3+3*0.6
+1.9- (2.5*(-0.6))
+
+pi
+(4/9)
+x/0.5=0.7
+
+qt(0.025, df = 2)
+qt(0.975, df = 2)
+
+muHat <- 1/3 * (5.2 + 4.8 + 5.3)
+
+sigmaHat2 <- (1/2) * ((5.2-5.1)^2 + (4.8-5.1)^2 + (5.3-5.1)^2) 
+sigmaHat <- sqrt(sigmaHat2)
+
+(sqrt(3)/ sigmaHat) * (muHat - 5)
+
+
+data("cars")
+index.test <- c(11, 37, 50)
+index.training <- c(1:10, 12:36, 38:49)
+test.data <- cars[index.test, ]
+training.data <- cars[index.training, ]
+training.data$dist
+
+fit <- lm(speed ~ dist, data=training.data)
+summary(fit)
+
+mean(training.data$speed)
+mean(fit$speed)
+
+plot(fitted(fit), residuals(fit))
+
+training.data

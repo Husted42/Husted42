@@ -46,3 +46,13 @@ curve(dexp(x, 1/3), col = 1, add = TRUE)
 
 curve(pexp(x, 1), xlim=c(0,10), ylim=c(0,1), col = 1)
 curve(pexp(x, 1/3), col = 1, add = TRUE)
+
+##### -- Exam quiz -- #####
+data("swiss")
+fit <- lm(Fertility ~ Examination, data=swiss)
+summary(fit)
+
+#plot
+plot(fitted(fit), residuals(fit))
+qqnorm(residuals(fit))
+
