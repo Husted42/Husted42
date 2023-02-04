@@ -18,7 +18,7 @@ summary(model)
 #prediction
 new <- data.frame(X1 = 164, X2 = 3)
 prePerKM <- predict(model, newdata = new)
-prePerKM *  6582
+prePerKM * 6582
 
 ##### -- Plots -- ######
 #goods amount X1

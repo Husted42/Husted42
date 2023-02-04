@@ -11,10 +11,10 @@ INTO OUTFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\emPredictionDat
 FIELDS TERMINATED BY ',';
 
 -- Get csv file with vessels.vessel_id, env_class.env_name
-SELECT vessels.vessel_id, env_class.env_name
+SELECT env_class.env_name, vessels.env_id
 FROM vessels
 JOIN env_class
-ON vessels.env_id = env_class.env_id
+ON vessels.env_id = env_class.env_id;
 ORDER BY vessel_id
 INTO OUTFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\pieChartData.csv'
 FIELDS TERMINATED BY ',';

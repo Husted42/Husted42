@@ -32,8 +32,9 @@ CREATE TABLE routes(
     total_emmison INT DEFAULT NULL,
     PRIMARY KEY(vessel_id, departure_date),
     FOREIGN KEY(vessel_id) REFERENCES vessels(vessel_id),
-    FOREIGN KEY(emp_id) REFERENCES captains(emp_id)
+    FOREIGN KEY(emp_id) REFERENCES captains(emp_id) ON DELETE SET NULL
 );
+
 
 -- add enviroment classes
 INSERT INTO env_class VALUES(1, 'A', 3.0);
