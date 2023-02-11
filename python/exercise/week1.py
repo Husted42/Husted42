@@ -30,12 +30,41 @@ def exercise_213b(A,n):
         A[j+1] = key
     return A
 
+# Dmfs rewrite to pseudocode
+def dmfsProblem1_3ap (n):
+    l = len(n)
+    i = 0
+    failed = False
+    while (i <= l):
+        for j in range(i+1, l):
+            if (n[i] == n[j]):
+                print("equal")
+        i += 1
+    return (i, j)
+
+#Test
+def dmfsProblem1_3a (A):
+    l = len(A)
+    i = 0
+    failed = False
+    while (i <= l):
+        print(i)
+        for j in range(i+1, l):
+            if (A[i] == A[j]):
+                failed = True
+        i += 1
+    if (failed == True):
+        return "Failed"
+    else:
+        return "succses"
+
 def run ():
-    if (True): # Exercise 2.1-2
+    if (False): # Exercise 2.1-2
         lste_212 = [1, 2, 3]
         print(exercise_212(lste_212, len(lste_212)))
-    if (True): # Exercise 2.1-3
+    if (False): # Exercise 2.1-3
         lste_213 = [5, 2, 4, 6, 1, 3]
         print("ASC : " + str(exercise_213a(lste_213, len(lste_213))))
         print("DESC: " + str(exercise_213b(lste_213, len(lste_213))))
+    if (True): print(dmfsProblem1_3a([1, 2, 3, 4, 5, 6, 7]))
 run()
