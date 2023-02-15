@@ -102,5 +102,5 @@ def run():
     if (False): printDataframeDicOfList()    
     if (False): printDataframeSetup()    
     if (False): indexInData()
-    if (True): britishTest()
+    if (False): britishTest()
 run()
