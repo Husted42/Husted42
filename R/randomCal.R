@@ -94,3 +94,7 @@ mean(fit$speed)
 plot(fitted(fit), residuals(fit))
 
 training.data
+
+
+1+ 1/sqrt(2)
+sqrt(2)
