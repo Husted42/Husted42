@@ -10,8 +10,6 @@ function findRight(lst, tgt)
                 call helper with arguments (lst[i+1:], tgt-lst[i], comb+[lst[i]], result)
     return result
 
-
-
 function JacobsFrog(n)
     lst = []
     for i from 1 to n do
