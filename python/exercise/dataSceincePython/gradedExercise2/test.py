@@ -2,6 +2,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup
+import pandas as pd
 
 #### -- Variables -- #####
 newsFront = 'https://www.bbc.com/news'
@@ -26,3 +27,85 @@ def Div(data):
 
 print(getSummary(data))
 print(Div(newsFront))
+
+def cleanAll(input):
+    tag = ['p', 'span', 'a', 'i']
+    text = input
+    text = re.sub(r'(<strong(?:.*?)>).*(<\/strong>)', '', text)
+    text = re.sub(r'\s+', ' ', text)
+    for element in tag:
+        x = '<' + element + '(?:.*?)>'
+        y = '<\/' + element + '>'
+        text = re.sub(x, '', text)
+        text = re.sub(y, ' ', text) 
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'\s,', '', text)
+    text = re.sub('\<br(.*)', '', text)
+    text = re.sub('\<img(.*)', '', text)
+    text = re.sub('\<b(.*)', '', text)
+    return text
+
+def getHeader(input):
+    text = input.find('span', class_='mw-page-title-main')
+    text = str(text)
+    cleanAll(text)
+    return text
+
+def getDate(input):
+    text = input.find('strong', class_='published')
+    text = str(text)
+    text = re.sub(r'<strong(?:.*?)>', '', text)
+    text = re.sub(r'<\/strong>', ' ', text)
+    text = re.sub(r'<span(?:.*?)>', '', text)
+    text = re.sub(r'<\/span>', ' ', text)
+    return text
+
+def getContent(input):
+    text = input.find_all('p')
+    lst = []
+    for elm in text:
+        elm = str(elm)
+        lst.append(elm)
+
+    string = ' '.join(lst)
+    string = cleanAll(string)
+    return string
+
+def articleList():
+    def temp(input):
+        page = 'https://en.wikinews.org/w/index.php?title=Category:Politics_and_conflicts&from=' + input
+        divGroup = BeautifulSoup(getData(page), 'html.parser')
+        divGroup = divGroup.find_all('div', id='mw-pages')
+        divGroup = divGroup[0].find_all('div', class_='mw-category-group')
+        divGroup = divGroup[0].find_all('a')
+        lst = []
+        for element in divGroup: 
+            element = str(element)
+            href_regex = r'href="([^"]+)"'
+            element = re.search(href_regex, element)
+            element = element.group(1)
+            element = 'https://en.wikinews.org/' + element
+            lst.append(element)
+        return lst
+    letters = "ABCDEFGHIJKLMNOPRSTUVWZABCDEFGHIJKLMNOPRSTUVWZ"[10%23:10%23+10]
+    letters = [*letters]
+    lst = []
+    for elemement in letters:
+        elemement = temp(elemement)
+        lst = lst + elemement
+    return lst
+
+def createTable():
+    links = (articleList())[:10]
+    lst = []
+    for elm in links: 
+        response = requests.get(elm)
+        contents = response.text
+        x = BeautifulSoup(contents, 'html.parser')
+        x = [getHeader(x), getDate(x), getContent(x)]
+        lst.append(x)
+
+    df = pd.DataFrame(lst)
+    df.columns = ['header', 'summary', 'content']
+    return df
+print(createTable())
