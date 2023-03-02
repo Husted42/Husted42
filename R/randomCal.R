@@ -99,4 +99,24 @@ training.data
 1+ 1/sqrt(2)
 sqrt(2)
 
+n = (9.77-((-0.133)*2013+36.416))^2 + (9.79-((-0.133)*2012+36.416))^2 + (9.81-((-0.133)*2011+36.416))^2
 
+
+yesGivenSunny * YesGivenCool * yesGivenHigh * yesGivenStrong
+
+yesGivenSunny <- 2/5
+yesGivenOvercast <- 4/4
+yesGivenRainy <- 3/5
+
+yesGivenHot <- 2/4
+YesGivenCool <- 3/4
+YesGivenMild <- 4/6
+
+yesGivenHigh <- 3/7
+yesGivenNormal <- 6/7
+
+yesGivenWeak <- 6/9
+yesGivenStrong <- 3/5
+
+P <- yesGivenSunny * yesGivenOvercast * yesGivenRainy * yesGivenHot * YesGivenCool * YesGivenMild * yesGivenHigh * yesGivenNormal * yesGivenWeak * yesGivenStrong
+P

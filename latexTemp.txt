@@ -1,0 +1,14 @@
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+        p & q & r & q and r & q -> (q and r) & \~q & q or \~q & r or \~p & (q v \~p) or (r v \~p) & (p -> (q and r)) -> ((q or \~p) and (r or \~p))  \\ \hline
+        T & T & T & T & T & F & T & T & T & T  \\ 
+        T & T & F & F & F & F & T & F & F & T  \\ 
+        T & F & T & F & F & F & F & T & F & T  \\ 
+        T & F & F & F & F & F & F & F & F & T  \\ 
+        F & T & T & T & T & T & T & T & T & T  \\ 
+        F & T & F & F & T & T & T & T & T & T  \\ 
+        F & F & T & F & T & T & T & T & T & T  \\ 
+        F & F & F & F & T & T & T & T & T & T  \\ 
+    \end{tabular}
+\end{table}
