@@ -5,9 +5,6 @@ def exercise_212(A, n):
         sum = sum + A[i]
     return sum
 
-
-
-
 def exercise_213a(A,n):
     print("")
     print("Exercise 2.1-3")
@@ -58,7 +55,6 @@ def heapify(A):
             B[(m + 1) // 2] = B[m - 1]
         m = (m + 1) // 2
     return B
-
 
 def run ():
     if (False): # Exercise 2.1-2
