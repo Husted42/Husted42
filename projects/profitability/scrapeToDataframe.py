@@ -91,4 +91,6 @@ def createDataframe(input):
                 df.at[label, year] = round(value/1000)
     return df
 
-print(createDataframe('lego'))
+dataFrame = createDataframe('lego')
+dataFrame.to_csv('profitability.csv')
+print(dataFrame)
