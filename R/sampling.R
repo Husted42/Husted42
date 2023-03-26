@@ -33,3 +33,9 @@ rnorm
 
 SS <- 654321
 sum(rnorm(n = SS, mean = 0, sd = 1) > 2)/SS
+
+fake <- 77304
+total <- 377371
+
+fake / total * 100
+

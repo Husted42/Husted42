@@ -120,3 +120,12 @@ yesGivenStrong <- 3/5
 
 P <- yesGivenSunny * yesGivenOvercast * yesGivenRainy * yesGivenHot * YesGivenCool * YesGivenMild * yesGivenHigh * yesGivenNormal * yesGivenWeak * yesGivenStrong
 P
+
+fake = 123954
+political = 748346 - fake
+reliable = 1226052 - political
+total = fake + political + reliable
+
+fake / total * 100
+political / total * 100
+reliable / total * 100
