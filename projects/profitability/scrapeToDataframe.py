@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 
-currentYear = 2021
-
 ''' Takes the first link when you search (input) on proff '''
 def getLink(input):
     #Scrape
@@ -74,11 +72,11 @@ def getRowLabels():
         lst.append((elm[0][0]))
     return lst
 
-''' creates the dataframe with:
+''' creates a dataframe with:
         col = last three years
         rows = labels
     Then values get's inserted 1 by 1 '''
-def createDataframe(input):
+def createDataframe(input, currentYear):
     rowLabels = getRowLabels()
     col = [currentYear, currentYear-1, currentYear-2]
     df = pd.DataFrame(np.zeros((len(rowLabels), len(col))), index = rowLabels, columns=col)
@@ -91,6 +89,29 @@ def createDataframe(input):
                 df.at[label, year] = round(value/1000)
     return df
 
-dataFrame = createDataframe('lego')
-dataFrame.to_csv('profitability.csv')
-print(dataFrame)
+def run(inp):
+    currentYear = inp
+    print('////////// Commands: ////////// \nto change newest year write: "year" \nto quit write: "quit"\n')
+    firm = input("Input Firm name: ")
+    if firm == "quit" or firm == '"quit"': return None
+    elif firm == "year":
+        anw = input("Input year: ")
+        print("The current year has been changed")
+        run(anw)
+
+        
+    
+    dataFrame = createDataframe(firm, int(currentYear))
+    print(dataFrame)
+    
+    print("\n\nDo you want to keep a csv?")
+    keepCsv = input("Input [y/n]: ")
+    if keepCsv == "quit": return None
+    elif keepCsv == 'y' or keepCsv == 'yes':
+        print("csv saved")
+        dataFrame.to_csv('profitability_' + str(firm) + '.csv')
+    else:
+        print("csv not saved")
+    print("")
+    run(currentYear)
+run(2021)
