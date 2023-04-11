@@ -129,3 +129,9 @@ total = fake + political + reliable
 fake / total * 100
 political / total * 100
 reliable / total * 100
+
+
+flush <- (factorial(13) / (factorial(5) * factorial(8)) - 9)
+flush
+cards <- factorial(52) / (factorial(5) * factorial(47))
+4*flush / cards
