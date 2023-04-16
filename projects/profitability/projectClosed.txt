@@ -1,0 +1,3 @@
+The idea was to train to predict rate of return based on a companies keyvalues.
+
+The project is terminted because of a lack of data. There is not enough danish compaies with the needed data.

@@ -138,9 +138,3 @@ def createDfForPipeline(input):
 
 print(createDfForPipeline(['lego', 'carlsberg']))
 
-# dataFrame = createDataframe("lego", 2021)
-# test = modifyToX(dataFrame)
-# print(dataFrame)
-# #print(test)
-# testY = modifyY(dataFrame)
-# print(testY)
