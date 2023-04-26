@@ -135,3 +135,26 @@ flush <- (factorial(13) / (factorial(5) * factorial(8)) - 9)
 flush
 cards <- factorial(52) / (factorial(5) * factorial(47))
 4*flush / cards
+
+
+#Matrix mutiplication
+1.1 * 3 + 2*4 + (-1)*(-8) #Wrong
+1.1 * 3 + (-1) * 6 #Right c11
+1.1 * (-8) + (-1) * 10
+3.3 + (-6)
+4.4 + (-7)
+-8.8 + (-10)
+6+21
+8+30.5
+-16+35 
+(-3) + 30
+
+a = matrix(c(1,3,5,7), ncol=2, nrow=2)
+b = matrix(c(2,4,6,8), ncol=2, nrow=2)
+a*b
+
+# Exercise 18 p. 71 MatAlgDat
+A = matrix(c(1.1, (-1), 2, 3.5, (-1), 5), nrow = 3, ncol = 2, byrow = TRUE)
+B = matrix(c(3, 4, (-8), 6, 7, 10), nrow = 2, ncol = 3, byrow = TRUE)
+
+A * B #Not possible? 
