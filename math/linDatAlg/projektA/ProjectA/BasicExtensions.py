@@ -21,9 +21,6 @@ def AugmentRight(A: Matrix, v: Vector) -> Matrix:
     """
     Create an augmented matrix from a matrix A and a vector v.
 
-    See page 12 in 'Linear Algebra for Engineers and Scientists'
-    by K. Hardy.
-
     :param A: a matrix of size M-by-N.
     :param v: a column vector of size M.
 
@@ -52,8 +49,6 @@ def MatVecProduct(A: Matrix, v: Vector) -> Vector:
     This function computes the matrix-vector product of a matrix A
     and a column vector v
 
-    See page 68 in "Linear Algebra for Engineers and Scientists"
-    by K. Hardy.
     :param A: an M-by-N Matrix.
     :param v: a size N Vector.
 
@@ -72,38 +67,52 @@ def MatrixProduct(A: Matrix, B: Matrix) -> Matrix:
     """
     Compute the Matrix product of two given matrices A and B.
 
-    See page 58 in "Linear Algebra for Engineers and Scientists"
-    by K. Hardy.
-
-    :param A: an M-by-N Matrix.
-    :param B: an N-by-P Matrix.
+    :param A: an N-by-M Matrix.
+    :param B: an M-by-P Matrix.
 
     :returns: the M-by-P Matrix A*B.
     """
-    raise NotImplementedError("MatrixProduct is not implemented!")
+    Arow = A.M_Rows
+    Acol = A.N_Cols
+    Bcol = B.N_Cols
+    result = Matrix( Arow, Bcol )
 
+    #Iterate over rows
+    for k in range (0, Arow):
+        #Iterate over columns / through rows
+        for j in range (0, Bcol):
+            elmLst = []
+            #Calculate element
+            for i in range (0, Acol):
+                elmLst.append(A.__getitem__((k,i)) * B.__getitem__((i,j)))
+            result.__setitem__((k,j), _sum(elmLst))
+    return result
 
 def Transpose(A: Matrix) -> Matrix:
     """
     Computes the transpose of a given Matrix.
 
-    See page 69 in "Linear Algebra for Engineers and Scientists"
-    by K. Hardy.
-
-    :param A: A M-by-N Matrix.
-    :returns: A N-by-M Matrix B such that B = A^T.
+    :param A: A N-by-M Matrix.
+    :returns: A M-by-N Matrix B such that B = A^T.
     """
-    raise NotImplementedError("Transpose is not implemented!")
+    n = A.M_Rows
+    m = A.N_Cols
+    result = Matrix( m, n )
+    for j in range (0, A.M_Rows):
+        for i in range(0, A.N_Cols):
+            result.__setitem__((i, j), A.__getitem__((j,i)))
+    return(result)
 
 
 def VectorNorm(v: Vector) -> float:
     """
     Computes the Euclidean Vector norm of a given Vector.
 
-    See page 197 in "Linear Algebra for Engineers and Scientists"
-    by K.Hardy.
-
     :param v: An N - dimensional Vector.
     :return: The Euclidean norm of the Vector.
     """
-    raise NotImplementedError("VectorNorm is not implemented!")
+    lst = []
+    for i in range (0, v.__len__()):
+        lst.append((v[i]) ** 2)
+    return(math.sqrt(_sum(lst)))
+
