@@ -16,10 +16,14 @@ __author__ = "François Lauze, University of Copenhagen"
 __date__ = "3/28/22"
 __version__ = "0.0.1"
 
+# NB - Koden er foklaret i afleveringen
 
 def AugmentRight(A: Matrix, v: Vector) -> Matrix:
     """
     Create an augmented matrix from a matrix A and a vector v.
+
+    See page 12 in 'Linear Algebra for Engineers and Scientists'
+    by K. Hardy.
 
     :param A: a matrix of size M-by-N.
     :param v: a column vector of size M.
@@ -55,9 +59,9 @@ def MatVecProduct(A: Matrix, v: Vector) -> Vector:
     :return: a size M Vector y such that y = A.v
     """
     array = []
-    for j in range(0, len(A.Column(0))):
+    for j in range(0, len(A.Column(0))): #Iterate throgh columns
         lst = []
-        for i in range (0, (len(A.Row(0)))):
+        for i in range (0, (len(A.Row(0)))):  #Iterate throgh rows
             lst.append(A.Row(j)[i] * v[i])
         array.append(_sum(lst))
     return(Vector.fromArray(array))
@@ -65,17 +69,17 @@ def MatVecProduct(A: Matrix, v: Vector) -> Vector:
 
 def MatrixProduct(A: Matrix, B: Matrix) -> Matrix:
     """
-    Compute the Matrix product of two given matrices A and B.
+    Compute the Matrix product of two given matrices A and . B.
 
-    :param A: an N-by-M Matrix.
-    :param B: an M-by-P Matrix.
+    :param A: an M-by-N Matrix.
+    :param B: an N-by-P Matrix.
 
     :returns: the M-by-P Matrix A*B.
     """
     Arow = A.M_Rows
     Acol = A.N_Cols
     Bcol = B.N_Cols
-    result = Matrix( Arow, Bcol )
+    result = Matrix( Arow, Bcol ) # 0-matrix of size MxP
 
     #Iterate over rows
     for k in range (0, Arow):
@@ -98,8 +102,8 @@ def Transpose(A: Matrix) -> Matrix:
     n = A.M_Rows
     m = A.N_Cols
     result = Matrix( m, n )
-    for j in range (0, A.M_Rows):
-        for i in range(0, A.N_Cols):
+    for j in range (0, A.M_Rows): #Iterate throgh rows
+        for i in range(0, A.N_Cols): #Iterate throgh columns
             result.__setitem__((i, j), A.__getitem__((j,i)))
     return(result)
 
@@ -111,7 +115,8 @@ def VectorNorm(v: Vector) -> float:
     :param v: An N - dimensional Vector.
     :return: The Euclidean norm of the Vector.
     """
-    lst = []
+
+    lst = [] # Array of every element squared
     for i in range (0, v.__len__()):
         lst.append((v[i]) ** 2)
     return(math.sqrt(_sum(lst)))
