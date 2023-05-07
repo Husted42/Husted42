@@ -1,5 +1,4 @@
 
-
 ##### -- Packages -- #####
 #install.packages("ggplot2")
 #install.packages("map")
@@ -40,8 +39,8 @@ mapData <- map_data("world") #ggplot2
 countyNames1 <- (unique(mapData["region"]))
 countyNames2 <- (unique(df_increase["Country.Name"]))
 
-write.csv(countyNames1, "C:/C/gitHub/code/R/visual/mapDataRegion.csv", row.names=FALSE)
-write.csv(countyNames2, "C:/C/gitHub/code/R/visual/df_increaseCountryName.csv", row.names=FALSE)
+#write.csv(countyNames1, "C:/C/gitHub/code/R/visual/mapDataRegion.csv", row.names=FALSE)
+#write.csv(countyNames2, "C:/C/gitHub/code/R/visual/df_increaseCountryName.csv", row.names=FALSE)
 
 df_increase[df_increase$"Country.Name" == "United Kingdom", "Country.Name"] <- "UK"
 df_increase[df_increase$"Country.Name" == "United States", "Country.Name"] <- "USA"
@@ -56,15 +55,10 @@ df_increase
 colnames(df_increase)[colnames(df_increase) == "Country.Name"] ="region" #Rename to make left_join work
 mapData <- left_join(mapData, df_increase, by="region")
 
+mapData$increase <- ifelse(mapData$increase < -50, -50, mapData$increase) #Fit min value to -50 or under
+mapData$increase <- ifelse(mapData$increase > 50, 50, mapData$increase) #Fit max value to -50 or over
 
-sum(is.na(mapData$increase)) # Count NA values : 29806
-mapData1 <- mapData %>% filter(!is.na(mapData$increase)) #Filter out NA values
-sum(is.na(mapData1$increase)) # Count NA values : 0
-
-mapData1$increase <- ifelse(mapData1$increase < -50, -50, mapData1$increase) #Fit min value to -50 or under
-mapData1$increase <- ifelse(mapData1$increase > 50, 50, mapData1$increase) #Fit max value to -50 or over
-
-map1 <- ggplot(mapData1, aes(x = long, y = lat, group = group)) + 
+map1 <- ggplot(mapData, aes(x = long, y = lat, group = group)) + 
   geom_polygon(aes(fill = increase), color = "black") #Create map
 
 map2 <- map1 + scale_fill_gradient(name = "Increase", low = "red", high =  "green", na.value = "grey50")+
