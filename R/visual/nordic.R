@@ -43,3 +43,26 @@ df %>%
        color = "Country") +
   scale_x_continuous(breaks = seq(min(df$year), max(df$year), by = 1)) +
   theme_light()
+
+
+######
+cor(df_clean$year, df_clean$Denmark) #Correlation between x and y
+cor(df_clean$year, df_clean$Norway)
+cor(df_clean$year, df_clean$Sweden)
+
+
+##### - Linear Regression - ####
+model <- lm(Denmark ~ year, data = df_clean)
+summary(model)
+
+#Prediction
+year2026 <- data.frame(year = 2026)
+predicted_gdp <- predict(model, newdata = year2026)
+print(predicted_gdp)
+
+
+
+
+
+
+
