@@ -54,7 +54,6 @@ def ElementaryRowReplacement(A: Matrix, i: int, m: float, j: int) -> Matrix:
         A modified in-place after row replacement.
     """
     N = A.N_Cols
-    B = A.__copy__()
     lst = []
     lst2 = []
     for elm in A.Row(j):
@@ -64,8 +63,8 @@ def ElementaryRowReplacement(A: Matrix, i: int, m: float, j: int) -> Matrix:
     for num in range (0, len(lst)):
         lst[num] = lst2[num] + m * lst[num]
     for num2 in range (N):
-        B[i, num2] = lst[num2]
-    return B
+        A[i, num2] = lst[num2]
+    return A
 
 
 def ElementaryRowInterchange(A: Matrix, i: int, j : int) -> Matrix:
@@ -80,12 +79,12 @@ def ElementaryRowInterchange(A: Matrix, i: int, j : int) -> Matrix:
     Returns:
         A modified in-place after row interchange
     """
-    B = A.__copy__()
     N = A.N_Cols
     for num in range(N):
-        B[i, num] = A[j, num] #r_j -> r_i
-        B[j, num] = A[i, num] #r_i -> r_j
-    return B
+        tmp = A[i, num]
+        A[i, num] = A[j, num] #r_j -> r_i
+        A[j, num] = tmp #r_i -> r_j
+    return A
 
 
 def ElementaryRowScaling(A: Matrix, i: int, c: float) -> Matrix:
@@ -100,11 +99,10 @@ def ElementaryRowScaling(A: Matrix, i: int, c: float) -> Matrix:
     Returns:
         A modified in-place after row scaling.
     """
-    B = A.__copy__()
     N = A.N_Cols
     for num in range(N):
-        B[i, num] = c * B[i, num]
-    return B
+        A[i, num] = c * A[i, num]
+    return A
 
 
 def ForwardReduction(A: Matrix) -> Matrix:
@@ -152,7 +150,22 @@ def BackwardReduction(A: Matrix) -> Matrix:
         M-by-N matrix which is the reduced form of A (performed in-place,
         i.e., A is modified directly).
     """
-    raise NotImplementedError()
+    M = A.M_Rows
+    N = A.N_Cols
+    for i in range(M-1, -1, -1):
+        for j in range(N):
+            if A[i,j] != 0:
+                ElementaryRowScaling(A, i, 1/A[i,j])
+                for r in range(i):
+                    rowNotZero = r == 0
+                    elmNotZero = A[r, j] == 0
+                    if rowNotZero: pass
+                    if elmNotZero: pass
+                    else:
+                        scalarMultiple  = -1 * A[r, j] / A[i,j]
+                        ElementaryRowReplacement(A, r, scalarMultiple, i)
+                break
+    return A
 
 
 def GaussElimination(A: Matrix, v: Vector) -> Vector:
