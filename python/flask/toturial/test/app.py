@@ -6,8 +6,6 @@ app = Flask(__name__)
 
 # set your own database
 #db = "dbname='bank' user='postgres' host='127.0.0.1' password = 'UIS'"
-db = "dbname='bank23010' user='postgres' host='127.0.0.1' password = 'password'"
-conn = psycopg2.connect(db)
 
 # Routes
 @app.route('/')
@@ -24,6 +22,8 @@ def about():
 
 @app.route("/test")
 def test():
+    db = "dbname='bank23010' user='postgres' host='127.0.0.1' password = 'password'"
+    conn = psycopg2.connect(db)
     cur = conn.cursor()
     cur.execute('SELECT * FROM Customers;')
     Customers = cur.fetchall()
