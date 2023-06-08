@@ -1,0 +1,73 @@
+j \coloneqq \frac{\left[\begin{array}{c}
+\textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{0} 
+\end{array}\right]\left[\begin{array}{c}
+\textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]}{(\sqrt{(-\frac{5}{7})^{2}+(\frac{2}{7})^{2}+(\frac{2}{7})^{2}+(-\frac{4}{7})^{2}})^{2}}\left[\begin{array}{c}
+\textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]+\frac{\left[\begin{array}{c}
+\textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{0} 
+\end{array}\right]\left[\begin{array}{c}
+\textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]}{(\sqrt{(-\frac{2}{7})^{2}+(\frac{5}{7})^{2}+(-\frac{2}{7})^{2}+(\frac{4}{7})^{2}})^{2}}\left[\begin{array}{c}
+\textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]+\frac{\left[\begin{array}{c}
+\textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{1} 
+\\
+ \textcolor{DarkOrchid}{0} 
+\end{array}\right]\left[\begin{array}{c}
+\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]}{(\sqrt{(\frac{2}{7})^{2}+(\frac{2}{7})^{2}+(-\frac{5}{7})^{2}+(-\frac{4}{7})^{2}})^{2}}\left[\begin{array}{c}
+\frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \frac{\textcolor{DarkOrchid}{2}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{5}}{\textcolor{DarkOrchid}{7}} 
+\\
+ \textcolor{DarkOrchid}{-}\frac{\textcolor{DarkOrchid}{4}}{\textcolor{DarkOrchid}{7}} 
+\end{array}\right]
