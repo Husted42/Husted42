@@ -79,7 +79,7 @@ def compareMatrices(A: Matrix, B: Matrix) -> bool:
     """Compare matrices up to tolerance via l1-distance."""
     if compareMatrixDimensions(A, B):
         l1_norm = 0.0
-        for i in range(A.N_Cols):
+        for i in range(A.M_Rows):
             l1_norm += l1_distance(A.Row(i), B.Row(i))
         return l1_norm / A.size_ < Tolerance
     else:
@@ -108,14 +108,19 @@ def TestSSM(A: Matrix, p: tuple, expected: Matrix) -> tuple:
             if not compareMatrices(B, expected):
                 resultStr += f'\n{outMessage(taskName, "Values", False)}'
                 status = False
-                # TODO: dump the expected result and some context.
+                print(f'Input matrix:\n{A}')
+                print(f'index of lines anc columns: {i}, {j}')
+                print(f'Expected result:\n{expected}')
+                print(f'Actual result:\n{B}')
             else:
                 resultStr += f'\n{outMessage(taskName, "Dims", True)}'
                 resultStr += f'\n{outMessage(taskName, "Values", True)}'
-        except:
+        except Exception as e:
+            print(f'got exception {e}')
             resultStr += f'\n{outMessage(taskName, "Dims", False)}'
             status = False
     except Exception as e:
+        print(f'got exception {e}')
         resultStr += f'\n{outMessage(taskName, "Run", False)}'
         status = False
 
@@ -138,12 +143,16 @@ def TestDet(A: Matrix, expected: float) -> tuple:
             if not math.isclose(det, expected, abs_tol=Tolerance):
                 resultStr += f'\n{outMessage(taskName, "Values", False)}'
                 status = False
-                # TODO: dump the expected result and some context.
+                print(f'Input matrix:\n{A}')
+                print(f'Expected result:\n{expected}')
+                print(f'Actual result:\n{det}')
             else:
                 resultStr += f'\n{outMessage(taskName, "Values", True)}'
-        except:
+        except Exception as e:
+            print(f'got exception {e}')
             status = False
     except Exception as e:
+        print(f'got exception {e}')
         resultStr += f'\n{outMessage(taskName, "Run", False)}'
         status = False
 
@@ -167,13 +176,20 @@ def TestSC(A: Matrix, v: Vector, i: int, expected: Matrix) -> tuple:
                 resultStr += f'\n{outMessage(taskName, "Values", False)}'
                 status = False
                 # TODO: dump the expected result and some context.
+                print(f'Input matrix:\n{A}')
+                print(f'Input vector:\n{v}')
+                print(f'Input index: {i}')
+                print(f'Expected result:\n{expected}')
+                print(f'Actual result:\n{B}')
             else:
                 resultStr += f'\n{outMessage(taskName, "Dims", True)}'
                 resultStr += f'\n{outMessage(taskName, "Values", True)}'
-        except:
+        except Exception as e:
+            print(f'got exception {e}')
             resultStr += f'\n{outMessage(taskName, "Dims", False)}'
             status = False
     except Exception as e:
+        print(f'got exception {e}')
         resultStr += f'\n{outMessage(taskName, "Run", False)}'
         status = False
 
@@ -197,6 +213,7 @@ def TestGS(A: Matrix, expected: tuple) -> tuple:
             if (not compareMatrices(Q, Qe)) or (not compareMatrices(R, Re)):
                 resultStr += f'\n{outMessage(taskName, "Values", False)}'
                 status = False
+                print(f'Input matrix:\n{A}')
                 print("Computed Q\n",  Q)
                 print("Expected Q\n", Qe)
                 print("Computed R\n",  R)
@@ -204,10 +221,12 @@ def TestGS(A: Matrix, expected: tuple) -> tuple:
             else:
                 resultStr += f'\n{outMessage(taskName, "Dims", True)}'
                 resultStr += f'\n{outMessage(taskName, "Values", True)}'
-        except:
+        except Exception as e:
+            print(f'got exception {e}')
             resultStr += f'\n{outMessage(taskName, "Dims", False)}'
             status = False
     except Exception as e:
+        print(f'got exception {e}')
         resultStr += f'\n{outMessage(taskName, "Run", False)}'
         status = False
 

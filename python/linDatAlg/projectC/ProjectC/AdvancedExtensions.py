@@ -29,34 +29,25 @@ def SquareSubMatrix(A: Matrix, i: int, j: int) -> Matrix:
         i: int. The index of the row to remove.
         j: int. The index of the column to remove.
 
-    Return:
+    Return: 
         The resulting (N - 1)-by-(N - 1) submatrix.
     """
-    M_Rows = A.M_Rows
-    N_Cols = A.N_Cols
+    m = A.M_Rows
+    n = A.N_Cols
+    row, col = i, j
+    supA = Matrix(n - 1, m - 1)
+    for k in range(n): 
+        if k == row: continue #Skip element for columns to be removed
+        else:
+            for l in range(m): #Skip element for rows to be removed
+                if l == col: continue
+                else: supA[k - (k > row), l - (l > col)] = A[k, l]
+    return supA 
 
-    if M_Rows != N_Cols:
-        raise ValueError("Matrix is not square")
 
-    if i < 0 or i >= M_Rows:
-        raise ValueError("Row index out of range")
-    
-    if j < 0 or j >= N_Cols:
-        raise ValueError("Column index out of range")
-    
-    if M_Rows == 1: # If the matrix is 1-by-1, return an empty matrix
-        return Matrix(0, 0) # Return an empty matrix
-    
-    B = Matrix(M_Rows - 1, N_Cols - 1) # Initialize the submatrix
-    for k in range(M_Rows): # Loop over rows
-        if k == i: # If the row is the one to remove, skip it
-            continue
-        for l in range(N_Cols): # Loop over columns
-            if l == j: # If the column is the one to remove, skip it
-                continue
-            B[k - (k > i), l - (l > j)] = A[k, l] # Set the (k - (k > i))-th row and (l - (l > j))-th column of B to A[k, l]
-    return B # Return the submatrix
-
+#Determinants of order 2 
+def detToByTo(A: Matrix) -> Matrix:
+    return A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0]
 
 def Determinant(A: Matrix) -> float:
     """
@@ -73,16 +64,16 @@ def Determinant(A: Matrix) -> float:
     Return:
         The determinant of the matrix.
     """
-    if A.M_Rows != A.N_Cols:
-        raise ValueError("Matrix is not square")
-    if A.M_Rows == 1: # If the matrix is 1-by-1, return the only entry
-        return A[0, 0] # Return the only entry of the matrix
-    if A.M_Rows == 2: # If the matrix is 2-by-2, return the determinant
-        return A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0] # Compute the determinant of a 2-by-2 matrix
-    det = 0.0 # Initialize the determinant
-    for j in range(A.N_Cols): # Loop over columns
-        det += (-1)**j * A[0, j] * Determinant(SquareSubMatrix(A, 0, j)) # Compute the determinant of the j-th submatrix and add it to det
-    return det # Return the determinant
+    m = A.M_Rows
+    n = A.N_Cols
+    det = 0
+
+    if m == 2: return detToByTo(A) 
+
+    #Recursive formular
+    for j in range(n):
+        det += (-1)**j * A[0, j] * Determinant(SquareSubMatrix(A, 0, j))
+    return det 
 
 
 def VectorNorm(v: Vector) -> float:
@@ -97,9 +88,9 @@ def VectorNorm(v: Vector) -> float:
          Euclidean norm, i.e. (\sum v[i]^2)^0.5
     """
     nv = 0.0
-    for i in range(len(v)): # Loop over entries
-        nv += v[i]**2 # Add the square of the i-th entry to nv
-    return math.sqrt(nv) # Return the square root of nv
+    for i in range(len(v)):
+        nv += v[i]**2 
+    return math.sqrt(nv) 
 
 
 def SetColumn(A: Matrix, v: Vector, j: int) -> Matrix:
@@ -118,14 +109,14 @@ def SetColumn(A: Matrix, v: Vector, j: int) -> Matrix:
     Raise:
         ValueError if j is out of range or if len(v) != A.M_Rows.
     """
-    if len(v) != A.M_Rows:
-        raise ValueError("Vector length mismatch")
-    if j < 0 or j >= A.N_Cols:
-        raise ValueError("Column index out of range")
-    
-    for i in range(A.M_Rows): # Loop over rows
-        A[i, j] = v[i] # Set the i-th row of column j to v[i]
-    return A # Return the modified matrix
+
+    if (j < 0 or j >= A.N_Cols) or len(v) != A.M_Rows:
+        raise ValueError("j is out of range or if len(v) != A.M_Rows.")
+    else:
+        #For each row, swap element in col j with with v[i]
+        for i in range(A.M_Rows):
+            A[i, j] = v[i]
+    return A 
 
 
 def GramSchmidt(A: Matrix) -> tuple:
@@ -144,22 +135,22 @@ def GramSchmidt(A: Matrix) -> tuple:
         tuple (Q,R) where Q is a M-by-N orthonormal matrix and R is an
         N-by-N upper triangular matrix.
     """
-    M, N = A.M_Rows, A.N_Cols
-    Q = Matrix(M, N)  # Initialize Q as an M-by-N matrix
-    R = Matrix(N, N)  # Initialize R as an N-by-N matrix
+    m = A.M_Rows
+    n = A.N_Cols
+    Q, R = Matrix(m, n),  Matrix(n, n)
+    v = Vector(m) 
 
-    for j in range(N): # Loop over columns
-        v = Vector(M)  # Create a new Vector of length M
-        for i in range(M): # Loop over rows
-            v[i] = A[i, j]  # Assign the values from the j-th column of A to the Vector
+    for j in range(n): 
+        for i in range(m): v[i] = A[i, j]  # q_j = u_j
 
-        for i in range(j): # Loop over columns
-            q = Vector.fromArray(Q.Column(i))  # Get the i-th column of Q as a Vector
-            R[i, j] = q @ v  # Compute the inner product q @ v
-            v -= q * R[i, j]  # Subtract the projection of v onto q
+        for i in range(j): 
+            q = Vector.fromArray(Q.Column(i)) #Q^T_i
+            R[i, j] = q @ v #r_ij = q^T u_j
+            v -= R[i, j] * q #q_j  = q_j - r_ij q_i
 
-        R[j, j] = VectorNorm(v)  # Compute the norm of the updated v
-        for i in range(M):
-            Q[i, j] = v[i] / R[j, j]  # Normalize v and set the j-th column of Q
+        if v == 0: continue
+        R[j, j] = VectorNorm(v) # r_jj = ||q_j|| 
+        for i in range(m): #q_j = q_j / r_jj
+            Q[i, j] = v[i] / R[j, j] 
 
-    return Q, R # Return the tuple (Q, R)
+    return (Q, R)
