@@ -109,14 +109,7 @@ def SetColumn(A: Matrix, v: Vector, j: int) -> Matrix:
     Raise:
         ValueError if j is out of range or if len(v) != A.M_Rows.
     """
-
-    if (j < 0 or j >= A.N_Cols) or len(v) != A.M_Rows:
-        raise ValueError("j is out of range or if len(v) != A.M_Rows.")
-    else:
-        #For each row, swap element in col j with with v[i]
-        for i in range(A.M_Rows):
-            A[i, j] = v[i]
-    return A 
+    return None
 
 
 def GramSchmidt(A: Matrix) -> tuple:
