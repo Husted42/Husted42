@@ -1,5 +1,5 @@
 import unittest
-import pipeLine
+import pipelinePOP.pipeLine as pipeLine
 
 n = pipeLine
 
