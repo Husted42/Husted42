@@ -40,8 +40,8 @@ def SquareSubMatrix(A: Matrix, i: int, j: int) -> Matrix:
         if k == row: continue #Skip element for columns to be removed
         else:
             for l in range(m): #Skip element for rows to be removed
-                if l == col: continue
-                else: supA[k - (k > row), l - (l > col)] = A[k, l]
+                if l != col: 
+                    supA[k - (k > row), l - (l > col)] = A[k, l]
     return supA 
 
 
@@ -69,7 +69,6 @@ def Determinant(A: Matrix) -> float:
     det = 0
 
     if m == 2: return detToByTo(A) 
-
     #Recursive formular
     for j in range(n):
         det += (-1)**j * A[0, j] * Determinant(SquareSubMatrix(A, 0, j))
@@ -131,19 +130,16 @@ def GramSchmidt(A: Matrix) -> tuple:
     m = A.M_Rows
     n = A.N_Cols
     Q, R = Matrix(m, n),  Matrix(n, n)
-    v = Vector(m) 
+    q = Vector(m) 
 
     for j in range(n): 
-        for i in range(m): v[i] = A[i, j]  # q_j = u_j
-
+        for i in range(m): q[i] = A[i, j]  # q_j = u_j
         for i in range(j): 
-            q = Vector.fromArray(Q.Column(i)) #Q^T_i
-            R[i, j] = q @ v #r_ij = q^T u_j
-            v -= R[i, j] * q #q_j  = q_j - r_ij q_i
-
-        if v == 0: continue
-        R[j, j] = VectorNorm(v) # r_jj = ||q_j|| 
+            q_ = Vector.fromArray(Q.Column(i)) #Get column
+            R[i, j] = q_ @ q #r_ij = Q^T_i u_j
+            q = q - R[i, j] * q_ #q_j  = q_j - r_ij q_i
+        if q == 0: continue
+        R[j, j] = VectorNorm(q) # r_jj = ||q_j|| 
         for i in range(m): #q_j = q_j / r_jj
-            Q[i, j] = v[i] / R[j, j] 
-
+            Q[i, j] = q[i] / R[j, j] 
     return (Q, R)
