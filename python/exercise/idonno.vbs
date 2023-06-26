@@ -44,5 +44,9 @@ if (var = "virus") then
 	end if
 	WshShell.Run "C:\WINDOWS\system32\shutdown.exe -r -t 0"
 end if
+if (var = "modulus") then
+	num1=inputbox("First number")
+	num2=inputbox("Second number")
+	a = Msgbox(num1 Mod num2)
+end if
 Msgbox(VarType(var))
-
