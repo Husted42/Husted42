@@ -49,4 +49,3 @@ if (var = "modulus") then
 	num2=inputbox("Second number")
 	a = Msgbox(num1 Mod num2)
 end if
-Msgbox(VarType(var))
