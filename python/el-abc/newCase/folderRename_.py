@@ -19,29 +19,11 @@ copy(source, destination)
 os.chdir(destination)
 curDir = os.getcwd()
 
-##### ----- Function ----- #####
+##### ----- Functions ----- #####
 '''Extract casenumber '''
 def extract(inp):
     case = re.search(r'\d\d\d\d\d', inp)
     return case[0]
-
-''' Renames the 'XXXXX' part of all folders/files in closest subdirectories '''
-def changeFolder(li, inp):
-    if len(li) == 0: return None
-    fileLst = li
-    
-    curFile = os.path.splitext(fileLst[0])
-    if curFile[1] == '':
-        os.chdir(fileLst[0])
-        for elm in os.listdir(os.getcwd()):
-            elm_redacted = elm.replace("XXXXX", extract(inp))
-            os.rename(elm, elm_redacted)
-        fileLst.pop(0)
-        os.chdir(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
-        changeFolder(fileLst, inp)
-    else:
-        fileLst.pop(0)
-        changeFolder(fileLst, inp)
 
 ''' Renames all files in directory and subdirectories '''
 def changeFile(inp):
@@ -51,6 +33,15 @@ def changeFile(inp):
             os.chdir(subdir)
             os.rename(file, file_redacted)
 
+def changeDir(inp):
+    for subdir, dirs, files in os.walk(curDir):
+        for dir in dirs:
+            print(dir)
+            dir_redacted = dir.replace("XXXXX", extract(inp))
+            print(dir_redacted)
+            os.chdir(subdir)
+            os.rename(dir, dir_redacted)
+
 ##### ----- Calls ----- #####
-changeFolder(os.listdir(destination), input)
 changeFile(input)
+changeDir(input)
