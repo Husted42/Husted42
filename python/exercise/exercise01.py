@@ -31,7 +31,6 @@ if 0 :
         print('Greatest common divisor')
         print(gdc(54, 24), '\n')
 
-''' https://www.w3resource.com/python-exercises/puzzles/index.php (06/06/2023)'''
 #Ecercise 2
 def twoNineteen (lst):
     a_, b_ = 0, 0
@@ -59,3 +58,22 @@ if 1 :
     print(fithThrice([19, 15, 5, 7, 5, 5, 2])) #False
     print(fithThrice([11, 12, 14, 13, 14, 13, 15, 14])) #True
     print(fithThrice([19, 15, 11, 7, 5, 6, 2])) #False
+
+#Ecercise 4
+print('\nMake car and traval 20 km')
+class factory:
+    def __init__(self, speed):
+        self.speed = speed
+        self.fuel = 100
+        self.km = 0
+
+    def travel(self, inp):
+        self.fuel = self.fuel - inp/5
+        self.km = self.km + inp * self.speed
+
+
+car = factory(200)
+car.travel(20)
+print(car.fuel)
+print(car.km)
+
