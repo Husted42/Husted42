@@ -16,7 +16,7 @@ def innerCal(a,b):
 def rec(k=10):
     if k:
         return k + rec(k-1)
-    else: return 0
+    else: return 0  
 
 ''' Exercise 4: rename function '''
 def display_student(name, age):
@@ -28,15 +28,14 @@ l1 = [3, 6, 9, 12, 15, 18, 21]
 l2 = [4, 8, 12, 16, 20, 24, 28]
 
 def oddEvenIndex(a, b):
-    even = []
     odd = []
-    for index in range(0, len(a), 2):
-        even.append(a[index])
-    for index in range(1, len(b), 2):
+    even = []
+    for index in range(1, len(a), 2):
         odd.append(a[index])
-    
-
-
+    for index in range(0, len(b), 2):
+        even.append(b[index])
+    lst = odd + even
+    return odd, even, lst
 
 ##### ----- Answers ----- #####
 def run1():
@@ -52,6 +51,11 @@ def run1():
 
     print('\nExercise 4: rename function')
     show_student('Emma', 26)
+
+    print('\nExercise 5: odd/even-index')
+    print('Odd: ', oddEvenIndex(l1, l2)[0])
+    print('Even: ', oddEvenIndex(l1, l2)[1])
+    print('list: ', oddEvenIndex(l1, l2)[2])
 
 
 if (True): run1()
