@@ -34,21 +34,23 @@ def cleanFolder():
         print('Element in question: ', elm, '\n\n\n')
         foldername = ''
         if (os.path.splitext(elm))[1] != '': #Check if folder
+            print('(after if) elm = ', elm, os.path.splitext(elm))
             fileSplit = os.path.splitext(elm)
             filetype = (fileSplit[1])[1:] #Filetype minus .
             if fileSplit[1] not in fileTypes: fileTypes.append(fileSplit[1]) #Get distinct
             print(2, fileSplit[1])
             foldername = categorize(filetype)
-        elif elm not in folderLst:
-            print(3, elm) 
-            foldername = 'Folder'
+        else:
+            if elm not in folderLst:
+                print(3, elm) 
+                foldername = 'Folder'
         if foldername != '':
             print(4, 'foldername = ', foldername)
             src = path_ + '/' + elm
             dest = path_ + '/' + foldername 
             if foldername not in os.listdir(path_): os.mkdir(dest, 0o666)
-            if os.path.exists(dest):
-                shutil.rmtree(dest)
+            # if os.path.exists(dest):
+            #     shutil.rmtree(dest)
             shutil.move(src, dest)
 
 cleanFolder() #Run startup
