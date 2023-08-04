@@ -6,6 +6,7 @@ import time
 path_ = os.getcwd()
 
 def cleanFolder():
+    print('cleaning')
     fileTypes = []
     files = os.listdir(os.getcwd())
     print(files)
@@ -23,6 +24,7 @@ def cleanFolder():
             print(dest, '\n\n')
             shutil.move(src, dest)
 
+cleanFolder() #Run startup
 schedule.every().hour.do(cleanFolder)
 
 ''' Keeps the script running '''
