@@ -37,6 +37,16 @@ AND Product.manufacturer NOT IN (
 	SELECT Product.manufacturer FROM Product WHERE type = 'laptop');
 
 -- 7) What is the cheapest wireless keyboard?
+SELECT name FROM Keyboard WHERE model IN(
+	SELECT Accessory.model FROM Accessory WHERE Accessory.price IN(
+			SELECT MIN(price) FROM Accessory WHERE type = 'keyboard')
+			AND Accessory.type = 'keyboard')
+			
+-- 8) Which PCs are overpriced? Meaning that they cost more than another PC
+--    while being slower and having less memory.
+SELECT P1.name AS n1, P2.name as n2 FROM PC P1
+INNER JOIN PC P2 ON P1.model != P2.model AND p1.price > p2.price
+AND p1.speed < p2.speed AND p1.ram < p2.ram;
 
+-- n1 (LOQ) is more expensive than n2 (Nitro N50-650) and has worse specs. (Besides storage)
 
-SELECT * FROM Product

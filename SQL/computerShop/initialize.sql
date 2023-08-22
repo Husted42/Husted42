@@ -73,7 +73,7 @@ insert into Product values('Lenovo', 1001, 'pc');
 insert into PC values('IdeaCentre Gaming 5', 1001, 2.5, 8, 512, 5797);
 
 insert into Product values('Lenovo', 1002, 'pc');
-insert into PC values('LOQ', 1002, 2.5, 16, 512, 7999);
+insert into PC values('LOQ', 1002, 2.5, 8, 2048, 7999);
 
 insert into Product values('Acer', 1003, 'pc');
 insert into PC values('Nitro N50-650', 1003, 3.2, 16, 512, 5999);
@@ -160,6 +160,6 @@ insert into Accessory values(4003, 'mouse', 388);
 insert into Mouse values('ThinkPad', 4003, 3, 'Black',  TRUE);
 
 insert into Product values('Logitech', 4004, 'Accessory');
-insert into Accessory values(4004, 'mouse', 388);
+insert into Accessory values(4004, 'mouse', 450);
 insert into Mouse values('G Pro', 4004, 2, 'Black',  TRUE);
 
