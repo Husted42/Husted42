@@ -1,67 +1,42 @@
-SELECT * FROM laptop;
-SELECT * FROM pc;
-SELECT * FROM printer;
-SELECT * FROM product;
+-- 1) What is the speed and storage capacity of PC's under 5000 DKK.
+SELECT PC.model, PC.speed AS GHz, PC.storage AS GB FROM PC
+WHERE PC.price < 5000; 
 
--- a) Find the model number, speed, and hard-disk size for all PCs whose price is under $1000 where
--- your rename the speed column to GHz and the hd column to GB.
-SELECT pc.model, pc.speed AS GHz, pc.hd AS GB FROM pc
-WHERE pc.price < 1000; 
-
--- b) Find the manufacturers of printers
-SELECT DISTINCT product.maker FROM product 
-WHERE product.model IN(
-	SELECT printer.model FROM printer
+-- 2) Who manufactures mice?
+SELECT DISTINCT Product.manufacturer FROM Product 
+WHERE Product.model IN(
+	SELECT Accessory.model FROM Accessory WHERE Accessory.type = 'mouse'
 );
 
--- c) Find the manufacturer and speed of laptops with a hard disk of at least thirty gigabytes.
-SELECT laptop.model, product.maker, laptop.speed FROM laptop
-LEFT JOIN product
-ON laptop.model = product.model 
-WHERE hd > 30;
+-- 3) Which laptops has more than 128 GB storage and how fast are they?
+SELECT Product.manufacturer, Laptop.name, Laptop.speed FROM Laptop
+LEFT JOIN Product 
+ON Laptop.model = Product.model 
+WHERE storage > 128;
 
--- d) Find the model number and price of all products (of any type) made by manufacturer B.
-SELECT product.model, laptop.price FROM product 
-RIGHT JOIN laptop ON laptop.model = product.model WHERE maker = 'B'
-UNION
-SELECT product.model, pc.price FROM product 
-RIGHT JOIN pc ON pc.model = product.model WHERE maker = 'B'
-UNION
-SELECT product.model, printer.price FROM product 
-RIGHT JOIN printer ON printer.model = product.model WHERE maker = 'B';
+-- 4) How much does the different keyboards cost?
+SELECT Product.manufacturer, Keyboard.name, Accessory.price FROM Keyboard
+LEFT JOIN Accessory ON Accessory.model = Keyboard.model
+LEFT JOIN Product ON Keyboard.model = Product.model; 
 
--- e) Find those manufacturers that sell Laptops, but not PCs 
-SELECT DISTINCT product.maker, product.type
-FROM product
-WHERE product.type = 'laptop' 
-AND product.maker NOT IN (SELECT maker FROM product WHERE type = 'pc')
+-- 5) What is the average price of a Lenovo product?
+SELECT AVG(a.price) FROM (
+	SELECT Product.model, Laptop.price FROM Product 
+	RIGHT JOIN Laptop ON Laptop.model = Product.model WHERE manufacturer = 'Lenovo'
+	UNION
+	SELECT Product.model, PC.price FROM Product 
+	RIGHT JOIN PC ON PC.model = Product.model WHERE manufacturer = 'Lenovo'
+	UNION
+	SELECT Product.model, Accessory.price FROM Product
+	RIGHT JOIN Accessory ON Product.model = Accessory.model WHERE manufacturer = 'Lenovo') a;
 
--- f) Find the laptops whose speed is slower than that of any PC
-SELECT * FROM laptop
-WHERE laptop.speed < (
-	SELECT MIN(speed) FROM PC
-)
+-- 6) Who manufatures PCs, but not Laptops?
+SELECT DISTINCT Product.manufacturer FROM Product
+WHERE Product.type = 'pc' 
+AND Product.manufacturer NOT IN (
+	SELECT Product.manufacturer FROM Product WHERE type = 'laptop');
 
--- g) Find the maker of the color printer with the lowest price
-SELECT product.maker FROM product WHERE product.model IN(
-	SELECT printer.model FROM printer WHERE printer.price IN(
-		SELECT MIN(printer.price) FROM printer WHERE printer.color = true))
-
--- h
+-- 7) What is the cheapest wireless keyboard?
 
 
--- i
-
--- j) Find the manufacturers that make at least three different models of PC
-SELECT product.maker, COUNT(product.type)
-FROM product WHERE product.type = 'pc'
-GROUP BY product.maker
-HAVING COUNT(product.type) > 2
-
--- k
-
--- l
-
-	
-
-
+SELECT * FROM Product
