@@ -4,7 +4,7 @@ CREATE TABLE Sales(
 	id SERIAL,
 	model INTEGER,
 	orderDate DATE,
-	PRIMARY KEY (model)
+	PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS Product;
@@ -163,3 +163,8 @@ insert into Product values('Logitech', 4004, 'Accessory');
 insert into Accessory values(4004, 'mouse', 450);
 insert into Mouse values('G Pro', 4004, 2, 'Black',  TRUE);
 
+--- Sales
+COPY sales(id, model, orderDate)
+FROM 'C:/Users/Public/salesData.csv'
+DELIMITER ','
+CSV HEADER;
