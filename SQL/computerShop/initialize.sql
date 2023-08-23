@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS salesOverview; 
+
 -- Create tables for computer shop -- 
 DROP TABLE IF EXISTS Sales;
 CREATE TABLE Sales(
@@ -115,6 +117,9 @@ insert into Laptop values('Aspire 5', 2006, 0.9, 16, 512, 14, 18799);
 insert into Product values('Asus', 2007, 'laptop');
 insert into Laptop values('X415', 2007, 1.7, 8, 128, 14, 4499);
 
+insert into Product values('Asus', 2008, 'laptop');
+insert into Laptop values('X515', 2008, 2.0, 8, 256, 14, 5499);
+
 insert into Product values('Asus', 2009, 'laptop');
 insert into Laptop values('VivoBook', 2009, 2.4, 8, 128, 15.6, 4799);
 
@@ -122,44 +127,44 @@ insert into Product values('Asus', 2010, 'laptop');
 insert into Laptop values('VivoBook Go', 2010, 2.8, 8, 512, 15.6, 5799);
 
 --- Keyboard
-insert into Product values('Logitech', 3001, 'Accessory');
+insert into Product values('Logitech', 3001, 'accessory');
 insert into Accessory values(3001, 'keyboard', 1199);
 insert into Keyboard values('G915', 3001, 'Mechanical', 'Black', TRUE, TRUE);
 
-insert into Product values('Razer', 3002, 'Accessory');
+insert into Product values('Razer', 3002, 'accessory');
 insert into Accessory values(3002, 'keyboard', 1499);
 insert into Keyboard values('Blackwidow v3 Mini', 3002, 'Mechanical', 'Black', FALSE, TRUE);
 
-insert into Product values('Logitech', 3003, 'Accessory');
+insert into Product values('Logitech', 3003, 'accessory');
 insert into Accessory values(3003, 'keyboard', 1499);
 insert into Keyboard values('G815', 3003, 'Mechanical', 'Black', TRUE, TRUE);
 
-insert into Product values('Logitech', 3004, 'Accessory');
+insert into Product values('Logitech', 3004, 'accessory');
 insert into Accessory values(3004, 'keyboard', 399);
 insert into Keyboard values('G413 TKL', 3004, 'Mechanical', 'Black', FALSE, FALSE);
 
-insert into Product values('Lenovo', 3005, 'Accessory');
+insert into Product values('Lenovo', 3005, 'accessory');
 insert into Accessory values(3005, 'keyboard', 1789);
 insert into Keyboard values('rackPoint Keyboard II', 3005, 'Membrane', 'Black', FALSE, TRUE);
 
-insert into Product values('Lenovo', 3006, 'Accessory');
+insert into Product values('Lenovo', 3006, 'accessory');
 insert into Accessory values(3006, 'keyboard', 740);
 insert into Keyboard values('4Y41B69381', 3006, 'Membrane', 'Black', TRUE, FALSE);
 
 --- Mouse
-insert into Product values('Acer', 4001, 'Accessory');
+insert into Product values('Acer', 4001, 'accessory');
 insert into Accessory values(4001, 'mouse', 714);
 insert into Mouse values('Predator', 4001, 5, 'Black',  FALSE);
 
-insert into Product values('Lenovo', 4002, 'Accessory');
+insert into Product values('Lenovo', 4002, 'accessory');
 insert into Accessory values(4002, 'mouse', 653);
 insert into Mouse values('Yoga', 4002, 2, 'Grey',  TRUE);
 
-insert into Product values('Lenovo', 4003, 'Accessory');
+insert into Product values('Lenovo', 4003, 'accessory');
 insert into Accessory values(4003, 'mouse', 388);
 insert into Mouse values('ThinkPad', 4003, 3, 'Black',  TRUE);
 
-insert into Product values('Logitech', 4004, 'Accessory');
+insert into Product values('Logitech', 4004, 'accessory');
 insert into Accessory values(4004, 'mouse', 450);
 insert into Mouse values('G Pro', 4004, 2, 'Black',  TRUE);
 
