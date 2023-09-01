@@ -1,7 +1,7 @@
 ## This is a directory/file filter for WinMerge
 ## This filter suppresses windows files not included in Onedrive.
-name: Symbian C++
-desc: Suppresses various binaries found in Visual C++ source trees compiling Symbian
+name: Onedrive
+desc: Suppresses windows files not included in Onedrive.
 
 ## This is an inclusive (loose) filter
 ## (it lets through everything not specified)
@@ -12,4 +12,11 @@ def: include
 ## (Inline comments begin with " ##" and extend to the end of the line)
 
 f: \.msg$ ## Outlook mails
-f: \.thumb$ ## Extension for bitmap image file format
+f: \.db$ ## Extension for bitmap image file format
+
+d: Diverse$
+d: Igangværende ordrer$
+d: Kontrakter med kunder$
+d: NTE - CELSA$
+d: Ny sagsmappe$
+
