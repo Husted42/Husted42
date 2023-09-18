@@ -154,7 +154,7 @@ WITH rowfilter AS(
 
 SELECT user_id, spend, transaction_date
 FROM rowfilter
-WHERE row_number = 3
+WHERE row_number = 3;
 
 -- Sending vs. Opening Snaps [Snapchat SQL Interview Question]
 WITH time_spent AS (
@@ -240,7 +240,7 @@ FROM users;
 -- Age bucket [Histogram]
 SELECT groups, COUNT(groups) FROM age_buckets
 GROUP BY groups
-ORDER BY groups
+ORDER BY groups;
 
 -- Age bucket [Max age with fucntion}
 CREATE OR REPLACE FUNCTION fn_find_max_age()
@@ -252,3 +252,33 @@ $$
 LANGUAGE SQL;
 
 SELECT fn_find_max_age();
+----- pgexercises.com -----
+-- Update some existing data
+UPDATE cd.facilities
+SET initialoutlay = 10000
+WHERE facid = 1;
+
+ -- Update multiple rows and columns at the same time
+UPDATE cd.facilities
+SET guestcost = 30, membercost = 6
+WHERE name LIKE '%Tennis%';
+
+-- Update a row based on the contents of another row
+UPDATE cd.facilities SET 
+	membercost = (SELECT (membercost * 1.1) FROM cd.facilities WHERE facid = 0),
+	guestcost = (SELECT (guestcost * 1.1) FROM cd.facilities WHERE facid = 0)
+WHERE facid = 1;
+
+-- Delete all bookings
+TRUNCATE TABLE cd.bookings;
+
+-- Delete a member from the cd.members table
+DELETE FROM cd.members
+WHERE memid = 37;
+
+-- Delete based on a subquery
+DELETE FROM cd.members
+WHERE memid NOT IN(
+  SELECT memid FROM cd.bookings);
+
+-- 
