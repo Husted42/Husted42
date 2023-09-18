@@ -1,8 +1,8 @@
 -- Histogram of Tweets [Twitter SQL Interview Question]
 WITH countTweets AS(
-SELECT user_id, COUNT(user_id) AS tweet_bucket FROM tweets
-WHERE EXTRACT(YEAR FROM tweet_date::DATE) = 2022
-GROUP BY user_id)
+  SELECT user_id, COUNT(user_id) AS tweet_bucket FROM tweets
+  WHERE EXTRACT(YEAR FROM tweet_date::DATE) = 2022
+  GROUP BY user_id)
 
 SELECT tweet_bucket, COUNT(tweet_bucket) AS user_num FROM countTweets
 GROUP BY tweet_bucket
@@ -194,3 +194,61 @@ SELECT category, product, total_spend FROM (
   WHERE EXTRACT(YEAR FROM transaction_date) = 2022
   GROUP BY category, product) AS A
 WHERE ranking < 3;
+
+-- Age bucket [data]
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
+	id SERIAL,
+	name VARCHAR(16),
+	age INT);
+	
+INSERT INTO users (name, age) VALUES 
+('Jens', 23), ('Hanne', 21), ('Hajken', 24),
+('Aage', 50), ('Morten', 55), ('Torben', 12),
+('Helle', 20), ('Dennis', 0), ('Jannic', 67);
+
+-- Age bucket [new column]
+
+ALTER TABLE users
+ADD age_bucket VARCHAR(16);
+
+UPDATE users
+SET age_bucket = CASE 
+	WHEN (age BETWEEN 0 and 20) THEN '0-20'
+	WHEN (age BETWEEN 21 and 35) THEN '21-35'
+	WHEN (age BETWEEN 36 and 50) THEN '36-50'
+	ELSE '50+'
+END;
+
+-- Age bucket [new table]
+DROP TABLE IF EXISTS age_buckets; 
+CREATE TABLE age_buckets(
+	id INT,
+	groups VARCHAR(16)
+);
+
+INSERT INTO age_buckets (id, groups)
+SELECT id, 
+CASE 
+	WHEN (age BETWEEN 0 and 20) THEN '0-20'
+	WHEN (age BETWEEN 21 and 35) THEN '21-35'
+	WHEN (age BETWEEN 36 and 50) THEN '36-50'
+	ELSE '50+'
+END
+FROM users;
+
+-- Age bucket [Histogram]
+SELECT groups, COUNT(groups) FROM age_buckets
+GROUP BY groups
+ORDER BY groups
+
+-- Age bucket [Max age with fucntion}
+CREATE OR REPLACE FUNCTION fn_find_max_age()
+RETURNS INT as
+$$
+SELECT MAX(age)
+FROM users
+$$
+LANGUAGE SQL;
+
+SELECT fn_find_max_age();
