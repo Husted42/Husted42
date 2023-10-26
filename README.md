@@ -14,7 +14,7 @@
 ---
 
 ### :chart: My Stats :
-[![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=Husted42&hide_border=true&theme=dark&card_width=700&fire=08EB00&ring=08EB00&currStreakLabel=08EB00)](https://git.io/streak-stats)
+<!-- [![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=Husted42&hide_border=true&theme=dark&card_width=700&fire=08EB00&ring=08EB00&currStreakLabel=08EB00)](https://git.io/streak-stats) -->
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&theme=dark&layout=donut&hide_border=true)](https://github.com/anuraghazra/github-readme-stats)
 
 ---
