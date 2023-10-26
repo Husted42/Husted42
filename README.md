@@ -15,7 +15,11 @@
 
 ### :chart: My Stats :
 <!-- [![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=Husted42&hide_border=true&theme=dark&card_width=700&fire=08EB00&ring=08EB00&currStreakLabel=08EB00)](https://git.io/streak-stats) -->
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&theme=dark&layout=donut&hide_border=true)](https://github.com/anuraghazra/github-readme-stats)
+<!-- [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&theme=dark&layout=donut&hide_border=true)](https://github.com/anuraghazra/github-readme-stats) -->
+<p align="left">
+  <img height="50%" width="auto" src ="https://github-readme-stats.vercel.app/api?username=Husted42&show_icons=true&count_private=true&theme=chartreuse-dark&hide_border=true&hide=issues,contribs&bg_color=00000000">
+  <img height="50%" width="auto" src ="https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&layout=compact&hide_border=true&theme=chartreuse-dark&bg_color=00000000&langs_count=6&hide=jupyter%20notebook,tex,css,php&exclude_repo=Pacman-AI">
+</p>
 
 ---
 ### 🏆 GitHub Trophies :
