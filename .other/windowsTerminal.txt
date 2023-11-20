@@ -1,0 +1,4 @@
+----- PC -----
+wt -p "Command Prompt" -d C:\C\github ; split-pane -p "Ubuntu"
+
+wt --title "Main - Command Prompt" ; split-pane -p "Ubuntu" --title sub2 ; split-pane -p "Power Shell" --title "Sub - Power Shell"
