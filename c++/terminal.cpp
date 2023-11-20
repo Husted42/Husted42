@@ -17,8 +17,8 @@ string runHPPS(string git) {
 }
 
 string runDefault(string git) {
-    string command =    "wt --colorScheme \"Tango Dark\" --startingDirectory " + git + "\\HPPS --title \"Github\" ; "
-                        "split-pane --colorScheme \"" + colorScheme1 + "\" --startingDirectory " + git + "\\HPPS --title \"Github\"";
+    string command =    "wt --colorScheme \"Tango Dark\" --startingDirectory " + git + " --title \"Github\" ; "
+                        "split-pane --colorScheme \"" + colorScheme1 + "\" --startingDirectory " + git + " --title \"Github\"";
     return command;
 }
 
