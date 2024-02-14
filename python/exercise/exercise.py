@@ -58,3 +58,4 @@ if 1 :
     print(fithThrice([19, 15, 5, 7, 5, 5, 2])) #False
     print(fithThrice([11, 12, 14, 13, 14, 13, 15, 14])) #True
     print(fithThrice([19, 15, 11, 7, 5, 6, 2])) #False
+
