@@ -1,0 +1,14 @@
+Sammenligning af signed og unsigned
+ - unsigned trumper
+ 
+xor := addition i base to
+
+x_0 = 0 (første tal)
+y_0 = 1 (andet tal)
+z_0 = x_0 xor y_0 (resultat)
+c_0 = x_0 ^ y_0 (værdi i mente)
+
+x_1 = 0 (første tal)
+y_1 = 1 (andet tal)
+z_1 = x_1 xor y_1 xor c_0 (resultat)
+c_1 =  (værdi i mente)

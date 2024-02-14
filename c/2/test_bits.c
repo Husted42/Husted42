@@ -4,5 +4,7 @@
 #include "bits.h"
 
 int main() {
-  // TODO
+  struct bit result = int_to_bool(1);
+  printf(result.v?"true\n":"false\n");
+  return 0;
 }
