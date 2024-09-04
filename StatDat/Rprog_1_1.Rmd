@@ -8,10 +8,12 @@ output:
     code_folding: hide
 ---
 
-***
+------------------------------------------------------------------------
 
 # Vektor/variable i R
+
 Man kan selv definere en vektor/variabel med funktionen `c`:
+
 ```{r}
 x <- c(1,2,6)
 x
@@ -32,12 +34,11 @@ data(cats)
 cats
 ```
 
-
 Data vedrører 144 katte. Der er tre variable i datasættet
 
-* Køn: `Sex`
-* Kropsvægt i kg: `Bwt`
-* Vægt af hjerte i gram `Hwt`
+-   Køn: `Sex`
+-   Kropsvægt i kg: `Bwt`
+-   Vægt af hjerte i gram `Hwt`
 
 ```{r}
 head(cats, n = 3) # udskriver de første tre datalinjer
@@ -45,23 +46,20 @@ head(cats, n = 3) # udskriver de første tre datalinjer
 
 Hvilken datatyper har de tre variable i datasættet?
 
-# $-syntaksen
-Vi skal fortælle R at den skal finde variablene i datasættet
-`cats`.
-Dette kan gøres med \$-syntaks:
-datasætnavn\$variabelnavn.
+# \$-syntaksen
+
+Vi skal fortælle R at den skal finde variablene i datasættet `cats`. Dette kan gøres med \$-syntaks: datasætnavn\$variabelnavn.
 
 ```{r}
 #Bwt # Virker ikke, da R ikke ved hvor variablen er
 cats$Bwt
 mean(cats$Bwt)
 ```
-**Advarsel:** Det skaber ofte forvirring, hvis man tilfældigvis i R
-allerede har en variabel ved navn `Bwt`, der intet har at gøre
-med indholdet i datasættet `cats`.
 
+**Advarsel:** Det skaber ofte forvirring, hvis man tilfældigvis i R allerede har en variabel ved navn `Bwt`, der intet har at gøre med indholdet i datasættet `cats`.
 
 ## Visualisering
+
 Der findes flere forskellige systemer til at producere grafik (dvs. figurer) i R. I bogen og i opgaverne benyttes især det system, der følger med standardinstallation af R. Det er helt ok, men vi vil gerne give jer mulighed for også at lære at lave grafik ved brug af R pakken `ggplot2`. Det er valgfrit, om I vælger at prøve at lære begge dele, og det er meget begrænset, hvor meget I forventes at kunne. Erfaringsmæssig kan det dog virke utilfredsstillende at lære at lave statistiske analyser i R, hvis man slet ikke kan lave figurer (for det er faktisk noget der hæver R over meget andet software til statistisk dataanalyse).
 
 Hvis du vil igang med at lave grafik med `ggplot2` skal pakken først installeres på din computer. (Se eventuelt Opgave HS. 2 fra øvelsestimerne onsdag i kursusuge 1).
@@ -80,11 +78,12 @@ library(tidyverse) ### load tidyverse-pakkerne. Skal være installeret
 
 ### Barplot
 
-For en diskret variabel kan man optælle forekomsten af forskellige værdier i en tabel. 
+For en diskret variabel kan man optælle forekomsten af forskellige værdier i en tabel.
 
 ```{r}
 table(cats$Sex)
 ```
+
 Vi kan visualisere antallet af observationer i hver gruppe ved et søjlediagram
 
 ```{r}
@@ -111,12 +110,12 @@ hist(cats$Hwt)
 
 Et mere lækkert histogram hvor
 
-* figurerne placeres ved siden af hinanden
-* der benyttes 20 søjler
-* søjlerne farves lyserøde
-* der sættes *labels* på x-aksen
-* der sættes en overskrift på figuren
-* det samlede areal under boksene skaleres til at være 1 (dvs. 100 %)
+-   figurerne placeres ved siden af hinanden
+-   der benyttes 20 søjler
+-   søjlerne farves lyserøde
+-   der sættes *labels* på x-aksen
+-   der sættes en overskrift på figuren
+-   det samlede areal under boksene skaleres til at være 1 (dvs. 100 %)
 
 ```{r}
 par(mfrow = c(1, 2))
@@ -124,7 +123,7 @@ hist(cats$Bwt, xlab="Body weight (kg)", main="Cats: Body weight", nclass=20, pro
 hist(cats$Hwt, xlab="Heart weight (g)", main="Cats: Heart weight", nclass=20, prob=TRUE, col = "pink")
 ```
 
-Med `ggplot2` R pakken benyttes `geom_histogram` funktionen til optegning af histogrammer. 
+Med `ggplot2` R pakken benyttes `geom_histogram` funktionen til optegning af histogrammer.
 
 Det først eksempel vist her er ikke særlig vellykket ...
 
@@ -133,6 +132,7 @@ ggplot(data = cats) + geom_histogram(aes(x = Bwt))
 ```
 
 Når vi får valgt bredden af søjlerne passende (med `binwidth`), ser det bedre ud ...
+
 ```{r}
 ggplot(data = cats) + geom_histogram(aes(x = Bwt), binwidth = 0.1) +
   labs(x = "Kropsvaegt (kg)", y = "Antal")
@@ -140,9 +140,9 @@ ggplot(data = cats) + geom_histogram(aes(x = Bwt), binwidth = 0.1) +
 
 Og her går er vi i fuld kontrol og laver et histogram hvor
 
-* der benyttes 10 søjler (`bins`)
-* der tegnes et separat histogram for hvert køn
-* søjlerne farves hvide og kanten farves efter køn
+-   der benyttes 10 søjler (`bins`)
+-   der tegnes et separat histogram for hvert køn
+-   søjlerne farves hvide og kanten farves efter køn
 
 ```{r}
 ggplot(data = cats) + geom_histogram(aes(x = Bwt, color = Sex), bins = 10, fill = "white") + facet_wrap(. ~ Sex) + labs(x = "Kropsvaegt (kg)", y = "Antal")
@@ -159,6 +159,7 @@ boxplot(cats$Hwt, main="Heart weight", col = "lightgray")
 ```
 
 Prøv at sammenligne det tre vandrette linjer i den grå boks med kvartilerne beregnet med `summary` nedenfor
+
 ```{r}
 summary(cats$Hwt)
 ```
@@ -180,7 +181,7 @@ Men standardgrafik kan man skrive
 plot(cats$Hwt ~ cats$Bwt)
 ```
 
-eller alternativt 
+eller alternativt
 
 ```{r eval = F}
 plot(cats$Bwt, cats$Hwt)
@@ -226,21 +227,25 @@ cats$Bwt ### udskriver alle værdierne af variablen 'Bwt'
 Nedenfor udregnes en række forskellige stikprøvestørrelse (eng: *summary statistics*) for den **numeriske** variabel `Bwt` (kropsvægt).
 
 Middelværdi (eng: *mean*)
+
 ```{r}
 mean(cats$Bwt) ### middelværdi / mean
 ```
 
 Spredning (eng: *standard deviation*)
+
 ```{r}
 sd(cats$Bwt) ### spredning / standard deviation
 ```
 
 Varians (eng: *variance*)
+
 ```{r}
 var(cats$Bwt) ### varians / variance
 ```
 
 Median (eng: *median*) dvs. den midterste observation, når man sorterer værdierne efter størrelse
+
 ```{r}
 median(cats$Bwt) ### median
 ```
@@ -253,9 +258,9 @@ summary(cats$Bwt) ### oplister diverse stikprøvestørrelser / summary statistic
 
 På figuren nedenfor er vist
 
-* middelværdi (mean) og median som mål for centret af målingerne af kattenes kropsvægt
+-   middelværdi (mean) og median som mål for centret af målingerne af kattenes kropsvægt
 
-* stikprøvespredning (SD) og Inter Quartile Range (IQR) som mål for variationen i målingerne af kattenes kropsvægt
+-   stikprøvespredning (SD) og Inter Quartile Range (IQR) som mål for variationen i målingerne af kattenes kropsvægt
 
 ```{r fig.show = "hold", out.width="50%"}
 ggplot(data = cats)  + geom_point(aes(x = Bwt, y = Hwt)) + geom_vline(xintercept = mean(cats$Bwt), color = "red") + theme_bw() + labs(x = "Body weight (kg)", y = "Heart weight (g)", title = "Mean")
@@ -266,7 +271,6 @@ ggplot(data = cats)  + geom_point(aes(x = Bwt, y = Hwt)) + geom_vline(xintercept
 
 ggplot(data = cats)  + geom_point(aes(x = Bwt, y = Hwt)) + geom_vline(xintercept = quantile(cats$Bwt, probs = 0.25), color = "blue", linetype = 2) + geom_vline(xintercept = quantile(cats$Bwt, probs = 0.75), color = "blue", linetype = 2) + theme_bw() + labs(x = "Body weight (kg)", y = "Heart weight (g)", title = "Inter Quantile Range (IQR)")
 ```
-
 
 ### Tabeller
 
@@ -285,4 +289,4 @@ my_tab <- count(cats, Sex, name = "Antal")
 my_tab
 ```
 
-***
+------------------------------------------------------------------------

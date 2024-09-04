@@ -1,0 +1,124 @@
+---
+title: "uge_1_onsdag"
+output: html_document
+date: "2024-09-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+install.packages("isdals")
+
+```{r}
+library("isdals")
+library("ggplot2")
+
+```
+
+```{r}
+data(ricestraw)
+ricestraw
+```
+
+# HS3
+
+### Opgave 6
+
+Scatterplot
+
+```{r}
+ggplot(data = ricestraw) + geom_point(aes(x = time, y = weight)) + labs(x = "Time", y = "Weight") + 
+  theme(legend.position = "top") 
+```
+
+### Opgave 7
+
+Fit a linear model through the dataset
+
+```{r}
+lm(weight ~ time, data = ricestraw )
+```
+
+# Opgave 2.3 i bogen
+
+### Opagve 1
+
+Direction : We see a an upwards trend as x increases indecatin a positve correlation Shape : It's har to see for the first two plots, but the tends towards a stright line Strange : There seems to be a single outlier that is higer for all 3 plos ie. has a high value for Height, Volume and Girth
+
+```{r}
+data(trees)
+
+ggplot(data = trees) + geom_point(aes(x = Height, y = Volume))
+ggplot(data = trees) + geom_point(aes(x = Height, y = Girth ))
+ggplot(data = trees) + geom_point(aes(x = Volume, y = Girth ))
+ggplot(data = trees) + geom_point(aes(x = Girth, y = Volume ))
+
+
+```
+
+### Opgave 4
+
+Linear model to descirbe volume as a linear function of Girth
+
+```{r}
+linreg <- lm(Volume ~ Girth , data = trees)
+alpha <- as.numeric(coef(linreg)[1])
+beta <- as.numeric(coef(linreg)[2])
+```
+
+### Opgave 5
+
+```{r}
+plot_1 <- ggplot(data = trees) + 
+    geom_point(aes(x = Girth , y = Volume )) + 
+    geom_abline(slope = beta, intercept = alpha)  # To make the linear line
+
+plot_1
+
+```
+
+### Opgave 6
+
+Calculate the correlation coefficient between volume and height, volume and diameter, and diameter and height (use the function cor()). Do the results correspond to what you would expect from the plots?
+
+The correlation coefficient is close to 1, this means we have a strong positve linear realation between the variable. This corresponds well to what we see in the plot.
+
+```{r}
+cor(trees$Volume, trees$Girth)
+cor(trees$Girth, trees$Volume)
+```
+
+### Opgave 7
+
+Multiplication is not associative
+
+# Opgave 2.7 i bogen
+
+### Opgave 1
+Fordi vi har en kategorisk kateogori og de andre er kontinuerte. Det giver derfor mening at kontrollere sammenhængen imellem de kontinuerte værdier på tværs af
+
+### Opgave 2
+```{r}
+library(isdals)
+data(tartar)
+head(tartar, n=3)
+```
+
+
+### Opgave 3
+```{r}
+?geom_boxplot
+ggplot(data = tartar, aes(treat, index)) + geom_boxplot(outliers = TRUE, color = 'blue')
+```
+
+### Opgave 4
+
+```{r}
+# Bare gennemsnitsværdien
+lm(index ~ treat -1, data=tartar)
+
+# Differencen mellem kontrolgruppen og de andre grupper
+lm(index ~ treat, data=tartar)
+
+```
