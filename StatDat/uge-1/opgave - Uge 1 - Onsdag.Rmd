@@ -123,3 +123,9 @@ lm(index ~ treat, data=tartar)
 
 ```
 
+
+
+
+
+
+

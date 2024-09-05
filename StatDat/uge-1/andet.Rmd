@@ -1,0 +1,167 @@
+---
+title: "Ug1"
+output: html_document:
+    toc: true
+    toc_float: true
+date: "2024-09-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Kursusuge 1, mandag
+### HS - Opgave 3
+
+```{r}
+
+install.packages("isdals")
+
+library(isdals)
+
+data(ricestraw)
+
+ricestraw
+```
+
+Brug kommandoen ricestraw. Hvor mange observationer/datalinier er der i datasæt-
+tet? Hvilke variable er der i datasættet? Prøv kommandoen ?ricestraw, og læs i hjæl-
+pefilen hvad variablene beskriver.
+ - 35 rækker/obersvationer
+ - time - number of days that the calf has been fed rice straw 
+ - Wight - weight gain (in kg) since the calf was first fed rice straw
+
+```{r}
+
+# Get help
+?ricestraw
+
+
+# Scatterplot data
+data(ricestraw) # Convert into a datafile
+plot(ricestraw$time, ricestraw$weight) # Plot
+
+lm(weight ~ time, data=ricestraw) # Fit Linear regression
+
+```
+
+Plot histogram
+```{r}
+ricestraw$weight
+hist(ricestraw$weight)
+
+
+library(ggplot2)
+# Plot histogram
+ggplot(data = ricestraw) + 
+  geom_histogram(aes(x = weight), 
+                 binwidth = 20,
+                 fill = "blue",
+                 boundary = 0 # Makes the bins start from zero insted of in the center 
+  )
+  labs(x = "Weight", y = "Count")
+
+```
+
+Lav et scatterplot (punktplot) hvor time er p ̊a x-aksen og weight er y-aksen. Du kan
+enten bruge $-syntaksen eller with.
+
+``` {r}
+ggplot(data = ricestraw) + geom_point(aes(x = weight, y = time))
+
+
+```
+
+Prøv kommandoen. Hvordan skal tallene i outputtet fortolkes? Frembring samme output
+på to andre m ̊ader: dels vha. $-syntaksen og dels 
+``` {r}
+lm(weight ~ time, data=ricestraw)
+lm(ricestraw$weight ~ ricestraw$time)
+
+
+```
+### Bog - øvelser
+-- ### Opgave 1.1 data types ### -- 
+Q: For each of 10 beetles, a biologist counted the number of times
+the beetle fed on a disease-resistant plant during a 4-hour period.
+A: Discrete
+
+Q: In a nutritional study, 40 healthy males were measured for
+weight and height as well as the weight of their food intake over
+a 24-hour period.
+A: Continous
+
+Q: . Seven horses were included in a 2-week study. After the first
+week a veterinarian measured the heart rate of each of the horses
+after an identification chip was inserted in its neck. At the end of
+the second week the veterinarian again measured the heart rate
+after branding the horses with a hot iron.
+A: Cateegorical : With and without iron
+B: Continous : Heart rate
+
+-- ### Opgave 1.1 data types ### -- 
+Determine the median, range and quartiles
+
+```{r}
+# Data
+patient <- c(1:9)
+blood_presure <- c(96, 119, 119, 108, 126, 128, 100, 105, 94)
+
+### Median
+sorted_blood_presure <- sort(blood_presure)
+
+if(length(sorted_blood_presure) %% 2 == 1){
+  # Uneven
+  middel <- (length(sorted_blood_presure) + 1)/2
+  median <- sorted_blood_presure[middel]
+  sprintf("Median %s", median)
+} else {
+  # Even
+  middel_1 <- (length(sorted_blood_presure) )/2
+  middel_2 <- (length(sorted_blood_presure) )/2 + 1
+  median <- (1/2) * (sorted_blood_presure[middel_1] + sorted_blood_presure[middel_2])
+  sprintf("Median %s", median)
+}
+
+### Range
+range <- sorted_blood_presure[length(sorted_blood_presure)] - sorted_blood_presure[1]
+sprintf("Range %s", range)
+
+### Quantiles
+print("Quantiles")
+print(quantile(sorted_blood_presure))
+
+
+### Inter-quartile range
+q_1 <- as.numeric(quantile(sorted_blood_presure)[2])
+q_3 <- as.numeric(quantile(sorted_blood_presure)[4])
+sprintf("IQR: %s", q_3 - q_1)
+```
+
+
+# Kursusuge 1, Onsdag
+
+```{r}
+
+```
+
