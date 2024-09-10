@@ -1,0 +1,171 @@
+---
+title: "Øvelser - Mandag"
+output: html_document
+date: "2024-09-09"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("ggplot2")
+```
+
+# Opgave 4.1 fra bog
+
+$$ \mu - 2 \sigma = 8 \Rightarrow \sigma = \frac{1}{2} \mu - 4 \Rightarrow \sigma = 5-4 = 1 $$
+Thus we get 
+$\mu = 10, \sigma = 1 $
+
+$$ \mu - 2 \sigma = 20 \Rightarrow \sigma = \frac{1}{2} \mu - 10 \Rightarrow \sigma = 25-10 = 15 $$
+
+# Hs.6
+
+Marginalskatteprocenten angiver hvor meget indkomstskat man betaler af
+”den sidst tjente krone“. Vi betragter i denne opgave populationen best
+̊aende af 18-64 ̊arige fuldt beskæftigede lønmod- tagere og selvstændigt
+erhvervsdrivende der ikke betaler topskat. Vi antager at marginalskatte-
+procenten for denne population er normalfordelt med middelværdi 41.5% og
+spredning 1.4%
+
+```{r}
+
+```
+
+## Opgave 1
+
+lav en skitse af tætheden for normalfordelingen, se side 79
+
+```{r}
+data_mean = 41.5 
+data_sd = 1.4
+
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+
+```
+
+## Opgave 2
+
+Bestem sandsynligheden for at en tilfældig person fra den givne
+population har en mar- ginalskatteprocent der er over 42%?
+
+We could itegrate the density function, but that seems like a lot of
+work..
+
+```{r}
+?pnorm
+## calculate probability
+# lower.tail = TRUE -> P[X > x] meaning we start form left
+pnorm(q = 38.7, sd = data_sd, mean = data_mean, lower.tail = TRUE)
+
+## Plot
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  # Coloring
+  stat_function(fun = dnorm, args = list(mean = data_mean, sd = data_sd),
+                xlim = c(max(data_mean - 5), 38.7), # Defines the interval
+                geom = "area", fill = "blue") +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+
+```
+
+## Opgave 3
+
+```{r}
+?pnorm
+# Lowe.tail = False -> P[X \leq x] # Sampeling a point greater than some value
+pnorm(q = 42, sd = data_sd, mean = data_mean, lower.tail = FALSE)
+
+
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  # Coloring
+  stat_function(fun = dnorm, args = list(mean = data_mean, sd = data_sd),
+                xlim = c(42, max(data_mean + 5)), # Defines the interval
+                geom = "area", fill = "blue") +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+
+```
+
+## Opgave 4
+
+Bestem sandsynligheden for at en tilfældig person fra den givne
+population har en mar- ginalskatteprocent der er mellem 40% og 42.2%.
+Illustrer sandsynligheden p ̊a din skitse fra spørgsm ̊al 1 (eller lav
+en ny skitse).
+
+Hvis finder afstanden mellem sandsyligheden for at den er over 42.2 til
+sandsyligheden for at den ligger over 40, så burde vi få intervallet.
+
+P[X \< 42.2] - P[X \< 40]
+
+```{r}
+p_1 <- pnorm(q = c(42.2), sd = data_sd, mean = data_mean, lower.tail = TRUE) # Mindre end 42
+p_2 <- pnorm(q = c(40), sd = data_sd, mean = data_mean, lower.tail = TRUE) # Mindre end 40
+p_1 - p_2
+
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  # Coloring
+  stat_function(fun = dnorm, args = list(mean = data_mean, sd = data_sd),
+                xlim = c(40, 42.2), # Defines the interval
+                geom = "area", fill = "blue") +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+```
+
+## Opgave 5
+
+Betragt 10 personer fra populationen og antag at deres
+marginalskatteprocenter er uaf- hængige af hinanden (jordbrugsøkonomerne
+kan overveje hvorn ̊ar dette er en rimelig antagelse). Angiv fordelingen
+af gennemsnittet af de ti personers marginalskatteprocent. Vink: Du kan
+bruge Infobox 4.3. Bestem derefter sandsynligheden for at gennemsnittet
+for de ti personer er mindre end 42%. Sammenlign med sandsynligheden fra
+spørgsm ̊al 3, og forklar forskellen.
+
+Det virker til at vi skal opdele de 1000 mennesker i grupper af 10,
+hvorefter vi beregner gennemsnits værdien for hver.
+
+```{r}
+set.seed(42) # Universe, life and everything
+
+# Create data
+my_data <- matrix(nrow = 100, ncol = 10, data = rnorm(1000, mean = data_mean, sd = data_sd))
+x <- rowMeans(my_data) # Calculate means, makes the matrix into a vector
+length(x)
+
+# Defines the red function
+f <- function(x) dnorm(x, mean = data_mean, sd = data_sd/sqrt(10))
+
+
+ggplot(data.frame(x = x), aes(x)) +
+  geom_histogram(boundary = 0, # Start postition of bar 
+                 binwidth = 0.25, 
+                 aes(y= ..density.. ) # Turn into probabilities, equivalent to prob = TRUE
+  ) +
+  stat_function(fun = f, color = "red") +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+
+```
+# HS.7
+
+```{r}
+data_mean <- 7.48
+data_sd <-0.44
+  
+  
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+
+log(1000)
+
+pnorm(q = log(1000), sd = data_sd, mean = data_mean)
+
+```
