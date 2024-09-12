@@ -152,7 +152,7 @@ ggplot(data.frame(x = x), aes(x)) +
   labs(x = "Marginalskatteprocent", y = "Densitet")
 
 
-
+pnorm(42, mean=mean(x), sd = sd(x))
 
 ```
 # HS.7
