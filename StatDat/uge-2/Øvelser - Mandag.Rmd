@@ -143,7 +143,6 @@ length(x)
 # Defines the red function
 f <- function(x) dnorm(x, mean = data_mean, sd = data_sd/sqrt(10))
 
-
 ggplot(data.frame(x = x), aes(x)) +
   geom_histogram(boundary = 0, # Start postition of bar 
                  binwidth = 0.25, 
@@ -152,8 +151,12 @@ ggplot(data.frame(x = x), aes(x)) +
   stat_function(fun = f, color = "red") +
   labs(x = "Marginalskatteprocent", y = "Densitet")
 
+
+
+
 ```
 # HS.7
+
 
 ```{r}
 data_mean <- 7.48
@@ -169,3 +172,5 @@ log(1000)
 pnorm(q = log(1000), sd = data_sd, mean = data_mean)
 
 ```
+
+

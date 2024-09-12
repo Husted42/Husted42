@@ -1,0 +1,87 @@
+---
+title: "Øvelser - Onsdag"
+output: html_document
+date: "2024-09-05"
+---
+
+# 8, 9, 10, 11, 12
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+# Hs.8
+## Opgave 1
+Man har indhentet data fra 52 landmænd der har forpagtede arealer. Data bestar af netto- ˚
+indtjeningen fra det forpagtede areal, dvs. det inkluderer dækningsbidrag og EU-støtte og
+omkostninger er fratrukket.
+Gennemsnittet for de 52 værdier af nettoindtjening er 4482 kr/ha, mens stikprøvespredningen
+er 696 kr/ha
+
+$$ \hat{y} \pm t_{0.975, n-1} \cdot \frac{s}{\sqrt{n}} $$
+
+```{r}
+4482 + c(1, -1) * qt(0.975, df=(52-1)) * (696/(sqrt(52))) 
+```
+## Opgave 2
+Nr. 2, det står i bogen under formlen
+
+# Opgave HS.10 (Konfidensinterval for en enkelt stikprøve pa flere m ˚ ader) ˚
+## Opgave 1
+Denne opgave bruger hoftemalingerne fra opgave HS.9, alts ˚ a variablen ˚ hip fra datafilerne
+johnson-fatpct.xlsx og johnson-fatpct.txt
+
+```{r}
+# Load data
+johnson_data <- read.table("data/johnson-fatpct.txt", header = 1)
+johnson_data
+```
+```{r}
+data_johnson <- data.frame(johnson_data)
+
+ggplot(data = data_johnson, aes(x = hip)) + 
+  geom_histogram(boundary = 0, binwidth = 5, aes(y= ..density.. )) + 
+  stat_function(fun = dnorm, n = 1000, args = list(mean = mean(data_johnson$hip), sd = sd(data_johnson$hip)))
+```
+
+
+
+```{r}
+qqnorm(johnson_data$hip, main = "Hip data")
+abline(a = mean(johnson_data$hip), b = sd(johnson_data$hip))
+```
+By these two plots we can conclude that the data is Gaussian.
+
+
+# Hs. 11
+```{r}
+pkt_data <- read.table("data/punktplot2017.txt", header = 1)
+pkt_data <- data.frame(pkt_data)
+
+```
+
+
+
+
+```{r}
+qqnorm(pkt_data$figur1, main = "Rigtige data")
+abline(a = mean(pkt_data$figur1), b = sd(pkt_data$figur1))
+
+qqnorm(pkt_data$figur2, main = "Rigtige data")
+abline(a = mean(pkt_data$figur2), b = sd(pkt_data$figur2))
+
+qqnorm(pkt_data$figur3, main = "Rigtige data")
+abline(a = mean(pkt_data$figur3), b = sd(pkt_data$figur3))
+```
+
+```{r}
+pkt_data$log_fig <- log(pkt_data$figur1)
+
+qqnorm(pkt_data$log_fig, main = "Rigtige data")
+abline(a = mean(pkt_data$log_fig), b = sd(pkt_data$log_fig))
+```
+
+
+
