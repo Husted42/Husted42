@@ -22,7 +22,8 @@ library(isdals) # Data
 $$ \mu \: \:  \sigma \: \: \alpha \: \: \beta $$
 ## Other
 $$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$
-# GGplotggplot requires type dataframe
+# GGplot
+ggplot requires type dataframe
 ```{r}
 data_johnson <- read.table("uge-2/data/johnson-fatpct.txt", header = 1)
 df_johnson <- data.frame(data_johnson)
@@ -31,12 +32,16 @@ head(df_johnson, n=3)
 
 ## Scatter with line
 ```{r}
-linreg <- lm(bodyfat ~ hip, data = df_johnson) # Fit data
+linreg <- lm(bodyfat ~ hip, data = df_johnson) # Fit
+summary(linreg)
+confint(linreg)
+
+
 alpha <- as.numeric(coef(linreg)[1]) # Intercept
 beta <- as.numeric(coef(linreg)[2]) # Slope
 
 ggplot(data = df_johnson, aes(x = hip, y = bodyfat)) + 
-  geom_point(color = "black", size = 1) + # Scatter
+  geom_point(color = "blue", size = 1) + # Scatter
   geom_abline(slope = beta, intercept = alpha) # line
 ```
 ## boxplot
@@ -91,6 +96,73 @@ If the points lie on the identity line, it is normal distributed. If it curves b
 qqnorm(df_johnson$hip, main = "Hip data")
 abline(a = mean(df_johnson$hip), b = sd(df_johnson$hip))
 ```
+# Eksempler på spørgsmål (Måske)
+## Konfidens intervaller for gennemsnit
+Data: Stikprøve af hip-målinger er kvatitative og kontinuerte.
+
+middelværdi og spredning er ukendte i hele populationen.
+
+Ud fra stikprøven vil vi udregne et estimat for middelværdi og spredning
+
+```{r}
+mean(df_johnson$hip)
+sd(df_johnson$hip)
+```
+
+Estimat for spredningen af gennemsnit (4.3)
+
+```{r}
+length(df_johnson$hip)
+
+sd(df_johnson$hip / sqrt(length(df_johnson$hip))) # 
+```
+Beregning af t-fraktil med frihedsgrader n-1
+```{r}
+qt(0.975, df = length(df_johnson$hip) - 1)
+```
+Beregning af interval
+
+```{r}
+mean(df_johnson$hip) + c(-1, 1) *
+  qt(0.975, df = length(df_johnson$hip) - 1) *
+  sd(df_johnson$hip / sqrt(length(df_johnson$hip)))
+```
+På baggrund af stikprøven fås et 95% konfidensinterval på (98.83, 100.38). Vi vurdere altså at intervallet med 95% sandsylighed vil indenholde det sande gennemsnit for hele populationen.
+
+Alternativ metode:
+
+```{r}
+### Vha. t.test
+t.test(df_johnson$hip)
+
+### Vha. lm
+model <- lm(hip ~ 1, data=df_johnson)
+summary(model)
+confint(model)
+```
+
+## Er data normalt fordelt?
+
+```{r}
+ggplot(data = df_johnson, aes(x = hip)) + 
+  geom_histogram(
+      boundary = 0,  # Start bins from 0 
+      binwidth = 2,  # Size of bins
+      aes(y= ..density.. ), # Convert to probabilities
+      color = "white", #Color outline
+      fill = "blue" # Color area
+  ) + xlim(85, 115) + ylim(0, 0.1) + # Define x & y intervals
+    stat_function(fun = dnorm, 
+                args = list(mean = mean(df_johnson$hip), sd = sd(df_johnson$hip)),
+                ) 
+
+qqnorm(df_johnson$hip, main="QQ-plot")
+abline(mean(df_johnson$hip), sd(df_johnson$hip), lwd = 3, col = "red")
+```
+Vi ser ikke nogen markant systematisk afvigelse mellem punkterne og identites linjen i QQ-plottet. Datapunkterne ligger altså i de kvartiler, som vi forventer ved en normal fordeling. Vi konkludere at data er normaltfordelt.
+
+
+
 
 
 
