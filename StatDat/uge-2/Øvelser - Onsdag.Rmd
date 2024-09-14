@@ -1,0 +1,148 @@
+---
+title: "Øvelser - Onsdag"
+output: html_document
+date: "2024-09-05"
+---
+
+# 8, 9, 10, 11, 12
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+# Hs.8
+## Opgave 1
+Man har indhentet data fra 52 landmænd der har forpagtede arealer. Data bestar af netto- ˚
+indtjeningen fra det forpagtede areal, dvs. det inkluderer dækningsbidrag og EU-støtte og
+omkostninger er fratrukket.
+Gennemsnittet for de 52 værdier af nettoindtjening er 4482 kr/ha, mens stikprøvespredningen
+er 696 kr/ha
+
+$$ \hat{y} \pm t_{0.975, n-1} \cdot \frac{s}{\sqrt{n}} $$
+
+```{r}
+# Mu    +-        T_{0.975, n-1} \Kcdot \frac{s}{\sqrt(n)}
+4482 + c(1, -1) * qt(0.975, df=(52-1)) * (696/(sqrt(52))) 
+```
+## Opgave 2
+Nr. 2, det står i bogen under formlen
+
+# HS.10 (Konfidensinterval for en enkelt stikprøve pa flere måder) ˚
+## Opgave 1
+Denne opgave bruger hoftemalingerne fra opgave HS.9, alts ˚ a variablen ˚ hip fra datafilerne
+johnson-fatpct.xlsx og johnson-fatpct.txt
+
+```{r}
+# Load data
+johnson_data <- read.table("data/johnson-fatpct.txt", header = 1)
+johnson_data
+```
+```{r}
+data_johnson <- data.frame(johnson_data)
+
+ggplot(data = data_johnson, aes(x = hip)) + 
+  geom_histogram(boundary = 0, binwidth = 1, aes(y= ..density.. )) + 
+  stat_function(fun = dnorm, n = 243, args = list(mean = mean(data_johnson$hip), sd = sd(data_johnson$hip)))
+```
+
+
+
+```{r}
+qqnorm(johnson_data$hip, main = "Hip data")
+abline(a = mean(johnson_data$hip), b = sd(johnson_data$hip))
+```
+By these two plots we can conclude that the data is Gaussian distributed.
+
+## Opgave 3
+Calculate mean ans standard deviation of the hip data
+```{r}
+mean(data_johnson$hip)
+sd(data_johnson$hip)
+```
+
+## Opgave 4
+Calculate confidence interval
+```{r}
+# \mu    +-        T_{0.975, n-1} \cdot \frac{s}{\sqrt(n)}
+mean(data_johnson$hip) + c(1, -1) * qt(0.975, df=(243-1)) * (sd(data_johnson$hip)/(sqrt(243))) 
+
+t.test(data_johnson$hip)
+
+```
+
+## Opgave 5
+
+```{r}
+lin_fit <- lm(hip ~ 1, data = data_johnson)
+summary(lin_fit)
+confint(lin_fit)
+
+
+```
+
+
+# Hs. 11
+```{r}
+pkt_data <- read.table("data/punktplot2017.txt", header = 1)
+pkt_data <- data.frame(pkt_data)
+
+```
+
+
+
+
+```{r}
+qqnorm(pkt_data$figur1, main = "Rigtige data")
+abline(a = mean(pkt_data$figur1), b = sd(pkt_data$figur1))
+
+qqnorm(pkt_data$figur2, main = "Rigtige data")
+abline(a = mean(pkt_data$figur2), b = sd(pkt_data$figur2))
+
+qqnorm(pkt_data$figur3, main = "Rigtige data")
+abline(a = mean(pkt_data$figur3), b = sd(pkt_data$figur3))
+```
+
+```{r}
+pkt_data$log_fig <- log(pkt_data$figur1)
+
+qqnorm(pkt_data$log_fig, main = "Rigtige data")
+abline(a = mean(pkt_data$log_fig), b = sd(pkt_data$log_fig))
+```
+
+## Opgave 3
+> mean(punktplot2017$figur1)
+[1] 70.69231
+> sd(punktplot2017$figur1)
+[1] 23.5597
+> sd(punktplot2017$figur1) / mean(punktplot2017$figur1)
+[1] 0.3332711
+> sd(log(punktplot2017$figur1))
+[1] 0.3285933
+
+```{r}
+pkt_data
+
+for(i in 1:ncol(pkt_data) ) { # log_fig not used
+  if(i != 4) {
+    cat(sprintf('figure%i \n', i)) 
+    cat(sprintf('Mean: %f \n', mean(pkt_data[, i]) ))
+    cat(sprintf('spredninglot(punktplot2017)
+cor(punktplot2017)
+: %f \n', sd(pkt_data[, i]) / mean(pkt_data[, i]) ))
+    cat(sprintf('log(s): %f \n\n', sd( log(pkt_data[, i]) ) ))
+  }
+}
+
+```
+
+```{r}
+
+plot(pkt_data)
+cor(pkt_data)
+
+```
+We see that points that more resembles a pattern has a higher correlation, as we expected. It becomes very clear when we look at the correlation between figure 1 and the logarithm of figure1.
+
+
