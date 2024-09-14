@@ -8,7 +8,90 @@ date: "2024-09-12"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Tegn
-$$ \mu \: \:  \sigma $$
-# Andet
-$$ \hat{x} $$
+```{r}
+# install.packages("ggplot2")
+library("ggplot2") # Plots
+# install.packages("isdals")
+library(isdals) # Data
+
+```
+
+# Latex
+
+## Symbols
+$$ \mu \: \:  \sigma \: \: \alpha \: \: \beta $$
+## Other
+$$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$
+# GGplotggplot requires type dataframe
+```{r}
+data_johnson <- read.table("uge-2/data/johnson-fatpct.txt", header = 1)
+df_johnson <- data.frame(data_johnson)
+head(df_johnson, n=3)
+```
+
+## Scatter with line
+```{r}
+linreg <- lm(bodyfat ~ hip, data = df_johnson) # Fit data
+alpha <- as.numeric(coef(linreg)[1]) # Intercept
+beta <- as.numeric(coef(linreg)[2]) # Slope
+
+ggplot(data = df_johnson, aes(x = hip, y = bodyfat)) + 
+  geom_point(color = "black", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+```
+## boxplot
+Boxplot need one categorical value and a continuous value.
+```{r}
+data("tartar")
+head(tartar, n=3)
+
+ggplot(data = tartar, aes(x = treat, y = index)) +
+  geom_boxplot(outliers = TRUE) + 
+  xlab("Treat") + ylab("Index")
+
+```
+
+
+## Histogram
+```{r}
+ggplot(data = df_johnson, aes(x = hip)) + 
+  geom_histogram(
+      boundary = 0,  # Start bins from 0 
+      binwidth = 2,  # Size of bins
+      aes(y= ..density.. ), # Convert to probabilities
+      color = "white", #Color outline
+      fill = "blue" # Color area
+  ) + xlim(85, 115) + ylim(0, 0.1) # Define x & y intervals
+```
+
+## Continuous function
+
+```{r}
+data_mean = 41.5 
+data_sd = 1.4
+
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  # Line
+  stat_function(fun = dnorm, # density of normal distribution
+                args = list(mean = data_mean, sd = data_sd)) + 
+  # Coloring
+  stat_function(fun = dnorm, 
+                args = list(mean = data_mean, sd = data_sd),
+                xlim = c(40, 42.2), # Defines the interval
+                geom = "area", fill = "blue" # Color the area blue
+                ) +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+```
+
+
+## QQplot
+If the points lie on the identity line, it is normal distributed. If it curves below consider log transformation.
+
+```{r}
+qqnorm(df_johnson$hip, main = "Hip data")
+abline(a = mean(df_johnson$hip), b = sd(df_johnson$hip))
+```
+
+
+
+
