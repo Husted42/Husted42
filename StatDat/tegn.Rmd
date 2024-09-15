@@ -159,7 +159,7 @@ ggplot(data = df_johnson, aes(x = hip)) +
 qqnorm(df_johnson$hip, main="QQ-plot")
 abline(mean(df_johnson$hip), sd(df_johnson$hip), lwd = 3, col = "red")
 ```
-Vi ser ikke nogen markant systematisk afvigelse mellem punkterne og identites linjen i QQ-plottet. Datapunkterne ligger altså i de kvartiler, som vi forventer ved en normal fordeling. Vi konkludere at data er normaltfordelt.
+Vi ser ikke nogen markant systematisk afvigelse mellem punkterne og identites linjen i QQ-plottet. Datapunkterne ligger altså nogenlunde i de kvartiler, som vi forventer ved en normal fordeling. Vi konkludere at data er normaltfordelt.
 
 
 
