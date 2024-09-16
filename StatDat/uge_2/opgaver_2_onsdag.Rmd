@@ -145,4 +145,6 @@ cor(pkt_data)
 ```
 We see that points that more resembles a pattern has a higher correlation, as we expected. It becomes very clear when we look at the correlation between figure 1 and the logarithm of figure1.
 
+# HS 12
+
 

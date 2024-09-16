@@ -25,7 +25,7 @@ $$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$
 # GGplot
 ggplot requires type dataframe
 ```{r}
-data_johnson <- read.table("uge-2/data/johnson-fatpct.txt", header = 1)
+data_johnson <- read.table("data/johnson-fatpct.txt", header = 1)
 df_johnson <- data.frame(data_johnson)
 head(df_johnson, n=3)
 ```

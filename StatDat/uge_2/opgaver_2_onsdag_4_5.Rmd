@@ -1,0 +1,69 @@
+---
+title: "Onsdag - Uge 2 - 4.5"
+output: html_document
+date: "2024-09-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library("ggplot2")
+```
+
+## 4.5
+
+
+```{r}
+data <- c(339, 339, 339, 340, 341, 340, 343, 348, 341, 346, 342, 339, 337)
+df <- data.frame(data)
+
+head(df, n = 3)
+```
+
+```{r}
+ggplot(data = df, aes(x = data)) + 
+  geom_histogram(
+      boundary = 0,  # Start bins from 0 
+      binwidth = 2,  # Size of bins
+      aes(y= ..density.. ), # Convert to probabilities
+      color = "white", #Color outline
+      fill = "blue" # Color area
+  ) + 
+  stat_function(fun = dnorm, # density of normal distribution 
+                args = list(mean = mean(df$data), sd = sd(df$data)))
+```
+To few data points.
+
+```{r}
+qqnorm(df$data, main = "Hip data")
+abline(a = mean(df$data), b = sd(df$data))
+```
+
+Vi ser en systematisk afvigelse fra identitets linjen, men den er ikke markant.
+Det er udfra plottet svært at konstatere om data er normalt fordelt, uden noget at samligne med
+
+```{r}
+ysim <- rnorm(13, mean=341.08, sd=3.07)
+
+
+qqnorm(ysim, main = "QQ-plot")
+abline(a = mean(ysim), b = sd(ysim))
+
+```
+
+Vi ser i eksemplet med tilfældig generet data, at punkterne nogen gange har den samme, eller endda en større systematisk afvigelse fra identitets linjen, end vi havde før. Dog er afvigelsen generalt mindre. Vi konkludere at data kan antages at være normalt fordelt i det første eksempel, og at afvigelserne må siges at være tilfældige.
+
+```{r}
+ysim <- rnorm(1000, mean=341.08, sd=3.07)
+
+
+qqnorm(ysim, main = "QQ-plot")
+abline(a = mean(ysim), b = sd(ysim))
+```
+Det bliver meget mere tydeligt hvorvidt data er normalt fordelt når vi har et større n.
+
+
+
+
