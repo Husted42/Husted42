@@ -2,24 +2,29 @@
 title: "Opgaver_3_mandag"
 output: html_document
 date: "2024-09-16"
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Opgave HS.13: Sudoko
-Opgave HS.14: Højde- og vægtdata
-Opgave 5.8: Opløsningsmidler
-Opgave 5.10: Priser på landbrugsejendomme. I spørgsmål 3 behøver du ikke beregne KI.
-Opgave HS.15: Gæt på punktplot
+Opgave HS.13: Sudoko Opgave HS.14: Højde- og vægtdata Opgave 5.8:
+Opløsningsmidler Opgave 5.10: Priser på landbrugsejendomme. I spørgsmål
+3 behøver du ikke beregne KI. Opgave HS.15: Gæt på punktplot
 
 # HS.13
+
 ## Opgave 1
+
 ```{r}
 # install.packages("readxl")
 
 library(readxl)
+library("ggplot2")
+library(tidyverse)
 sudokuData <- read_excel("data/sudoku-sd1.xlsx")
 
 # Feature engineering
@@ -30,11 +35,13 @@ head(sudokuData , 3)
 ```
 
 ## Opgave 2
-Resposvariabel : tid 
+
+Resposvariabel : tid
 
 Forklarende variabel : type
 
-Da vi har en kontinuert responsvariabel og en kategorisk forklarende variabel vælges den ensides ANOVA 
+Da vi har en kontinuert responsvariabel og en kategorisk forklarende
+variabel vælges den ensides ANOVA
 
 ```{r}
 ggplot(data = sudokuData, aes(x = type, y = tid)) +
@@ -45,11 +52,10 @@ ggplot(data = sudokuData, aes(x = type, y = tid)) +
 ## opgave 3
 
 ```{r}
-# library(tidyverse)
+
 summarize(group_by(sudokuData, type), n = n(),
           tid_mean = mean(tid), tid_sd = sd(tid))
 ```
-
 
 ```{r}
 # Perfome anova
@@ -58,14 +64,14 @@ summary(linreg, n = length())
 
 ```
 
-Standard error for græsk er størst fordi der er færrest observationer. Rækkefølgen passer 1-1 med antal af observationer.
+Standard error for græsk er størst fordi der er færrest observationer.
+Rækkefølgen passer 1-1 med antal af observationer.
 
 ## opgave 4
 
 ```{r}
 head(sudokuData, n = 3)
 ```
-
 
 ```{r}
 sudokuData <- data.frame(sudokuData)
@@ -76,16 +82,17 @@ model3 <- lm(tid ~ myType, data=sudokuData)
 summary(model3)
 ```
 
-
 ## Opgave 5
+
 ```{r}
 confint(model3)
 ```
-Vi er sikker på at forskellen i tid mellem latinsk og græsk er mellem 9 og 106 sekunder. 
-Vi kan konlkludere at der er en forskel mellem tiden i de to typer, da 0 ikke ligger i intervallet.
+
+Vi er sikker på at forskellen i tid mellem latinsk og græsk er mellem 9
+og 106 sekunder. Vi kan konlkludere at der er en forskel mellem tiden i
+de to typer, da 0 ikke ligger i intervallet.
 
 ## Opgave 6
-
 
 ```{r}
 sudokuData <- data.frame(sudokuData)
@@ -96,14 +103,20 @@ model4 <- lm(tid ~ myType, data=sudokuData)
 summary(model4)
 ```
 
-
 ```{r}
 confint(model4)
 ```
-I de intervaller som ikke indenholder 0, kan vi med 95% sikkerhed sige at der er en forskel, som ikke skyldes tilfældighed.
 
-# HS 14
+I de intervaller som ikke indenholder 0, kan vi med 95% sikkerhed sige
+at der er en forskel, som ikke skyldes tilfældighed.
+
+# HS. 14
+
 ## Opgave 1
+
+Vi har to kvantitative data + kontinuert responsvariabel, da anvendes
+linear regression.
+
 ```{r}
 
 data_horse <- read_excel(path = "data/stud2017-v2.xls")
@@ -130,13 +143,148 @@ ggplot(data = data_horse, aes(x = hojde, y = vaegt)) +
 
 ## Opgave 2
 
+Filtrer på kvinder
+
 ```{r}
-?filter()
+
+df_k_horse <- subset(data_horse, kon == "Kvinde")
+
+```
+
+## Opgave 3
+
+Lav en passende figur der viser data.
+
+```{r}
+linreg_k <- lm(vaegt ~ hojde, data = df_k_horse) # Fit
+summary(linreg_k)
+confint(linreg_k)
+
+
+alpha <- as.numeric(coef(linreg_k)[1]) # Intercept
+beta <- as.numeric(coef(linreg_k)[2]) # Slope
+
+ggplot(data = df_k_horse, aes(x = hojde, y = vaegt)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+```
+
+## Opgave 4
+
+Betragt en kvinde p˚a 165 cm, og angiv et estimat for hendes forventede
+vægt.
+
+Modellen er fittet, vi laver en predektion på vægten
+
+```{r}
+
+x_kvinder <- data.frame(hojde = 165) # Create data
+predict(linreg_k, x_kvinder)
+
+```
+
+## Opgave 5
+
+Angiv estimatet for hældningen og den tilhørende standard error. Bestem
+ogs˚a 95% konfidensintervallet for hældningen
+
+```{r}
+summary(linreg_k)
+
+confint(linreg_k)
+```
+
+Vi estimere en hældning på 0.8415 og vi antager at den sande ukendte
+hældning ligger inden for intervallet (0.57, 1.1)
+
+## Opgave 6
+
+Tyder data p˚a at der er en sammenhæng mellem højde og vægt for kvinder?
+
+Hvis der ikke er en sammenhæng mellem højde og vægt har vi at
+$$ H_0 : \beta = 0 $$
+
+Vi ser at 0 ikke ligger inden for vores 95% procent konfidens interval.
+Da kan en sammenhæng mellem højde og vægt konkluderes.
+
+## Opgave 7
+
+Angiv residualspredningen, dvs. estimatet for spredningen omkrng
+regressionslinien
+
+Residual standard error: 8.999 on 101 degrees of freedom
+
+## Opgave 8
+
+$$ 1 \cdot \hat{\beta} =  \hat{\beta} = 0.8415   $$
+
+Konfidens intervallet må være det samme som for hældningen.
+
+## Opgave 9
+Bestem ogs˚a et 95% konfidensinterval for den forventede vægtforskel.
+
+
+Hmm.. Det er jeg ikke sikker på
+
+```{r}
+x_kvinder <- data.frame(hojde = c(160, 170))
+
+predict(linreg, x_kvinder, interval = "confidence", level = 0.95)
+
+jens <- predict(linreg, x_kvinder, interval = "confidence", level = 0.95)
+
+jens[2, 1] - jens[1, 1] # Expected diff
+jens[2, 2] - jens[1, 2] # Lower
+jens[2, 3] - jens[1, 3] # Upper
+```
+
+## Opgave 10
+
+Fit den tilsvarende model for mændene, og angiv estimat, standard error
+og konfidensinterval for hældningen i modellen.
+
+```{r}
+df_m_horse <- subset(data_horse, kon == "Mand")
+
+
+linreg_m <- lm(vaegt ~ hojde, data = df_m_horse) # Fit
+summary(linreg_m)
+confint(linreg_m)
+
+
+alpha <- as.numeric(coef(linreg_m)[1]) # Intercept
+beta <- as.numeric(coef(linreg_m)[2]) # Slope
+
+ggplot(data = df_m_horse, aes(x = hojde, y = vaegt)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
 
 
 
 ```
 
+## Opgave 11
 
+Vi husker at $$ SE = \frac{\sigma}{\sqrt{n}} $$
+
+```{r}
+nrow(df_m_horse)
+nrow(df_k_horse)
+
+```
+Der er over dobbelt så mange observationer for kvinder ift. mænd. Da bliver nævneren større for kvinder og SE mindre.
+
+## Opgave 12
+```{r}
+coefficients(summary(linreg_m))[2,1]
+coefficients(summary(linreg_k))[2,1]
+
+confint(linreg_m)
+confint(linreg_k)
+
+```
+Nej, selvom der er forskel på den estimeret hældning, så er hældningen for mændene også forbundet med en del usikkerhed. Ser vi på kofindens intervallet er der et meget stort overlap hvilket vil sige at den sande værdi godt kan være ens for de to grupper.
+
+# HS. 15
 
 
