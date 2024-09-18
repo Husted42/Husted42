@@ -11,9 +11,11 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Opgave HS.13: Sudoko Opgave HS.14: Højde- og vægtdata Opgave 5.8:
-Opløsningsmidler Opgave 5.10: Priser på landbrugsejendomme. I spørgsmål
-3 behøver du ikke beregne KI. Opgave HS.15: Gæt på punktplot
+Opgave HS.13: Sudoko 
+Opgave HS.14: Højde- og vægtdata 
+Opgave 5.8: Opløsningsmidler 
+Opgave 5.10: Priser på landbrugsejendomme. I spørgsmål 3 behøver du ikke beregne KI. 
+Opgave HS.15: Gæt på punktplot
 
 # HS.13
 
@@ -284,6 +286,64 @@ confint(linreg_k)
 
 ```
 Nej, selvom der er forskel på den estimeret hældning, så er hældningen for mændene også forbundet med en del usikkerhed. Ser vi på kofindens intervallet er der et meget stort overlap hvilket vil sige at den sande værdi godt kan være ens for de to grupper.
+
+# Bog 5.8
+```{r}
+library("isdals")
+data("hazard")
+head(hazard , n=3)
+
+```
+## Opgave 1
+Anova kontinuert og kategorisk
+
+## Opgave 2 + 3
+```{r}
+anova <- lm(sorption ~ type - 1, data = hazard)
+summary(anova)
+```
+## Opgave 4
+```{r}
+sum_hazard <- summarize(group_by(hazard, type), n = n(),
+          mean_sorption = mean(sorption), sd_sorption = sd(sorption))
+sum_hazard
+```
+```{r}
+# aromatic - chlor
+diff_mean_a_c <-sum_hazard$mean_sorption[1] - sum_hazard$mean_sorption[2]
+# aromatic - estere
+diff_mean_a_e <-sum_hazard$mean_sorption[1] - sum_hazard$mean_sorption[3]
+# estere - chlor
+diff_mean_c_e <- sum_hazard$mean_sorption[2] - sum_hazard$mean_sorption[3]
+
+diff_mean_a_c
+diff_mean_a_e
+diff_mean_c_e
+```
+
+
+```{r}
+### Compute pairwise standard error
+#aromatic and chlor	
+0.2351 * sqrt((1/9) + (1/8))
+
+# aromatic	and estere
+0.2351 * sqrt((1/9) + (1/15))
+
+# estere and chlor
+0.2351 * sqrt((1/15) + (1/8))
+
+```
+## Opgave 5
+Compute 95% confidence intervals for the pairwise differences
+between the expected values for the types. What is the conclusion regarding differences between the three solvent types?
+
+```{r}
+diff_mean_a_c + c(-1, 1) * qt(0.975, df = (9+8-2)) * (0.2351 * sqrt((1/9) + (1/8)))
+diff_mean_a_e + c(-1, 1) * qt(0.975, df = (9+15-2)) * (0.2351 * sqrt((1/9) + (1/15)))
+diff_mean_c_e + c(-1, 1) * qt(0.975, df = (8+15-2)) * (0.2351 * sqrt((1/15) + (1/8)))
+```
+0-Hypotesen forkastes ikke for forskellen mellem aromatic og aromatic, da 0 ingår i intervallet.
 
 # HS. 15
 
