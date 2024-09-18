@@ -345,6 +345,43 @@ diff_mean_c_e + c(-1, 1) * qt(0.975, df = (8+15-2)) * (0.2351 * sqrt((1/15) + (1
 ```
 0-Hypotesen forkastes ikke for forskellen mellem aromatic og aromatic, da 0 ingår i intervallet.
 
-# HS. 15
+## 5.10
 
+# HS. 15
+## Opgave 1
+1 stikprøve = 1 gruppe
+2 stikprøve = 2 grupper
+
+## Opgave 2
+
+```{r}
+dat1 <- read.table('../uge_2/data/punktplot2017.txt', header=TRUE)
+df_dat1 <- data.frame(dat1)
+df_dat1
+
+m1 <- lm(figur2 ~ 1, data=dat1)
+summary(m1)
+confint(m1)
+```
+```{r}
+m2 <- lm(figur3 ~ 1, data=dat1)
+summary(m2)
+confint(m2)
+```
+
+```{r}
+qqnorm(df_dat1$figur2, main = "Rigtige data")
+abline(a = mean(df_dat1$figur2), b = sd(df_dat1$figur2))
+
+qqnorm(df_dat1$figur3, main = "Rigtige data")
+abline(a = mean(df_dat1$figur3), b = sd(df_dat1$figur3))
+```
+## Opgave 3
+```{r}
+mean(dat1$figur2)
+mean(dat1$figur3)
+
+confint(m1)
+confint(m2)
+```
 

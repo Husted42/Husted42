@@ -1,0 +1,149 @@
+---
+title: "opgaver_3_onsdag"
+output: html_document
+date: "2024-09-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Opgave 6.1: Drægtighed for heste. Du skal lave dette “manuelt”, altså ved at bruge formler i bogen.
+Opgave HS.16: Parret vs uparret
+Opgave HS.17: Hjerte- og kropsvægt for katte.
+Opgave 6.6: Soyabønner
+Opgave 6.2: Maveeksperiment 
+
+# Opgave 6.1
+## Opgave 1
+1 responsvariable + 0 forklarende = 1 stikprøve t-test
+
+```{r}
+data <- c(339, 339, 339, 340, 341, 340, 343, 348, 341, 346, 342, 339, 337)
+df <- data.frame(data)
+
+head(df, n = 3)
+```
+
+## Opgave 2
+H_0: $ \mu = 340 $
+H_1: $ \mu \neq 340 $
+
+
+```{r}
+qt(0.975, df = 13-1)
+
+
+# T-Value
+t_val <- mean(data) / sd(data) * sqrt(length(data))
+t_val
+# P-value
+2 * (1 - pt(t_val, df = (length(data) - 1) )) # pt gives the distribution function
+
+# Confidence
+mean(data) + c(-1, 1) * qt(0.975, df = 13-1) * sd(data)/sqrt(13) 
+
+# Alternative approch
+t.test(data)
+```
+
+```{r}
+t_obs <- (mean(data) - 340) / sd(data) * sqrt(length(data))
+2 * (1 - pt(t_obs, df = (length(data) - 1) )) # pt gives the distribution function
+
+
+```
+Da p værdien er over 0.05 forkastets hypotesen $ \mu = 340 $ ikke. 
+
+Derudover ser vi at 340 indgår i vores konfidensinterval, hvilket underbygger 0-hypotesen.
+
+# HS 16
+
+## Opgave 1
+Parret, man endda feature engineere ved at tage den absolutte afstand i mellem mand og kvinde.
+
+## Opgave 2
+Uparret, medmindre de tilføjer en bønnesort kollone
+
+## Ogave 3
+Uparret.
+
+# HS 17
+☺
+```{r}
+library(MASS)
+data(cats)
+
+library(tidyverse)
+cats <- transform(cats, Forhold = Hwt / Bwt)
+head(cats, n=3)
+
+summarize(group_by(cats, Sex), n = n(),
+          mean_forhold = mean(Forhold), sd_forhold = sd(Forhold))
+
+```
+
+## Opgave 3
+
+```{r}
+ggplot(data = cats, aes(x = Sex, y = Forhold)) +
+  geom_boxplot(outliers = TRUE) + 
+  xlab("Sex") + ylab("Forhold")
+```
+
+## Opgave 4
+```{r}
+m1 <- lm(Forhold ~ Sex - 1, data = cats)
+summary(m1)
+coefficients(m1)
+
+
+summarize(group_by(cats, Sex), n = n(),
+          mean_forhold = mean(Forhold), sd_forhold = sd(Forhold))
+```
+Estimat for gennemsnit forskel
+```{r}
+# RSE/s - sqrt(1/n_1 + 1/n_2)
+0.5277 * sqrt((1/47) + (1/97))
+
+(3.915119	-  3.894547) + c(-1, 1) * qt(0.975, df = (47+97-2)) * (0.5277 * sqrt((1/47) + (1/97)))
+
+
+```
+## Opgave 5
+
+H_0 : $ \mu_1 = \mu_2 \Rightarrow \mu_1 - \mu_2 = 0 $ 
+
+Vi forkaster ikke 0-hypotest. Data taler ikke for en signifikant forskel mellem han og hun.
+
+
+# Opgave 6.6
+## Opgave 1
+Fordi hvis vi måler genetikken på den ene plante i potteplanten, sige det også noget om den anden.
+
+## Opgave 2
+1-sidet ANOVA
+
+```{r}
+data(soybean)
+head(soybean, n = 3)
+
+```
+
+## Opgave 3
+```{r}
+
+t.test(soybean$stress, soybean$nostress, paired=TRUE)
+
+```
+$ H_0:  \mu_1 - \mu_2 = 0 $ 
+0-hypotesen forkastes
+
+## Opgave 4
+```{r}
+
+t.test(soybean$stress, soybean$nostress, paired=FALSE)
+
+```
+
+
