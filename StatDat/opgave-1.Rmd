@@ -1,0 +1,132 @@
+---
+title: "Opgave-1"
+output: html_document
+date: "2024-09-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Initialize
+```{r}
+# Import libraries
+library("ggplot2")
+library("tidyverse")
+library("isdals")
+
+# Load data
+data("tartar")
+
+```
+
+# Opgave 1 (HS.18)
+## Opgave 1
+```{r}
+head(tartar, n = 3)
+```
+
+Vi har en kategorisk forklarende variabel og en kvantitativ kontinuert variabel. Derfor bruger vi Anova til at analysere påvirkningen på gennemsittet givet variablen treat.
+
+```{r}
+# refactor to make control group the primary group 
+tartar$treat <- relevel(factor(tartar$treat), ref="Control")
+m1 <- lm(index ~ treat , data = tartar)
+```
+
+
+## Opgave 2
+Model antagelse
+Responsvariablen $ y_1 , ..., y_n $ er uafhænige og normaltfordelt $ y_i \sim N(\mu_i, \sigma^2) $ med sammen spredning for alle grupper. 
+Derudover afhænger middelværdien $ \mu_i = \alpha_{g_{(i)}} $ afhænger af gruppen $ g(i) $
+
+Plots
+ - QQ-Plot og histogram til normal fordeling
+ - Boxplot til analyse af forskel mellem data
+
+Er data normalt fordelt?
+```{r}
+tartar_contol <- subset(tartar, treat=="Control")
+tartar_P207 <- subset(tartar, treat=="P2O7")
+tartar_HMP <- subset(tartar, treat=="HMP")
+
+qqnorm(tartar_contol$index, main = "Index for group : Control")
+abline(a = mean(tartar_contol$index), b = sd(tartar_contol$index))
+
+qqnorm(tartar_P207$index, main = "Index for group : P207")
+abline(a = mean(tartar_P207$index), b = sd(tartar_P207$index))
+
+qqnorm(tartar_HMP$index, main = "Index for group : HMP")
+abline(a = mean(tartar_HMP$index), b = sd(tartar_HMP$index))
+```
+Vi kan se på QQ-plottet at der ikke er nogen systematisk afvigelse fra identitets linjen, hvilket tyder på at data falder i kvartiler, som der forventes ved en normalfordeling. 
+
+Boxplot
+```{r}
+## Boxplot
+ggplot(data = tartar, aes(x = treat, y = index)) +
+  geom_boxplot(outliers = TRUE) + 
+  xlab("Treat") + ylab("Index")
+
+```
+Plottet viser at der er en markant between-group variation, hvilket tyder på at den forklarende variabel har en påvirkning af på værdien af responsvariablen. 
+
+Dertil ser vi en større witihn-group variation i control og P207, end vi ser for HMP. 
+
+## Opgave 3
+Vi bruger LM til at udregne estimatet for den forventede værdi $\hat{\mu}$
+```{r}
+m2 <- lm(index ~ treat -1 , data = tartar)
+summary(m2)
+```
+Vi forventer at en hund som ikke er blevet behandlet har et index på 1.0889
+Vi forventer at en hund som er blevet behandlet med P207 harr et index på 0.7467
+
+## Opgave 4
+
+$$ H_0 : \alpha_1 = \alpha_2 = \alpha_2 $$
+```{r}
+summary(m1)
+```
+Vi kan ikke konkludere at den forventede værdi er den samme for treatHMP og kontrol gruppen, givet at vi har en p-værdi på 0.00135. Da forkastes 0-hypotesen.
+
+## Opgave 5
+```{r}
+confint(m1)
+```
+Vi kan med 95% sikkerhed konkludere at den sande forskel ligger i intervallet (-1.0211365, -0.28164124). Da 0 ikke indgår i intervallet er der evidens for at HMP behandlingen virker. 
+
+# Opgave 2
+## Opgave 1
+
+```{r}
+library("readxl")
+?read.table
+data1 <- read.table(file = "data/feb2021opg1.txt", header = 1)
+head(data1, n = 3)
+```
+Vi laver en ny kollonne med difference imellem smittede in december og januar.
+
+Vi opstiller en nul hypotese $ H_0: \alpha = 0 $ altså at der ikke er nogen forskel, samt en alternativ hypotese $ H_1: \alpha = 1 $ 
+
+
+```{r}
+data1$fald <- data1$jan - data1$dec
+
+
+t.test(data1$fald, mu = 0)
+```
+Vi forkaster vores 0-hypoteser da vi for en p-værdi på 2.2e-16, hvilket praktisk talt er 0. Dette bliver understøttet af vores konfidens interval, da 0 ikke ligger i intervallet. 
+
+## Opgave 2
+
+```{r}
+m3 <- lm(fald ~ dec, data = data1)
+summary(m3)
+```
+$$ \hat{\alpha} = 1.471, \: \: \hat{\beta} = -0.720 $$
+De to ukende parameter skæring (alpah) og hældning (beta) er angivet overfor.
+
+
+
+
