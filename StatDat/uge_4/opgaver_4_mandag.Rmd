@@ -1,0 +1,94 @@
+---
+title: "opgaver_4_mandag"
+output: html_document
+date: "2024-09-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Opgave 6.7
+Ensidet anova
+```{r}
+library("isdals")
+data("chicken")
+
+
+chicken$feed <- relevel(factor(chicken$feed), ref="1")
+head(chicken, n = 3)
+
+```
+$ H_0 : \alpha_1 = ...= \alpha_k  $
+
+```{r}
+m1 <- lm(gain ~ feed, data = chicken)
+summary(m1)
+```
+
+Vi anvender F-test til at sige noget om gennemsnittet på tværs af alle grupper, ved at sammenligne mellem-grupe variationen med indenfor-gruppe variationen. Da vi for vores p-værdi for f-statistic er mindre end 0.05 afvis hypotesen på et signifikansnivue på 95%.
+
+
+### Opgave 2
+
+For type 2 får vi en p-værdi på 12%, så vi forkaster ikke hypotesen, men for et signifikans nivue på 95% forkastes hypotesen $ \alpha_{1} = \alpha_{3} $
+
+### Opgave 3
+```{r}
+confint(m1)
+```
+
+Da 0 ikke ligger i intervallet forkastes hypotesen $ \alpha_1 - \alpha_3 = 0 $ 
+
+
+# Opgave 6.14
+### Opgave 1
+e reject the null hypothesis that there is no difference in
+the average breaking strength of the raw materials that the
+four suppliers provide.
+
+### opgave 2
+suppC :  622.50 +  411.25 = 1033.75
+
+### Opgave 3
+Cotrol group: 622.50
+
+### Opgave 4
+Interval for diff between A and b
+```{r}
+# Mean_1 - Mean_2  +- * t_(0.975, df) * RSE * sqrt(1/n_1 + 1/n_2)
+(167.50) + c(-1, 1) * qt(0.975, df = (4+4-2)) * (72.18 * sqrt((1/4) + (1/4)))
+
+```
+
+### Opgave 5
+```{r}
+# Mean_1 - Mean_2  +- * t_(0.975, df) * RSE * sqrt(1/n_1 + 1/n_2)
+(291.25 - 167.5) + c(-1, 1) * qt(0.975, df = (4+4-2)) * (72.18 * sqrt((1/4) + (1/4)))
+
+```
+Da 0 ligger i intervallet afviser vi at der er forskel på de to levarandører.
+
+### Opgave 6
+
+```{r}
+range <- c(45:51)
+
+for (n in range) {
+  
+  int_b <- 167 + c(-1, 1) * 1.96 * 72.18/sqrt( n )
+  int_c <- 411.25 + c(-1, 1) * 1.96 * 72.18/sqrt( n )
+  int_d <- 291.25 + c(-1, 1) * 1.96 * 72.18/sqrt( n )
+  
+  val_b <- int_b[2] - int_b[1]
+  val_c <- int_c[2] - int_c[1]
+  val_d <- int_d[2] - int_d[1]
+
+  cat("\n")
+  cat(n, val_b)
+}
+
+```
+
+
+
