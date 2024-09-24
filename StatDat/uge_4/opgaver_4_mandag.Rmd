@@ -90,5 +90,52 @@ for (n in range) {
 
 ```
 
+# HS 19
+### Opgave 1
 
+```{r}
+library("ggplot2")
+data_mus <- read.table("../data/mus_prop.txt", header = 1)
+df_mus <- data.frame(data_mus)
+head(df_mus, n=3)
+```
+Siden man indstpøjter dosis0 og måler på konc24, så er konc24 en kvantitativ kontinuert respons variabel til en kvantitativ kontinuert forklarende variabel dosis0
+
+```{r}
+
+
+m1 <- lm(konc24 ~ dosis0, data = df_mus) # Fit
+summary(m1)
+confint(m1)
+
+
+alpha <- as.numeric(coef(m1)[1]) # Intercept
+beta <- as.numeric(coef(m1)[2]) # Slope
+
+ggplot(data = df_mus, aes(x = dosis0, y = konc24)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+
+
+```
+### Opgave 2
+Antagelsen om proportionalitet betyder at vores linær regressions model skal skære i origo, altså $\alpha =$
+
+```{r}
+m2 <- lm(konc24 ~ dosis0-1, data=df_mus)
+
+alpha <- 0
+beta <- as.numeric(coef(m2)[1]) # Slope
+
+ggplot(data = df_mus, aes(x = dosis0, y = konc24)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+```
+### Opgave 4
+Vi opstiller en 0-hypotese $ H_0 : \alpha = 0 $  
+Vi fitter en ny model uden popotionalitets antageelsen og kontrollere om nul ligger i 95% kvartilen for skærigen
+```{r}
+confint(m1)
+```
+Vi ser at 0 ligger i intervallet, vi kan derfor ikke konkludere ud fra data at 0-hypotesen kan forkastest. Data taler altså for at propotionalitets antagelsen holder.
 
