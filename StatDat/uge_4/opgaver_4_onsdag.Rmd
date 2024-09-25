@@ -1,0 +1,236 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Opgave 7.7. Bemærk: Figuren nederst til højre er lidt atypisk i forhold til hvad man ser i praksis, men overvej alligevel hvad “der er galt” med figuren.
+
+Opgave 7.2. To ekstra spørgsmål:
+  Bestem et 95% konfidensinterval og et 95% prædiktionsinterval svarende til værdien 8 for radioact. Hvad er fortolkningen af de to    intervaller? NB: Det er fint at beregne intervallerne på log-skala, men du bør tænke over hvilken betydning det har for             fortolkningen, hvis man ønsker at regne resultaterne tilbage til den oprindelige skala.
+  For hvilken værdi af radioact vil man forvente at få en tumorvægt på 0.2?
+Opgave 7.4.
+
+# Opgave 7.7
+
+Figur 1:
+  Problem with variance homogeneity. Positiv tragt form
+  
+Figur 2:
+  Problem conserning the mean. Der er en systematisk kurveformet afvigelse fra gennemsnittet. Der skulle nok være fittet en kubisk model.
+  
+Figur 3:
+  Den er fjong
+  
+Figur 3:
+  Den er ikke normaltfordelt ud, vi ville forvenete at der var flere værdi omkring 0.
+
+
+# Opgave 7.2
+## Opgave 1
+Vi vil gerne sige noget om vægten ud fra radiokativiteten, så vi vælger vægt som responsvariabel og radioaktivitet som forklarende variabel.
+
+```{r}
+library("isdals")
+library("ggplot2")
+data("cancer2")
+
+head(cancer2, n = 3)
+```
+
+
+```{r}
+linreg <- lm(tumorwgt ~ radioact, data = cancer2) # Fit
+summary(linreg)
+confint(linreg)
+
+
+alpha <- as.numeric(coef(linreg)[1]) # Intercept
+beta <- as.numeric(coef(linreg)[2]) # Slope
+
+ggplot(data = cancer2, aes(x = radioact, y = tumorwgt)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+```
+## Opgave 2
+```{r}
+cancer2$fitted_values <- fitted(linreg)
+cancer2$residuals <- rstandard(linreg)
+
+ggplot(data = cancer2, aes(x = fitted_values, y = residuals)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = 0, intercept = 0) # line
+
+```
+Den tragtformede fordeling af residualsene tyder på at der er noget galt med antagelsen om varians homonigitet.
+
+## Opgave 3
+```{r}
+linreg_log <- lm(log(tumorwgt) ~ radioact, data = cancer2) # Fit
+summary(linreg_log)
+confint(linreg_log)
+
+
+alpha <- as.numeric(coef(linreg_log)[1]) # Intercept
+beta <- as.numeric(coef(linreg_log)[2]) # Slope
+
+ggplot(data = cancer2, aes(x = radioact, y = log(tumorwgt))) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = beta, intercept = alpha) # line
+```
+
+```{r}
+cancer2$fitted_values <- fitted(linreg_log)
+cancer2$residuals <- rstandard(linreg_log)
+
+ggplot(data = cancer2, aes(x = fitted_values, y = residuals)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = 0, intercept = 0) # line
+```
+
+Vi løser problemet med inhomoginietet ved at log transformere, således at høje værdi bliver mindkes gradvist mere end de lave værdier.
+
+## opgave 4
+```{r}
+pred_8 <- predict(linreg_log, newdata = data.frame(radioact = 8), interval = "c")
+exp(pred_8)
+```
+Vi forventer den kommer til at veje 0.34
+
+## opgave 5
+```{r}
+predict_int_c <- predict(linreg_log, newdata = data.frame(radioact = 8), interval = "c")
+predict_int_p <- predict(linreg_log, newdata = data.frame(radioact = 8), interval = "p")
+
+predict_int_c
+predict_int_p
+```
+```{r}
+cat("Lower // Upper \n")
+exp(predict_int_c[2])
+exp(predict_int_c[3])
+cat("\n")
+
+cat("Lower // Upper \n")
+exp(predict_int_p[2])
+exp(predict_int_p[3])
+```
+Den bedste prediktion er middelværdien, men når vi transformere data tilbage, så har vi medianen i stedet. Fordi vi ikke har outlierne til at trække i middelværdien. 
+
+Prediktions intervallet er større end konfidensintervallet end for gennemsnit, fordi vi tager højde for afvigelsen fra gennesnittet (spredning = 1) 
+
+Middelværdien for den logaritmiske skala, svare til medianen når vi transformere tilbage til den originale skala.
+
+## Opgave 6
+```{r}
+beta0 <- coef(linreg_log)[1]  # Intercept
+beta1 <- coef(linreg_log)[2]  # Slope
+
+target_y = log(0.2)
+x_value = (target_y - beta0) / beta1
+
+print(x_value)
+
+```
+
+# Opgave 7.4
+## Opgave 1
+```{r}
+data(pillbug)
+
+head(pillbug, n = 3)
+
+```
+
+
+
+
+```{r}
+# Make a control group
+pillbug$group <- relevel(pillbug$group, ref="Control")
+
+# Log transformed variable
+pillbug$log_time <- log(pillbug$time)
+```
+
+```{r}
+ggplot(data = pillbug, aes(x = group, y = time)) +
+  geom_boxplot(outliers = TRUE) + 
+  xlab("group") + ylab("time")
+
+ggplot(data = pillbug, aes(x = group, y = log_time)) +
+  geom_boxplot(outliers = TRUE) + 
+  xlab("group") + ylab("log_time")
+
+```
+
+Der er mindre overlap mellem 25% og 75% kvartilen fra kontrol guppen og lystgruppen, derfor konkludere vi at log transformationen er bedst.
+
+## Opgave 2
+```{r}
+m1 <- lm(time ~ group, data = pillbug)
+
+pillbug$fitted_values <- fitted(m1)
+pillbug$residuals <- rstandard(m1)
+
+ggplot(data = pillbug, aes(x = fitted_values, y = residuals)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = 0, intercept = 0) # line
+
+qqnorm(pillbug$residuals, main = "QQplot for residuals")
+abline(a = 0, b = 1)
+
+```
+
+Vi ser en systematisk afvigelse fra QQplot, hvilket tyder på at restledene ikke er normalt fordelt
+
+```{r}
+m2 <- lm(log_time ~ group, data = pillbug)
+
+pillbug$log_fitted_values <- fitted(m2)
+pillbug$log_residuals <- rstandard(m2)
+
+ggplot(data = pillbug, aes(x = log_fitted_values, y = log_residuals)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = 0, intercept = 0) # line
+
+qqnorm(pillbug$log_residuals, main = "QQplot for residuals")
+abline(a = 0, b = 1)
+
+```
+
+Det er fint nok.
+
+## Opgave 4
+Det ser ikke ud til at der er problemer med homogonitets antagelsen ift. residual plottet for den logtransformeret data. Dertil ser vi i mindre grad en systematisk afvigelse fra den ligefrem propotionale linje i QQplotet. Vi havde ret i opgave 1 :)
+
+## Opgave 5
+Vi bruger den logtransformeret model, da den stemmer bedre overens med model antagelserne for ANOVA.
+
+```{r}
+summary(m2)
+```
+
+Vi opstiller en 0-hypotese om at der ikke er forskel mellem kontrol og light, $H_0 : \alpha_1 - \alpha_2 = 0$, vi får en meget lille p-værdi, hvilket betyder at vi forkaster hypotesen. Data taler altså for der er en indflydelse hvis de bliver eksponeret til lys.
+
+## Opgave 6
+```{r}
+confint(m2)
+```
+Der er forskel på grupperne, men vi kan ikke stille den samme sikkerhed (ligså smalle intervaller) hvis vi transformere tilbage til det orginale dataform. Uanset hvad, så er 0 ikke med i intervallet.
+
+## Opgave 7
+```{r}
+log(50)
+```
+
+
+```{r}
+predict(m2, newdata = data.frame(group = "Light"), interval = "p")
+log(50)
+```
+Intervallet vil indeholde 95 % af nye/fremtidige målinger. Da 3.912 er indenfor intervallet er det ikke en uanmindelig værdi.
+
+
+
+
+

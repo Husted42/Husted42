@@ -106,6 +106,7 @@ Estimat for gennemsnit forskel
 # RSE/s - sqrt(1/n_1 + 1/n_2)
 0.5277 * sqrt((1/47) + (1/97))
 
+# Mean_1 - Mean_2  +- * t_(0.972, df) * RSE * sqrt(1/n_1 + 1/n_2)
 (3.915119	-  3.894547) + c(-1, 1) * qt(0.975, df = (47+97-2)) * (0.5277 * sqrt((1/47) + (1/97)))
 
 

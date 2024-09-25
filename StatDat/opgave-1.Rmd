@@ -39,12 +39,13 @@ m1 <- lm(index ~ treat , data = tartar)
 Model antagelse
 Responsvariablen $ y_1 , ..., y_n $ er uafhænige og normaltfordelt $ y_i \sim N(\mu_i, \sigma^2) $ med sammen spredning for alle grupper. 
 Derudover afhænger middelværdien $ \mu_i = \alpha_{g_{(i)}} $ afhænger af gruppen $ g(i) $
+(TODO: Antagelser om restled)
 
 Plots
  - QQ-Plot og histogram til normal fordeling
  - Boxplot til analyse af forskel mellem data
 
-Er data normalt fordelt?
+### Er data normalt fordelt?
 ```{r}
 tartar_contol <- subset(tartar, treat=="Control")
 tartar_P207 <- subset(tartar, treat=="P2O7")
@@ -61,6 +62,24 @@ abline(a = mean(tartar_HMP$index), b = sd(tartar_HMP$index))
 ```
 Vi kan se på QQ-plottet at der ikke er nogen systematisk afvigelse fra identitets linjen, hvilket tyder på at data falder i kvartiler, som der forventes ved en normalfordeling. 
 
+
+```{r}
+m2 <- lm(index ~ treat, data = tartar)
+
+tartar$log_fitted_values <- fitted(m2)
+tartar$log_residuals <- rstandard(m2)
+
+ggplot(data = tartar, aes(x = log_fitted_values, y = log_residuals)) + 
+  geom_point(color = "blue", size = 1) + # Scatter
+  geom_abline(slope = 0, intercept = 0) # line
+
+qqnorm(tartar$log_residuals, main = "QQplot for residuals")
+abline(a = 0, b = 1)
+```
+Antagelsen om at $e_1 ,.., e_n$ er standard normalt fordelt holder, der er ca. lige mange punkter over og under den vandrette linje på residualplottet. Og i QQ-plotet ser vi ingen systematisk afvigelse fra den ligefrem propotionalle linje. Derfor konkludere vi at spredningen er den samme for alle grupper.
+
+
+### Afhænger middelværi af gruppen
 Boxplot
 ```{r}
 ## Boxplot
@@ -71,7 +90,7 @@ ggplot(data = tartar, aes(x = treat, y = index)) +
 ```
 Plottet viser at der er en markant between-group variation, hvilket tyder på at den forklarende variabel har en påvirkning af på værdien af responsvariablen. 
 
-Dertil ser vi en større witihn-group variation i control og P207, end vi ser for HMP. 
+Dertil ser vi en større witihn-group variation i control og P207, end vi ser for HMP. Dette tyder på at middelværdien afhænger af gruppen.
 
 ## Opgave 3
 Vi bruger LM til at udregne estimatet for den forventede værdi $\hat{\mu}$
@@ -83,6 +102,7 @@ Vi forventer at en hund som ikke er blevet behandlet har et index på 1.0889
 Vi forventer at en hund som er blevet behandlet med P207 harr et index på 0.7467
 
 ## Opgave 4
+(TODO: F-test)
 
 $$ H_0 : \alpha_1 = \alpha_2 = \alpha_2 $$
 ```{r}
@@ -96,14 +116,14 @@ confint(m1)
 ```
 Vi kan med 95% sikkerhed konkludere at den sande forskel ligger i intervallet (-1.0211365, -0.28164124). Da 0 ikke indgår i intervallet er der evidens for at HMP behandlingen virker. 
 
-# Opgave 2
+# Opgave Eksamen 2021
 ## Opgave 1
 
 ```{r}
 library("readxl")
 ?read.table
 data1 <- read.table(file = "data/feb2021opg1.txt", header = 1)
-head(data1, n = 3)
+head(data1, n = 30)
 ```
 Vi laver en ny kollonne med difference imellem smittede in december og januar.
 
@@ -111,7 +131,7 @@ Vi opstiller en nul hypotese $ H_0: \alpha = 0 $ altså at der ikke er nogen for
 
 
 ```{r}
-data1$fald <- data1$jan - data1$dec
+data1$fald <-  data1$dec - data1$jan
 
 
 t.test(data1$fald, mu = 0)
@@ -124,9 +144,22 @@ Vi forkaster vores 0-hypoteser da vi for en p-værdi på 2.2e-16, hvilket prakti
 m3 <- lm(fald ~ dec, data = data1)
 summary(m3)
 ```
-$$ \hat{\alpha} = 1.471, \: \: \hat{\beta} = -0.720 $$
+$$ \hat{\alpha} = -1.471, \: \: \hat{\beta} = 0.720 $$
 De to ukende parameter skæring (alpah) og hældning (beta) er angivet overfor.
 
+## Opgave 3
+Faldet $\hat{\beta}$ er det samme for alle værdier af x, så vi kan ikke konkludere ud fra den linære model at der er forskel i falde givet at der er mange smittede i december.  
+
+
+
+## Opgave 4
+```{r}
+predict(m3, newdata = data.frame(dec = 10), interval = "p")
+```
+$$  \alpha + \beta x = f(x) \Rightarrow  -1.471 + 0.72 \cdot 10 = 5.735 $$ 
+
+Intervallet vil indeholde 95 % af nye/fremtidige målinger. Da 5.7 er indenfor intervallet er det ikke en uanmindelig værdi.
+Vores interval er lidt større end konfidensintervallet for samme værdi, dette er fordi der skal tages højde for $e_i$, som  vi antager har en spredning på 1.
 
 
 
