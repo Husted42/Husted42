@@ -1,0 +1,115 @@
+---
+title: "Opgave 2"
+output: html_document
+date: "2024-10-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# initialisering
+
+```{r}
+# install.packages("ggplot2")
+library("ggplot2") # Plots
+# install.packages("isdals")
+library(isdals) # Data
+```
+
+```{r}
+florida <- read.table("../data/florida.txt", header = 1)
+florida <- data.frame(training) # Convert to dataframe
+```
+
+# Eksamen, Januar 2019 - Opgave 2
+
+## Opgave 1
+Det er mest oplagt at anvede pris som responsvariabel, da det ikke er en målbar størrelse før huset er solgt. Og vi anvender size som forklarende variabel da den er målbare. Det ville mest brugbart at udvikle en model, som kan give et estimat for prisen givet størrelsen på huset.
+
+```{r}
+linreg1 <- lm(Price ~ Size, data=florida)
+
+qqnorm(rstandard(linreg1))
+abline(0,1, lty=2)
+```
+Vi ser en systematisk avigelse fra i QQ-plottet, for de laveste og højeste kvartiler ses in konkav krumning omkring den ligefrem propotionelle linje og i midten ser vi en konveks krumning.
+
+
+```{r}
+linreg2 <- lm(log(Price) ~ log(Size), data=florida)
+
+
+qqnorm(rstandard(linreg2))
+abline(0,1, lty=2)
+```
+Efter logtransformationen er der ikke nogen systematisk afvigelse fra linjen i QQ-plottet, hvilket betyder at data ligger i de kvartiler, som vi forventer ved en normalfordeling. 
+
+```{r}
+plot(fitted(linreg2), rstandard(linreg2))
+abline(a = 0, b = 0)
+```
+Residualerne ligger fordelt omkring linjen, som vi forventer det, med ca. 95% af datapunkterne indenfor 2 og -2 på y-aksen og ca. samme mængde punkter over og under linjen.
+
+
+## Opgave 2
+**Data:** <br>
+Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel log(price) og den
+forklarende variabel log(Size).
+
+**Statistisk model:** <br>
+$$ y_i = \mu_i + \epsilon  $$ 
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og
+at alle $y_i$ er normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ 
+(ret linje) med spredning $\sigma$, som er vores ukendte populationsparametre
+
+**De ukendte populationsparametre** <br>
+Skæringen $\alpha$, hældningen $\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan estimere.
+
+Vi vedhæfter os at når vi projektetere $\mu$ tilbage til den ikke logtransformeret data, så er det ikke en middelværdi, men en median.
+
+```{r}
+summary(linreg2)
+confint(linreg2)
+```
+Estimatet for hældningsparameterener $\hat{\beta} = 1.23$. \\
+Vi får et konfidensinterval på [1.035, 1.42]
+
+## Opgave 3
+I stedet for at predict de to værdier og trække dem fra hindande kan vi nøjes med at kigge på hældningsparameteren gange differencen
+
+$$ \hat{\beta} \cdot (log(2000)-log(1000))  $$
+```{r}
+1.22549 * (log(2000) - log(1000))
+```
+Vi skal dog kende de to $e^{\mu}$ værdien for at sige noget om faktoren
+```{r}
+small <- exp(2.81449 + 1.22549 * log(1000))
+big <- exp(2.81449 + 1.22549 * log(2000))
+
+
+big
+small
+cat("\nFaktor: \n")
+big / small
+```
+Hvis jeg har forstået opgaven rigtig så er det store hus lidt mere end dobbelt så dyrt, hvilket giver mening da vores hældningsparameter er større end en. Hvis den havde været 1 med en skæring i 0, ville faktoren være præcis 2.
+
+## Opgave 4
+```{r}
+# R log transformere automatisk
+pred <- predict(linreg2, newdata = data.frame(Size = 2000), interval = "p")
+pred
+
+exp(pred[1])
+exp(pred[2])
+exp(pred[3])
+```
+Da 215.000 ligger i prediktionsintervallet fra 92.700 til 370.079, anses det, udfra data, ikke som en usædvanlig pris
+
+
+## Opgave 5
+

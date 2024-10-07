@@ -1,0 +1,74 @@
+---
+title: "øvelser_6_mandag"
+output: html_document
+date: "2024-10-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# initialisering
+
+```{r}
+# install.packages("ggplot2")
+library("ggplot2") # Plots
+# install.packages("isdals")
+library(isdals) # Data
+```
+
+```{r}
+training <- read.table("../data/training.txt", header = 1)
+training <- data.frame(training) # Convert to dataframe
+```
+
+# Eksamen, november 2019 - Opgave 2
+
+## Opgave 1
+
+```{r}
+head(training, n=3)
+
+```
+
+Da vores responsvariabel, iltoptagelse efter træning, er en kvantitaviv og kontinuert. Og vores foklarende variable er iltoptagelse før træning, er en kvantitaviv og kontinuert. Anvendes lineær regression.
+
+Vi kan opstille en hypotesetest til at se om træningenprogrammet forbedre konditionen:
+
+$$ H_0 : \beta = 0, H_1 : \beta > 0 $$
+
+```{r}
+linReg <- lm(after ~ before, data = training)
+summary(linReg)
+```
+Vi aflæser $\hat{\beta} = 0.965$ og forkaster 0 hypotesen med et signifikansnivue på 95% om at der ikke er nogen effekt med en p-værdi på $Pr(>\vert t \vert) \approx 0$
+
+```{r}
+confint(linReg)
+```
+Da der ikke er nogle negative værdier i intervallet [0.833 1.095] taler data for den alternative hypotese omkring en positiv effekt af træningsporgrammet.
+
+## Opgave 2
+```{r}
+confint(linReg)
+```
+
+Vi kan konkludere at den sande ukendte gennesnit $\beta$ med 95% sikkerhed ligger i intervallet  [0.833 1.095]
+
+## Opgave 3
+
+
+Vi ønsker at beskrive den i-te forskel ved den statistiske model
+
+$$
+\texttt{forskel}_i = \alpha_{\texttt{sex}(i)} + \beta_{\texttt{age}(i)} + e_i,
+$$
+hvor $e_1, \ldots, e_{152}$ er iid. normalfordelte med middelværdi $0$ og spredning $\sigma$.
+
+
+```{r}
+training$forskel <- training$after - training$before
+model2 <- lm(forskel ~ sex + age, data = training)
+summary(model2)
+```
+
