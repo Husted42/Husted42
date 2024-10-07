@@ -1,0 +1,45 @@
+---
+title: "Øvelser onsdag"
+output: html_document
+date: "2024-10-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Januar 2022 - Opgave 2
+Data til denne opgave består af kropsmålinger fra 243 mænd. For hver mand har man blandt
+andet målt omkredsen ved hofte og mave, begge dele i cm. Desuden har man bestemt mændenes
+fedtprocent med en præcis målemetode baseret på opdriften ved undervandsvejning. Man er
+interesseret i at kunne prædiktere fedtprocenten ved hjælp af hofte- og/eller maveomkreds.
+Data er tilgængelige i filerne johnson-fatpct.txt og johnson-fatpct.xlsx på den vedlagte
+USB-stick. Der er en linie per person og følgende variable:
+• bodyfat: Fedtprocent
+• hip: Omkreds ved hofte, målt i cm
+• abdomen: Omkreds ved mave, målt i cm
+Du skal i hele opgaven bruge variablen bodyfat som responsvariabel.
+
+
+## Opgave 1
+1. Lav en figur der illustrerer sammenhængen mellem maveomkreds og fedtprocent. Der
+skal være en skitse af figuren i besvarelsen.
+Angiv på baggrund af figuren en statistisk model der gør det muligt at estimere sammen-
+hængen.
+
+```{r}
+data_johnson <- read.table("../data/johnson-fatpct.txt", header = 1)
+
+# plot(data_johnson)
+# cor(data_johnson)
+
+head(data_johnson, n = 3)
+
+```
+
+```{r}
+m1 <- lm(bodyfat ~ abdomen, data = data_johnson)
+
+plot(abdomen, bodyfat, data = data_johnson)
+```
+

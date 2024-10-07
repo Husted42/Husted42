@@ -1,0 +1,213 @@
+---
+title: "Øvelser onsdag"
+output: html_document
+date: "2024-10-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Januar 2022 - Opgave 2
+Data til denne opgave består af kropsmålinger fra 243 mænd. For hver mand har man blandt
+andet målt omkredsen ved hofte og mave, begge dele i cm. Desuden har man bestemt mændenes
+fedtprocent med en præcis målemetode baseret på opdriften ved undervandsvejning. Man er
+interesseret i at kunne prædiktere fedtprocenten ved hjælp af hofte- og/eller maveomkreds.
+Data er tilgængelige i filerne johnson-fatpct.txt og johnson-fatpct.xlsx på den vedlagte
+USB-stick. Der er en linie per person og følgende variable:
+• bodyfat: Fedtprocent
+• hip: Omkreds ved hofte, målt i cm
+• abdomen: Omkreds ved mave, målt i cm
+Du skal i hele opgaven bruge variablen bodyfat som responsvariabel.
+
+
+## Opgave 1
+1. Lav en figur der illustrerer sammenhængen mellem maveomkreds og fedtprocent. Der
+skal være en skitse af figuren i besvarelsen.
+Angiv på baggrund af figuren en statistisk model der gør det muligt at estimere sammen-
+hængen.
+
+```{r}
+data_johnson <- read.table("../data/johnson-fatpct.txt", header = 1)
+
+# plot(data_johnson)
+# cor(data_johnson)
+
+head(data_johnson, n = 3)
+
+```
+
+```{r}
+m1 <- lm(bodyfat ~ abdomen, data = data_johnson)
+
+plot(data_johnson$abdomen, data_johnson$bodyfat)
+abline(a = m1$coefficients[1], b=m1$coefficients[2])
+
+
+```
+
+Den virker til at der er en linær sammenhæng i dataen, på figuren er der tegnet et fittetd linær regressions linje, som ser ud til at passe med dataen, vi laver et residual plot for at kontrollere:
+
+```{r}
+plot(fitted(m1), rstandard(m1))
+abline(a = 0, b = 0)
+```
+
+Residual plottet ser ud som vi forventer med nogenlunde samme fordeling/varians i punkterne over og under linjen.
+
+## Opgave 2
+Angiv estimater for samtlige parametre i modellen fra spørgsmål 1.
+
+Betragt to mænd der har maveomkreds på henholdsvis 100 cm og 110 cm. Bestem et
+estimat for forskellen i forventet fedtprocent mellem de to mænd.
+
+Der er en forskel på 10 cm, så vi multiplicere hældnignskoefficienten med 10
+
+```{r}
+m1$coefficients[2] * 10
+```
+Vi forventer en forskel på 10 cm.
+
+
+## Opgave 3
+Fit den lineære regressionsmodel hvor du bruger hofteomkredsen som den eneste forkla-
+rende variabel, og angiv estimatet for regressionskoefficienten hørende til hofteomkreds.
+
+Fit derefter den multiple regressionsmodel hvor du inddrager både maveomkreds og hofteomkreds som forklarende variable, og angiv estimatet for regressionskoefficienten hørende til hofteomkreds.
+
+Forklar kortfattet hvad forskellen på de to angivne estimater kan skyldes.
+
+```{r}
+m2 <- lm(bodyfat ~ hip, data = data_johnson)
+
+m3 <- lm(bodyfat ~ hip + abdomen, data = data_johnson)
+
+summary(m2)
+summary(m3)
+```
+Hip skifter fortegn, dette skyldes problemet med multikorrolation, der ser ummildbart ud som om der er en nogenlunde linær sammenhæng mellem hip og abdomen. Årsagen til at værdien bliver negativ er fordi, når vi fitter, at modellen skal modarbejde at vi reelt set tæller abdomen dobbelt
+$$y = \beta_0 + \beta x_{1} + \beta_2 x_2 + \epsilon $$
+Men hvis der er linær afhængighed
+$$ x_2 \approx  a + b x_1 $$
+$$ y \approx \beta_0 + \beta x_{1} + \beta_2 (a + b x_1) + \epsilon $$
+hvor
+$$ \epsilon \sim N(0, \sigma^2) $$
+
+Vi kan fit en model til at kontrollere antagelsen. 
+```{r}
+m4 <- lm(hip ~ abdomen, data = data_johnson)
+
+plot(data_johnson$abdomen, data_johnson$hip)
+abline(m4)
+```
+Da vi ikke ser en større spredning fra linjen, kan vi være ret sikre på at overstående er problemet.
+
+## Opgave 4
+I dette spørgsmål skal du bruge den multiple lineære regression fra spørgsmål 3. Bestem
+et 95% konfidensinterval og et 95% prædiktionsinterval for en mand med maveomkreds
+på 85 cm og hofteomkreds på 98 cm.
+
+Er det usædvanligt for en mand med maveomkreds på 85 cm og hofteomkreds på 98 cm
+at have en fedtprocent på 17? Svaret skal begrundes.
+
+```{r}
+new_data <- data.frame(abdomen = 85, hip = 98)
+predict(m3, newdata = new_data, interval = "c")
+predict(m3, newdata = new_data, interval = "p")
+```
+Konfidensinterval angiver et spænd hvor vi med 95% sikkerhed kan forvente det sande gennemsnittet ligger i. 
+
+Prædiktionsintervallet angiver et spænd hvor vi med 95% sikkerhed kan forvente at en ny observation vil ligge i.
+
+Konklusion: Det er ikke usædvanligt, fordi 17 ligger i prediktionsintervallet.
+
+
+# November 2018 - Opgave 2
+Denne opgave vægtes med 28% ved bedømmelsen, og svarene skal begrundes.
+Data til denne opgave stammer fra valgkampe i forbindelse med 15 amerikanske borgmester-
+valg, hvor den siddende borgmester stillede op. Data er tilgængelige i filerne elections.xlsx
+og elections.txt. Der er 15 datalinier og følgende tre variable:
+
+• approval: Den siddende borgmesters popularitet ved valgkampens begyndelse, angivet
+som den procentdel der i en meningsmåling angav at ville stemme på kandidaten
+
+• expenditures: Udgifter til valgkampagnen for den siddende borgmester, angivet i 1000
+dollars
+
+• performance: Resultatet af valget for den siddende borgmester, angivet som den pro-
+centdel af stemmerne der gik til ham/hende
+I det første spørgsmål skal du kun benytte variablene approval og expenditures.
+
+
+## Opgave 1
+Opskriv en lineær regressionsmodel, der kan benyttes til at undersøge om populariteten
+ved valgkampens begyndelse har betydning for hvor mange penge der benyttes til valg-
+kampagnen.
+
+Er der i evidens i data for at der er en sammenhæng mellem borgmesterens popularitet og
+hans/hendes udgifter til valgkampagnen?
+
+```{r}
+data_elections <- read.table("../data/elections.txt", header = 1)
+head(data_elections, n = 3)
+```
+**Linær regression**
+**Data**
+Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel approval og den
+forklarende variabel expenditures.
+
+**Statistisk model:** <br>
+$$ y_i = \mu_i + \epsilon  $$ 
+hvor $ \epsilon_i \sim N(0, \sigma^2) $
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og
+at alle $y_i$ er normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i $ 
+(ret linje) med spredning $\sigma$, som er vores ukendte populationsparametre
+
+```{r}
+linreg_1 <- lm(approval ~ expenditures, data = data_elections)
+summary(linreg_1)
+```
+Da p-værdien er lav kan vi afvise $H_0 : \beta = 0$ med et signifikansnivue på 95% 
+
+## Opgave 2
+Opskriv den estimerede sammenhæng mellem de tre variable svarende til den multiple
+regressionsmodel. Angiv også estimatet for residualspredningen.
+
+```{r}
+mul_linreg <- lm(performance ~ approval + expenditures, data=data_elections)
+summary(mul_linreg)
+```
+Vi har en lav residual spredning på 0.04637
+
+## Opgave 3
+Forklar kortfattet hvordan estimatet hørende til variablen expenditures skal fortolkes.
+
+$$ \hat{y} = \hat{\alpha} +  \hat{\beta_1}x + \hat{\beta_2}x  $$
+Variablen expendutures er vores beta_2 som altså angiver den forventede påvirkningen på performance når expenditures øges/sænkes, når vi har taget højde for approval. Hvis expendutures øges med 1 stiger performance 0.1.
+
+
+Undersøg med et hypotesetest om det hjælper på valgresultatet at bruge flere penge på
+valgkampagnen
+
+- Mul_linreg = fullmodel
+- linreg_1 = nullModel
+
+```{r}
+fullModel <- lm(performance ~ expenditures, data=data_elections)
+anova(fullModel, mul_linreg)
+```
+
+Vi afviser 0-hypotesen $H_0 : \beta_2 = 0$
+
+
+
+
+
+
+
+
+
+
+

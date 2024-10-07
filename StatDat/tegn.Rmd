@@ -111,16 +111,19 @@ abline(a = mean(df_johnson$hip), b = sd(df_johnson$hip))
 
 **Data:** <br>
 Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
-kvantitative kontinuerte data, både for vores responsvariabel y og den
-forklarende variabel x.
+kvantitative kontinuerte data, både for vores responsvariabel approval og den
+forklarende variabel expenditures.
 
 **Statistisk model:** <br>
+$$ y_i = \mu_i + \epsilon  $$ 
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
 Vi antager $y_1 ,..., y_n$ er uafhængihed, og
-at alle $y_i$ er normaltfordelt med middelværdi $\mu_i = \alpha + \beta x$
-(ret linje) med spredning $\sigma$
+at alle $y_i$ er normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ 
+(ret linje) med spredning $\sigma$, som er vores ukendte populationsparametre
 
 **De ukendte populationsparametre** <br>
-Skæringen $\alpha$, hældningen $\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan estimere
+Skæringen $\alpha$, hældningen $\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan estimere.
 
 # Eksempler på spørgsmål (Måske)
 

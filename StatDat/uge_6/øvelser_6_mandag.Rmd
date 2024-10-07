@@ -1,0 +1,90 @@
+---
+title: "øvelser_6_mandag"
+output: html_document
+date: "2024-10-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# November 2017, opgave 3.
+## Opgave 1
+```{r}
+rodlaengde <- read.table("../data/rodlaengde.txt", header = 1)
+head(rodlaengde, 3)
+```
+
+```{r}
+twoway.int <- lm(lgd ~ dosis + sted + dosis*sted, data=rodlaengde)
+summary(twoway.int)
+```
+$$ lgd = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_2 x_3  + \epsilon $$ 
+Hvor beta_1 er dosis, beta_2 er sted og beta_3 er dosis*sted. 
+
+
+```{r}
+plot(fitted(twoway.int), rstandard(twoway.int), pch = 16, main = "Tosidet ANOVA med vekselvirkning", cex.main = 1.5, cex.lab = 1.5)
+abline(h = 0, lty = 2)
+```
+Vi ser på residualt plottet at punkterne er fordelt med nogenlunde lige mange punkter over og under linjen, og at der er nogle enkelt punkter, som ligger udenfor intervallet på 2, hvilket også er forventligt da vi forventer at ca. 5% af punkterne vil gøre dette.
+
+
+
+```{r}
+qqnorm(rstandard(twoway.int), pch = 16)
+abline(0, 1, lwd = 2, lty = 2)
+```
+Data er fordelt i de kvartiler som vi forventer, hvilket kan ses på QQ-plottet, da der ikke er nogen systematisk afvigelse.
+
+
+## Opgave 2
+Vi opstiller en nul-hypotese om at rodlængden ikke er forskellig på sted A og sted B.. 
+$$ H_0 : \beta_3 = 0 $$
+
+```{r}
+drop1(twoway.int, test = "F")
+```
+Der er ikke signifikant forskel på rodlængden når der korrigeres for sted. Baseret på en p-værdi på 0.6503 kan vi nemlig ikke afvise nul-hypotesen om at der ikke er forskel på modellen når vi ikke indrager sted som forklarende variabel.  
+
+## Opgave 3
+Bestem estimatet for forventet rodlængde for en plante fra sted B, som har fået mellemstor
+dosis gødning givet som to behandlinger (mellem2).
+
+For hvilken af de otte kombinationer af dosis og sted er den forventede rodlængde størst?
+Svaret skal naturligvis begrundes.
+
+```{r}
+twoway.add <- lm(lgd ~ dosis + sted, data=rodlaengde)
+summary(twoway.add)
+
+
+```
+R har valgt en kontrol gruppe for os, med dosis =  hoej og og sted = A.
+
+Esitimat for forventet rodlængde for en plante fra sted B, som har fået mellemstor
+dosis gødning givet som to behandlinger (mellem2)
+
+```{r}
+# intercept + forskel i dosismellem2  + stedB
+8.8120 + (-2.1690) + 0.5080
+```
+
+Den længeste rod opnås ved sted B med dosis høj. Fordi forskellen til de andre dosis størrelser påvirker længden negativt og sted B har et positiv effekt.
+
+
+## Opgave 4
+Angiv estimat og 95% konfidensinterval for forskellen i forventet rodlængde mellem planer der har fået høj dosis gødning og planter der har fået lav dosis gødning.
+
+Undersøg med et hypotesetest om der er forskel mellem forventet rodlængde på sted A
+og sted B.
+
+
+```{r}
+confint(twoway.add)
+
+```
+
+Siden modellen er addativ behøver vi ikke at tage højde for stedet. Vi ser at forskellen konfidensintavallet på forskellen [-4.628, -2.666] da 0 ikke ligger i interavallet kan vi afvise at der ikke er forskel.
+
+

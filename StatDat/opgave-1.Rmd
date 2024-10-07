@@ -4,6 +4,8 @@ output: html_document
 date: "2024-09-20"
 ---
 
+♣
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -36,10 +38,14 @@ m1 <- lm(index ~ treat , data = tartar)
 
 
 ## Opgave 2
-Model antagelse
-Responsvariablen $ y_1 , ..., y_n $ er uafhænige og normaltfordelt $ y_i \sim N(\mu_i, \sigma^2) $ med sammen spredning for alle grupper. 
-Derudover afhænger middelværdien $ \mu_i = \alpha_{g_{(i)}} $ afhænger af gruppen $ g(i) $
-(TODO: Antagelser om restled)
+Model antagelse:
+Data:
+$(y_1, x_1) , ..., (y_26, x_26)$ hvor responsvariablen y et index på hvor høj en grad hunden har problemer med tandsten og og den diskrete forklarende variable x angiver de forskellige typer af behandlinger. Svarende til to behandlinger og en kontrol gruppe.
+
+Anova:
+Responsvariablen $y_1 , ..., y_n$ er uafhænige og normaltfordelt $ y_i \sim N(\mu_i, \sigma^2) $ med sammen spredning for alle grupper. 
+Derudover afhænger middelværdien $\mu_i = \alpha_{g_{(i)}}$  af gruppen $g(i)$
+Vi antager at alle restled $e_1 ,.., e_n$ har samme fordeling $e_i \sim iid. \: N(0, 1)$ 
 
 Plots
  - QQ-Plot og histogram til normal fordeling
@@ -53,14 +59,19 @@ tartar_HMP <- subset(tartar, treat=="HMP")
 
 qqnorm(tartar_contol$index, main = "Index for group : Control")
 abline(a = mean(tartar_contol$index), b = sd(tartar_contol$index))
-
+```
+```{r}
 qqnorm(tartar_P207$index, main = "Index for group : P207")
 abline(a = mean(tartar_P207$index), b = sd(tartar_P207$index))
+```
 
+```{r}
 qqnorm(tartar_HMP$index, main = "Index for group : HMP")
 abline(a = mean(tartar_HMP$index), b = sd(tartar_HMP$index))
 ```
-Vi kan se på QQ-plottet at der ikke er nogen systematisk afvigelse fra identitets linjen, hvilket tyder på at data falder i kvartiler, som der forventes ved en normalfordeling. 
+
+
+Vi kan se på QQ-plottet at der ikke er nogen systematisk afvigelse fra identitets linjen, hvilket tyder på at data falder i de kvartiler, som der forventes ved en normalfordeling. 
 
 
 ```{r}
@@ -73,10 +84,15 @@ ggplot(data = tartar, aes(x = log_fitted_values, y = log_residuals)) +
   geom_point(color = "blue", size = 1) + # Scatter
   geom_abline(slope = 0, intercept = 0) # line
 
+
+```
+```{r}
 qqnorm(tartar$log_residuals, main = "QQplot for residuals")
 abline(a = 0, b = 1)
 ```
-Antagelsen om at $e_1 ,.., e_n$ er standard normalt fordelt holder, der er ca. lige mange punkter over og under den vandrette linje på residualplottet. Og i QQ-plotet ser vi ingen systematisk afvigelse fra den ligefrem propotionalle linje. Derfor konkludere vi at spredningen er den samme for alle grupper.
+
+
+Antagelsen om at $e_1 ,.., e_n$ er standard normalt fordelt holder, der er ca. lige mange punkter over og under den vandrette linje på residualplottet. Og i QQ-plotet ser vi ingen systematisk afvigelse fra den ligefrem propotionalle linje. Herved validere vi at antagelse om spredningen er den samme for alle grupper.
 
 
 ### Afhænger middelværi af gruppen
@@ -90,7 +106,7 @@ ggplot(data = tartar, aes(x = treat, y = index)) +
 ```
 Plottet viser at der er en markant between-group variation, hvilket tyder på at den forklarende variabel har en påvirkning af på værdien af responsvariablen. 
 
-Dertil ser vi en større witihn-group variation i control og P207, end vi ser for HMP. Dette tyder på at middelværdien afhænger af gruppen.
+Dertil ser vi en større witihn-group variation i control og P207, end vi ser for HMP. 
 
 ## Opgave 3
 Vi bruger LM til at udregne estimatet for den forventede værdi $\hat{\mu}$
@@ -102,13 +118,28 @@ Vi forventer at en hund som ikke er blevet behandlet har et index på 1.0889
 Vi forventer at en hund som er blevet behandlet med P207 harr et index på 0.7467
 
 ## Opgave 4
-(TODO: F-test)
-
 $$ H_0 : \alpha_1 = \alpha_2 = \alpha_2 $$
+
+* *fuld model*: ensidet anova med 3 gruppegennemsnit
+* *nulmodel*: model hvor data opfattes som en sample fra en gruppe, altså hvor alle gruppegennemsnit antages at være ens
+
 ```{r}
-summary(m1)
+n_groups <- 3
+lenght <- nrow(tartar)
 ```
-Vi kan ikke konkludere at den forventede værdi er den samme for treatHMP og kontrol gruppen, givet at vi har en p-værdi på 0.00135. Da forkastes 0-hypotesen.
+
+
+```{r}
+fullModel <- lm(index ~ treat , data = tartar)
+nulModel <- lm(index ~ 1 , data = tartar)
+anova(nulModel, fullModel)
+
+1 - pf(6.6684, 3-1, 28-5)
+
+```
+Vi anvender F-test til at sige noget om gennemsnittet på tværs af alle grupper, ved at sammenligne mellem-grupe variationen med indenfor-gruppe variationen. Da  p-værdien for f-statistic er mindre end 0.05 forkastes nul-hypotesen på et signifikansnivue på 95%, for at alle middelværdier er nes.
+
+Der er altså mindst en af grupperne, hvis middelværedi afviger fra kontrol gruppen.
 
 ## Opgave 5
 ```{r}
