@@ -19,7 +19,7 @@ library(isdals) # Data
 
 ```{r}
 florida <- read.table("../data/florida.txt", header = 1)
-florida <- data.frame(training) # Convert to dataframe
+florida <- data.frame(florida) # Convert to dataframe
 ```
 
 # Eksamen, Januar 2019 - Opgave 2
@@ -33,6 +33,7 @@ linreg1 <- lm(Price ~ Size, data=florida)
 qqnorm(rstandard(linreg1))
 abline(0,1, lty=2)
 ```
+
 Vi ser en systematisk avigelse fra i QQ-plottet, for de laveste og højeste kvartiler ses in konkav krumning omkring den ligefrem propotionelle linje og i midten ser vi en konveks krumning.
 
 
@@ -43,12 +44,14 @@ linreg2 <- lm(log(Price) ~ log(Size), data=florida)
 qqnorm(rstandard(linreg2))
 abline(0,1, lty=2)
 ```
+
 Efter logtransformationen er der ikke nogen systematisk afvigelse fra linjen i QQ-plottet, hvilket betyder at data ligger i de kvartiler, som vi forventer ved en normalfordeling. 
 
 ```{r}
 plot(fitted(linreg2), rstandard(linreg2))
 abline(a = 0, b = 0)
 ```
+
 Residualerne ligger fordelt omkring linjen, som vi forventer det, med ca. 95% af datapunkterne indenfor 2 og -2 på y-aksen og ca. samme mængde punkter over og under linjen.
 
 
@@ -101,15 +104,35 @@ Hvis jeg har forstået opgaven rigtig så er det store hus lidt mere end dobbelt
 ## Opgave 4
 ```{r}
 # R log transformere automatisk
-pred <- predict(linreg2, newdata = data.frame(Size = 2000), interval = "p")
+pred <- predict(linreg2, newdata = data.frame(Size = 3000), interval = "p")
 pred
 
 exp(pred[1])
 exp(pred[2])
 exp(pred[3])
 ```
-Da 215.000 ligger i prediktionsintervallet fra 92.700 til 370.079, anses det, udfra data, ikke som en usædvanlig pris
+Da 215.000 ligger i prediktionsintervallet fra 150.839 til 614.413, anses det, udfra data, ikke som en usædvanlig pris
 
 
 ## Opgave 5
+```{r}
+multipel <- lm(log(Price) ~ log(Size) + Baths, data=florida)
+```
+
+$$ \texttt{Log(Price)} = \alpha + \beta_1 \cdot \texttt{log(Size)} + \beta_2 \cdot \texttt{Baths} $$
+
+$$ H_0 : \beta_2 = 0 $$
+
+* *fuld model*: Multipel lineær regressions model med 2 forklarende variable log(Size) og Baths
+* *nulmodel*: En undermodel hvor med 1 forklarende variabel log(Size)
+
+```{r}
+fullModel <- lm(log(Price) ~ log(Size) + Baths, data=florida)
+nulModel <- lm(log(Price) ~ log(Size), data=florida)
+
+anova(nulModel, fullModel)
+```
+
+Vi forkaster nulhyposten om at Baths ikke har nogen signifikat effekt på et signifikatnivuea på 95% udfra en p-værdi på 0.3825
+
 

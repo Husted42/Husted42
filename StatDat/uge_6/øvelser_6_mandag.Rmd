@@ -24,7 +24,7 @@ Hvor beta_1 er dosis, beta_2 er sted og beta_3 er dosis*sted.
 
 
 ```{r}
-plot(fitted(twoway.int), rstandard(twoway.int), pch = 16, main = "Tosidet ANOVA med vekselvirkning", cex.main = 1.5, cex.lab = 1.5)
+plot(fitted(twoway.int), rstandard(twoway.int), pch = 16, main = "Tosidet ANOVA", cex.main = 1.5, cex.lab = 1.5)
 abline(h = 0, lty = 2)
 ```
 Vi ser på residualt plottet at punkterne er fordelt med nogenlunde lige mange punkter over og under linjen, og at der er nogle enkelt punkter, som ligger udenfor intervallet på 2, hvilket også er forventligt da vi forventer at ca. 5% af punkterne vil gøre dette.
@@ -57,8 +57,6 @@ Svaret skal naturligvis begrundes.
 ```{r}
 twoway.add <- lm(lgd ~ dosis + sted, data=rodlaengde)
 summary(twoway.add)
-
-
 ```
 R har valgt en kontrol gruppe for os, med dosis =  hoej og og sted = A.
 
@@ -86,5 +84,163 @@ confint(twoway.add)
 ```
 
 Siden modellen er addativ behøver vi ikke at tage højde for stedet. Vi ser at forskellen konfidensintavallet på forskellen [-4.628, -2.666] da 0 ikke ligger i interavallet kan vi afvise at der ikke er forskel.
+
+
+# HS 26
+## Opgave 1
+```{r}
+data("jellyfish")
+head(jellyfish, n = 3)
+```
+
+
+
+
+```{r}
+m1 <- lm(Length ~ Width + Location, data=jellyfish)
+summary(m1)
+```
+Da modellen er additiv fortolker vi Width som en hældnigskoefficient, som er ens for alle grupper, altså uden vekselvirkning.
+Intercept er skæring i y for gruppen Dangar og LocationSalamander er slæringen i y for gruppen Salamander.
+
+
+## Opgave 3
+Bestem et estimat for den forventede længde af en gople fra Dangar Island med en bredde pa 14. Bestem ogs ˚ a et estimat for den forventede længde af en gople fra Salamander Bay med en bredde pa 14
+
+```{r}
+newData_S <- data.frame(Width = 14, Location = "Salamander")
+newData_D <- data.frame(Width = 14, Location = "Dangar")
+
+predict(m1, newData_S, interval = "p")
+predict(m1, newData_D, interval = "p")
+
+
+
+```
+
+## Opgave 4
+```{r}
+confint(m1)
+```
+Intervallet for forskellen mellem dagner og salamadar [0.740, 2.831], da 0 ikke ligger i hypotesen kan vi forkaste nulhypotesen 
+$$ H_0 : \alpha_{Location(Dangar)} - \alpha_{Location(Salamander)} = 0 $$
+
+Dette kan også ses med F-test
+```{r}
+drop1(m1, test = 'F')
+```
+Vi forkaster hypotesen om at der ikke er forskel på de forskellige lokationer på et signifikansnivue på 95%, med en p-værdi på 0.001292
+
+# Januar 2020 - Opgave 2
+```{r}
+pestgolf <- read.table("../data/pestgolf.txt", header = 1)
+head(pestgolf, 3)
+```
+## Opgave 1
+Fordi vi har e kontinuert resposnvariabel (kd) og to kategoriske forklarende variable (Treat) og (Lokation).
+
+
+Angiv et estimat for den forventede sorption i en jordprøve fra Lokation = HONE,
+hvorp˚a der er anvendt produktet Treat = T05
+```{r}
+twoway.int <- lm(Kd ~ Treat + Lokation + Treat*Lokation, data=pestgolf)
+summary(twoway.int)
+
+0.848667 + -0.008333
+```
+
+Vores model estimere en kd værdi på 0.840
+
+
+## Opgave 2
+```{r}
+fullModel <- lm(Kd ~ Treat + Lokation + Treat*Lokation, data=pestgolf)
+nulModel <- lm(Kd ~ Treat + Lokation, data = pestgolf)
+
+anova(fullModel, nulModel)
+
+```
+$$ kd = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_2 x_3  + \epsilon $$ 
+Hvor $\epsilon \sim N(0,1) $.
+
+Vi forkaster ikke $H_0 : \beta_3 = 0$ med et signifikansniveau på 95% med en p-værdi på 0.0682
+
+## Opgave 3
+Angiv et estimat og et 95 % konfidensinterval for den forventede forskel i sorptionen
+i jordprøver fra stederne omtalt som DYR og HONE.
+
+```{r}
+nulModel <- lm(Kd ~ Treat + Lokation, data = pestgolf)
+summary(nulModel)
+confint(nulModel)
+```
+
+Vi har en estimeret forskel på -0.464 med et 95% interval på [-0.607, -0.320]
+
+## Opgave 4
+```{r}
+drop1(nulModel, test = "F")
+```
+
+$$ H_0 : \alpha_{Location(KNY)} = \alpha_{Location(HONE)} = \alpha_{Location(DYR)}  $$
+Vi forkaster 0 hypotesen med $Pr(>F) \approx 0$ 
+
+# Januar 2020 - Opgave 1
+```{r}
+salat <- read.table("../data/salat.txt", header = 1)
+head(salat, 3)
+```
+
+## Opgave 1
+Angiv et estimat for den forventede mængde tørstof, hvis der tilføres nitratmængder p˚a henholdsvis 0.5 og 3.0. Angiv ogs˚a estimatet for residualspredningen.
+
+```{r}
+model1 <- lm(stof ~ factor(nitrat), data = salat)
+summary(model1)
+```
+
+Estimat for middelværdien for gruppe factor(nitrat)0.5 = 24.465 
+Estimat for middelværdien for gruppe factor(nitrat)3.0 = 37.538
+
+## Opgave 2
+```{r}
+fullModel <- lm(stof ~ factor(nitrat), data = salat)
+nulModel  <- lm(stof ~ 1, data = salat)
+anova(nulModel, fullModel)
+```
+Vi forkaster nulhypotesen $ H_0 : \alpha_{g(0.5)} = \alpha_{g(1)} = \alpha_{g(2)} = \alpha_{g(3)} $  på et 95% signifikansniveau med en p-værdi på $0.001769$ 
+
+## Opgave 3
+Angiv et estimat for den forventede mængde tørstof ved tilsætning af en nitratmængde p˚a 1.0, n˚ar du tager udgangspunkt i modellen model2 som fittes med
+R-koden
+
+```{r}
+model2 <- lm(stof ~ nitrat, data = salat)
+summary(model2)
+```
+```{r}
+predict(model2, data.frame(nitrat = 14), interval = "p")
+```
+
+## Opgave 4
+
+```{r}
+plot(fitted(model2), rstandard(model2), pch = 16, main = "Linreg", cex.main = 1.5, cex.lab = 1.5)
+abline(h = 0, lty = 2)
+```
+
+```{r}
+qqnorm(rstandard(model2), pch = 16)
+abline(0, 1, lwd = 2, lty = 2)
+```
+## Opgave 5
+```{r}
+anova(model2, model1)
+```
+
+# Opgave 8.9
+
+
+
 
 

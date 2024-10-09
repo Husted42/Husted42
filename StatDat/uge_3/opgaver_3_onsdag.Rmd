@@ -147,4 +147,5 @@ t.test(soybean$stress, soybean$nostress, paired=FALSE)
 
 ```
 
+## Opgave 5
 
