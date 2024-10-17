@@ -1,0 +1,365 @@
+---
+title: "Noter"
+output: html_document
+date: "2024-10-17"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Innit
+```{r}
+data_johnson <- read.table("../data/johnson-fatpct.txt", header = 1)
+pestgolf <- read.table("../data/pestgolf.txt", header = 1)
+
+```
+
+
+# Modeller
+
+## 1-stikprøve T-test
+**Data:** <br>
+Kontinuert responsvariabel [y] med ingen forklarende variabel
+$$y_1, ..., y_n$$
+
+**Statistisk model:** <br>
+$y_1, ..., y_n$ er  uafhængige og alle normalfordelte
+med samme middelværdi $\mu_i = \gamma+e_i $ hvor $e_i \sim N(0, \sigma^2)$ og samme spredning $\sigma$.
+
+**De ukendte populationsparametre** <br>
+Middelværdi $\mu$ og spredning $\sigma$
+
+
+## 1-sidet Anova
+Pointen med en varaiansanalyse er at vi kan påvise forskelle mellem grupper ved at samligne forskellige kilder til variation.
+
+**Data:** <br> $y_1, ..., y_n$ [Forklar var de repræsentere] fra k grupper med $n_j$ observationer i gruppe j.
+
+**Statistisk model:** <br>
+Vi antager at $y_1, ..., y_n$ er uafhængige og normalfordelte $\sim N(\mu_i, \sigma^2)$
+
+Dertil antager vi at middelværdien $\mu_i = \alpha_{g(i)} + e_i$ hvor
+$\epsilon_i \sim N(0, \sigma^2)$ afhænger af gruppen. Med samme spredning $\sigma$ i alle grupper. 
+
+**De ukendte populationsparametre** <br>
+Middelværdien for alle grupper $\mu_1 ,..., \mu_k$ og den ukendte spredningen $\sigma$
+
+## 2-stikprøve T-test
+TODO : Tilføj afsnit
+
+## Linær regression
+
+**Data:** <br> Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel [y] og den
+forklarende variabel [x].
+
+**Statistisk model:** <br> $$ y_i = \mu_i + \epsilon  $$ hvor
+$\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ (ret linje)
+med spredning $\sigma$.
+
+**De ukendte populationsparametre** <br> Skæringen $\alpha$, hældningen
+$\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan
+estimere: $\hat{\alpha},\hat{\beta},  \hat{\sigma}$
+
+## Kvadratisk regerssion
+**Data:** <br> Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel [y] og den
+forklarende variabel [x].
+
+**Statistisk model:**
+$$y_i = \alpha + \beta_1 x_{i} + \beta_2 x_{i}^2 + e_i$$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $y_i = \alpha + \beta_1 x_{i} + \beta_2 x_{i}^2 + e_i$ (Andengrads polynomial)
+med spredning $\sigma$.
+
+**De ukendte populationsparametre** <br> 
+Skæringen $\alpha$, hældningenskoeficienter $\beta_1, \beta_2$  og spredningen $\sigma$ er alle ukendte parametre, som vi kan
+estimere: $\hat{\alpha},\hat{\beta_1}, \hat{\beta_2}, \hat{\sigma}$
+
+
+## 2-Sidet Anova evt. med vekselvirkning
+
+### Additive model for tosidet ANOVA
+**Data** <br>
+To kategoriske forklarende variable og en kontinuert.
+[Her skal der skrives i sammenhæng af data, men angiv grupperne $x_1$ og $x_2$ samt responsvariablen $y_i$]
+
+**Statistisk model**
+$$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e_i $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+**Eksempel**
+```{r}
+unique(pestgolf$Treat)
+unique(pestgolf$Lokation)
+```
+
+
+```{r}
+m1 <- lm(Kd ~ Treat + Lokation, data = pestgolf)
+summary(m1)
+```
+
+Vi ser at TreatT04 og LokationDYR mangler i tabellen, da må dette være vores kontrol parameter / Intercept
+
+Vi kan estimere middelværdien for Lokation = "HONE", Treat = "T05" ved brug af tabellen
+
+```{r}
+# Intercept + Treat05 + LokationHONE 
+0.89411 + 0.22411 + (-0.46350)
+```
+
+Eller ved brug af predict
+```{r}
+predict(m1, data.frame(Lokation = "HONE", Treat = "T05"), interval = "p")
+```
+
+
+### Additive model med vekselvirkning
+To kategoriske forklarende variable og en kontinuert.
+[Her skal der skrives i sammenhæng af data, men angiv grupperne $g_1(i)$ og $g_2(i)$ samt responsvariablen $y_i$]
+
+**Data** <br>
+To kategoriske forklarende variable og en kontinuert.
+[Her skal der skrives i sammenhæng af data, men angiv grupperne $g_1(i)$ og $g_2(i)$ samt responsvariablen $y_i$]
+
+**Statistisk model**
+$$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1x_2 + e_i $$
+**Eksempel**
+```{r}
+m2 <- lm(Kd ~ Treat + Lokation + Treat * Lokation, data = pestgolf)
+summary(m2)
+```
+
+Vi ser at TreatT04 og LokationDYR mangler i tabellen, da må dette være vores kontrol parameter / Intercept
+
+Vi kan estimere middelværdien for Lokation = "HONE", Treat = "T05" ved brug af tabellen
+
+```{r}
+# Intercept + Treat05 + LokationHONE + TreatT05:LokationHONE
+0.848667 + 0.315000 + -0.459333 + (-0.008333)
+```
+
+Eller ved brug af predict
+```{r}
+predict(m2, data.frame(Lokation = "HONE", Treat = "T05"), interval = "p")
+```
+### Hypotese test af vekselvirkning
+
+$h_0: \beta_3 = 0$
+
+Kan testes med anova eller drop1
+```{r}
+anova(m1, m2)
+cat("\n\n\n------------------------------------------------------------------\n")
+drop1(m2, test="F")
+```
+
+Vi forkaster ikke 0 hypotesen på et signifikansniveau på 95% da vi for en p-værdi på 0.0682 
+
+## Multilineær regression / Multipel lineær regression
+Modeller med $d\geq2$ kvantitative forkl. variable.
+$$y_i = \alpha + \beta_1 x_{i1} + ... + \beta_d x_{id} + e_i$$
+**Data** <br>
+Tupler af data $(x_{11}, x_{11}, y_1), ... , (x_{n1}, x_{n1}, y_n) $ med forklarende variable [Beskriv x'erne] og respons variabel [Beskriv y]
+
+**Statistisk model** <br>
+Udgangspunkt i to forklarende variable:
+$$y_i = \alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + e_i$$ 
+
+**De ukendte populationsparametre** <br> 
+De partielle hældninger $\beta_1$, $\beta_2$, skæring med y aksen $\alpha$ og spredningen $\sigma$ er populationsparametre som vi kan estimere: $\hat{\beta_1}, \hat{\beta_2}, \hat{\alpha}, \hat{\sigma} $
+
+**Multikollinearitet**
+Multikollinearitet opstår hvis $x_1$ og $x_2$ er afhængie, således at det bliver svært at adskille effekten af dem. 
+
+Vi skal altid være opmærksom på kollinearitet, og tegn på dette kunne være:
+  * Unaturlige estimater (Forkert fortegn)
+  * Hverken $\beta_1$ eller $\beta_2$ er signifikante
+
+Vi har den statistisk model
+$$y = \beta_0 + \beta x_{1} + \beta_2 x_2 + \epsilon $$
+
+Men hvis der er lineær afhængighed gælder det at
+
+$$ x_2 \approx  a + b x_1 $$
+
+Hvilket implicere
+$$ y \approx \beta_0 + \beta x_{1} + \beta_2 (a + b x_1) + \epsilon $$
+hvor
+$$ \epsilon \sim N(0, \sigma^2) $$
+
+### Eksempel på anvendelse
+**Fit modelen**
+```{r}
+m1 <- lm(bodyfat ~ hip + abdomen, data = data_johnson)
+summary(m1)
+```
+
+Vi estimere en model $$ \hat{y} = \hat{\alpha} +  \hat{\beta_1}x + \hat{\beta_2}x  $$
+hvor $\hat{\alpha} = -20.88$ er et estimat for skæringen, $\hat{\beta_1} = -0.33 $, $ \hat{\beta_2} = 0.78$ er estimater for hældningen.
+
+Vi ser at hip skifter fortegn, beskriv problemet med Multikollinearitet. Kan vi argumentere for at de forklarende variable er afhænige?
+
+**Test af hypotese**
+Vi ønsker at teste $h_0: \beta_1 = -0.5, \beta_2 = 0.8$
+
+Vi anvender en F-test til at teste hele hypotesen:
+  * Fullmodel: Vores fittede multiple regressions model
+  * Nulmodel: En multiple regressions model med fixed partielle hældninger $\beta_1 = -0.5, \beta_2 = 0.8$
+
+```{r}
+m2 <- lm(bodyfat ~ offset((-0.5)*hip + (0.8)*abdomen), data = data_johnson) ## Nulmodel
+
+anova(m2, m1)
+
+```
+Vi forkaster nulhypotesen med en signifikantsnivue på 95% med en p-værdi på 0.0025.  
+
+## Lineær normal model (Flere rette linjer)
+TODO : Tilføj afsnit
+
+## Binomial model
+TODO : Tilføj afsnit
+
+## Antalstabel / ro proportioner
+TODO : Tilføj afsnit
+
+# Noter til quiz
+## uge 2
+### Konfidensintervallet for enkelt stikprøve
+**Giver standard error**
+$$ \hat{y} \pm t_{0.975, n-1} \cdot SE $$
+$$ n = 7, \mu = 17, SE = 3  $$
+```{r}
+# mu - qt * s/sqrt(n)
+n = 7
+mu =17
+SE = 3
+
+mu + c(-1, 1) * qt(0.975, df=n-1) * SE
+```
+**Givet spredning**
+$$ \hat{y} \pm t_{0.975, n-1} \cdot \frac{s}{\sqrt{n}} $$
+```{r}
+# mu - qt * s/sqrt(n)
+n = 7
+mu =17
+s = 3
+
+mu + c(-1, 1) * qt(0.975, df=n-1) * (s/sqrt(n))
+```
+
+### Find spredning for Normalfordeling givet middelværdi og konfidensinterval på 68%
+
+```{r}
+lower = 50
+upper = 62
+
+(upper - lower) / 2
+
+```
+### Sandsynlighed for Observation over værdi for normal fordeling
+Vi får givet middelværdi og spredning
+
+```{r}
+mu = 200 # Middelværdi
+s = 40 # Spredning
+obs = 190 #Observation
+
+# Under
+pnorm(obs, mean = mu, sd = s)
+
+#Over
+1 - pnorm(obs, mean = mu, sd = s)
+```
+
+### Mere end 2 spredninger væk fra middelværdien?
+For en normalfordeling fås et nogenlunde 95% interval ved
+$$ \hat{y} \pm 2 \cdot \frac{s}{\sqrt{n}} $$
+Altså ligger 5% af observationerne fra en normalfordelt population mere end 2*spredning vær fra middelværdien
+
+### Sandsylighed mellem 2 værdier for normalfordeing
+```{r}
+mu = 15.5 # Middelværdi
+s = 3 # Spredning
+upper = 16.5 # Til
+lower = 14 # Fra
+
+pnorm(upper, mean = mu, sd = s) 
+pnorm(lower, mean = mu, sd = s)
+cat("\n")
+pnorm(upper, mean = mu, sd = s) - pnorm(lower, mean = mu, sd = s)
+```
+
+### Find den værdi, hvor vi kan forvente at x% af oberservationerne ligger under.
+```{r}
+mu = 114.8 # Middelværdi
+s = 13.1 # Spredning
+x = 0.35 # percentage to check
+
+qnorm(x, mean = mu, sd = s)
+```
+### Beregn SE udfra spredning
+SE fra spredning
+```{r}
+s = 2
+n = 16
+
+s / sqrt(16)
+```
+
+## uge 3
+### Bestem t-teststørrelsen og p-værdien for hypotesen i lineær regression
+I en lineær regression med 87 datapunkter er hældningen blevet estimeret til 5.12 med en standard error på 3.20. Bestem t-teststørrelsen og p-værdien for hypotesen om at "den sande hældning" er 0
+```{r}
+beta = 5.12 #Hældning
+SE = 3.2 # Standard error
+n = 87 # Antal observationer
+hypotese = 0 # hypotesen om at "den sande hældning" er 0
+
+
+# Test af hypotesen H: beta=4
+T = (beta - hypotese) / SE
+
+# Beregning af p-vaerdi
+P = 2*(1-pt(T, df = n - 2))
+
+T
+P
+
+```
+### Konfidensinterval for hældning i lineær regression
+I en lineær regression med 104 observationer er hældningen blevet estimeret til 33.2 med en tilhørende standard error på 2.8. Bestem et 95% konfidensinteval for hældningen.
+
+```{r}
+n = 104 # Antal observationer
+beta = 33.2 # Hældning
+SE = 2.8 # Standard error
+int = .95 # Konfidensinterval
+conf = 1 - (1 - int) /2
+conf
+
+# 2 frihedsgrader for lineær regression
+beta + c(-1, 1) * qt(conf, df=n-2) * SE
+
+```
+
+### Ensidet ANOVA t-fraktil (TODO: Forkert svaret er 2.002465 )
+Ved en ensidet variansanalyse med 20 observationer fra hver af tre forskellige behandlingsgrupper (A, B og C) ønsker man at konstruere et 95 % - konfidensinterval for den gennemsnitlige værdi hørende til målinger fra gruppe A. Angiv værdien af den t-fraktil der indgår i konstruktionen af konfidensintervallet.
+
+```{r}
+n <- 20 # Antal Observationer
+k <- 1 # Antal grupper (I gruppe A)
+
+qt(0.975, df = n-1)
+```
