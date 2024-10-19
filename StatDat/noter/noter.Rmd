@@ -354,7 +354,7 @@ beta + c(-1, 1) * qt(conf, df=n-2) * SE
 
 ```
 
-### Ensidet ANOVA t-fraktil (TODO: Forkert svaret er 2.002465 )
+### Ensidet ANOVA t-fraktil (TODO: Forkert, svaret er 2.002465 )
 Ved en ensidet variansanalyse med 20 observationer fra hver af tre forskellige behandlingsgrupper (A, B og C) ønsker man at konstruere et 95 % - konfidensinterval for den gennemsnitlige værdi hørende til målinger fra gruppe A. Angiv værdien af den t-fraktil der indgår i konstruktionen af konfidensintervallet.
 
 ```{r}

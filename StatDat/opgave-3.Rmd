@@ -1,0 +1,163 @@
+---
+title: "Opgave 3"
+output: html_document
+date: "2024-10-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Data
+```{r}
+data1 <- read.table("data/nov2022opg1.txt", header = 1)
+head(data1, n = 3)
+```
+```{r}
+unique(data1$variety)
+```
+# Delopgave 1
+Det er den ensidet variansanalyse. Med en kategorisk forklarende variabel variety og en kvantitativ kontinuert responsvariabel udbytte
+
+```{r}
+mod1 <- lm(udbytte ~ variety, data = data1)
+round(summary(mod1)$coefficients, 4)
+```
+
+Vores Intercept er E
+```{r}
+varietyE <- 6.550
+varietyR1 <- varietyE + (-3.050)
+
+varietyE
+varietyR1
+```
+Vi for et estimat for middelværdien i hver gruppe
+
+$$ \hat{\alpha_{\texttt{E}}} = 6.55, \: \: \hat{\alpha_{\texttt{R1}}} = 3.5  $$
+
+# Opgave 2
+```{r}
+confint(mod1)
+```
+```{r}
+E_low <- 5.154084
+E_high <- 7.9459156
+
+diff_low <- -5.024123
+diff_high <- -1.0758772
+  
+R1_low <- E_low + diff_low
+R1_high <- E_high + diff_high
+
+E_low
+E_high
+
+diff_low
+diff_high
+
+R1_low
+R1_high
+```
+
+95 % - konfidensinterval for E (5.15, 7.94)
+
+95 % - konfidensinterval for R1 (0.12, 6.87)
+
+95 % - konfidensinterval for forskellen (-5.02, -1.07)
+
+konfidensintervalet skal forstås således at den sande ukendte populationsmiddelværdi for gruppen E ligger i intervallet (5.15, 7.94). Samme logik følger for de næste to intervaller.
+
+
+# Opgave 3
+
+Vi laver en anova test for at se om delmodelen kan forklare data bedre. Dette kunne også være gjordt med drop1, i begge tilfælde får vi samme p-værdi
+  * FullModel : En ensidet variansanalyse med variety som forklarende variabel
+  * Nullmodel : End del model af FullModel, som betragtes som en enkelt stikprøve uden en forklarende variabel
+
+```{r}
+Fullmodel <- lm(udbytte ~ variety - 1, data = data1)
+Nullmodel <- lm(udbytte ~ 1, data = data1)
+
+anova(Nullmodel, Fullmodel)
+```
+
+Vi kan ud fra data ikke konkludere at der er forskel. Vi forkaster ikke nulhypotesen $\alpha_{g(1)} = ... = \alpha_{g(k)}$ for k grupper, med et signifikansnivuea på 95%, da vi for en p-værdi på over 5%
+
+# Opgave 4
+**Data:** <br> Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative data, både for vores responsvariabel udbytte og den
+forklarende variabel afstand. Vi bemærker at udbytte er koninutert imens afstand er diskret.
+
+**Statistisk model:** <br> $$ y_i = \mu_i + \epsilon  $$ hvor
+$\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ (ret linje)
+med spredning $\sigma$.
+
+**De ukendte populationsparametre** <br> Skæringen $\alpha$, hældningen
+$\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan
+estimere: $\hat{\alpha},\hat{\beta},  \hat{\sigma}$
+
+```{r}
+mod2 <- lm(udbytte ~ afstand, data = data1)
+summary(mod2)
+```
+
+Ud fra summery kan vi se de estimeret parametre
+$$ \hat{\alpha} = 3.72, \hat{\beta} = 0.46, \hat{\sigma} = 1.12 $$
+
+# Opgave 5
+Vi opstiller en nulhypotese $H_0: \beta = 0$ 
+
+Vi kan forkaste nulhypotesen om at der ikke er nogen linær sammenhæng på et signifikantnivue på 95% med en p-værdi på 1.08e-05 (Meget lidt :D )
+
+Derfor ved vi at nul ikke ligger i 95%-konfindenintervallet for den ukendte sande hældning
+
+```{r}
+confint(mod2)
+```
+Nul ligger ikke i intervallet (0.28, 0.63)
+
+# Opgave 6
+
+```{r}
+data1$afstand_kat <- factor(data1$afstand)
+data1$afstand_kat
+```
+```{r}
+mod3 <- lm(udbytte ~ variety + afstand_kat, data = data1)
+summary(mod3)
+```
+
+Vores intercept er i dette tilfeælde varietyE og afstad_kat1, så estimatet kan aflæses direkte til at være 3.87
+
+```{r}
+3.0233 - 2.1721
+```
+Den forventede forskel på udbytter for to områder som ligger henholdvis 2 m og 4 m fra hækken er 0.85
+
+
+# Opgave 7
+
+```{r}
+data1$x <- 1/data1$afstand
+mod4 <- lm(udbytte ~ x + variety, data = data1)
+summary(mod4)
+```
+
+Den forventede værdi er 7.13
+```{r}
+(7.6288 + 0.4574) + (-3.9832 * (1/4.2))
+```
+
+```{r}
+predict(mod4, newdata = data.frame(x = (1/4.2), variety = "P"), interval = "p")
+```
+
+Vi for et  95 % - prædiktionsinterval (5.45 8.82) 
+
+Hvilket vil sige at 95% af nye obersevationen kan forventes at falde indenfor det interval, givet udbyttet på et område som ligger i afstanden 4.2 m fra hækken og som beplantes med jordbærsorten P.
+
