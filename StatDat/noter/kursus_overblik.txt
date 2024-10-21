@@ -1,0 +1,60 @@
+##### ----- Kursusuge 1 - Mandag ----- #####
+Datatyper, deskriptiv statistic
+
+##### ----- Kursusuge 1 - Onsdag ----- #####
+den lineære regressionsmodel
+den ensidede variansanalysemodel
+
+##### ----- Kursusuge 2 - mandag ----- #####
+Normalfordelingen og dens egenskaber
+Hvordan tjekker man om data er normalfordelte?
+Hvorfor er normalfordelingen så interessant/vigtig?
+
+##### ----- Kursusuge 2 - Onsdag ----- #####
+Afsnit 4.4: Du kan læse dette overfladisk; jeg siger nok lidt om det ved forelæsningerne
+Afsnit 5.3: Indtil delafsnit 5.3.4 (dvs. side 117 nederst til side 124 øverst)
+
+##### ----- Kursusuge 3 - mandag ----- #####
+I onsdags snakkede vi om statistisk model, estimation, standard error, konfidensinterval for en enkelt stikprøve. I dag skal vi have de samme begreber på plads for ensidet ANOVA og lineær regression.
+
+Kapitel 5. Bemærk at vi allerede har snakket om det meste af afsnit 5.3, og at vi nok ikke når afsnit 5.4 i dag.
+
+
+##### ----- Kursusuge 3 - Onsdag ----- #####
+Afsnit 3.5 og 5.4 om to stikprøver (parrede og uparrede)
+Afsnit 6.1-6.2 om hypotesetest (i det omfang tiden tillader det)
+
+##### ----- Kursusuge 4 - mandag ----- #####
+Afsnit 6.3 - 6.4 om F-test.
+Afsnit 6.5 om fejltyper ved statistiske test
+Afrunding af kapitel 5 og 6
+
+##### ----- Kursusuge 4 - Onsdag ----- #####
+Kapitel 7 om modelkontrol og prædiktion
+
+
+##### ----- Kursusuge 5 - mandag ----- #####
+gennemgang af ca. første halvdel af slides + det meste af dagens R program
+der indlægges tid til at I selv kan stille spørsmål og fx. tænke over Tillægsspørgsmål til output fra ensidet ANOVA fra dagens R program
+
+##### ----- Kursusuge 5 - Onsdag ----- #####
+Afsnit 8.1 om multipel regression
+
+
+##### ----- Kursusuge 6 - mandag ----- #####
+Afsnit 8.2 (s. 224-234) om den additive moel for tosidet variansanalyse (ANOVA)
+8.4.1-8.4.2 (s. 243-249) om den tosidede variansanalysemodel med vekselvirkning
+
+##### ----- Kursusuge 6 - Onsdag ----- #####
+Eventuelle hængepartier vedrørende tosidet ANOVA
+Modeller med både kvantitative og kontinuerte forklarende variable: afsnit 8.3 (side 234-242)
+
+##### ----- Kursusuge 7 - mandag ----- #####
+Kapitel 11: om binomialfordelingen
+
+##### ----- Kursusuge 7 - Onsdag ----- #####
+Opgave HS.30: test for uafhængighed
+Opgave 12.5: tosidede antalstabeller (3 x 3 tabel)
+Opgave HS.32: se bort for spørgsmål (e).
+Januar 2018, opgave 1: opgave der kommer godt rundt i pensum!
+Quiz til kursusuge 7: Find også et tidpunkt, hvor du laver denne quiz - og hvis du ikke har gjort det allerede quizzerne fra foregående uger.

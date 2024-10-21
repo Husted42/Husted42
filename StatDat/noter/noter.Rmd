@@ -11,16 +11,48 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Innit
+# Data
+Indlæsning
 ```{r}
+#install.packages("ggplot2")
+library(ggplot2)
+
+# txt
 data_johnson <- read.table("../data/johnson-fatpct.txt", header = 1)
 pestgolf <- read.table("../data/pestgolf.txt", header = 1)
 
+# xls
+library(readxl)
+studData2 <- read_excel("data/stud2017-v2.xls")
+studData2 <- studData2[,  c("kon", "hojde")]
+studData2 <- na.omit(studData2) # Drop null rows
+
+# lib
+library(MASS)
+data(cats)
+cats <- na.omit(cats) # Drop null rows
+
+
+```
+
+Print data
+```{r}
+head(pestgolf, n = 3) # Øverste rækket
+unique(pestgolf$Lokation) # Unikke værider 
 ```
 
 
-# Modeller
+Ændring i data
+```{r}
+# Opret subset af data med filter
+kData <- subset(studData2, kon=="Kvinde")
+mData <- subset(studData2, kon=="Mand")
+```
 
+
+
+
+# Modeller
 ## 1-stikprøve T-test
 **Data:** <br>
 Kontinuert responsvariabel [y] med ingen forklarende variabel
@@ -85,6 +117,12 @@ med spredning $\sigma$.
 Skæringen $\alpha$, hældningenskoeficienter $\beta_1, \beta_2$  og spredningen $\sigma$ er alle ukendte parametre, som vi kan
 estimere: $\hat{\alpha},\hat{\beta_1}, \hat{\beta_2}, \hat{\sigma}$
 
+**Eksempel**
+```{r}
+
+```
+
+
 
 ## 2-Sidet Anova evt. med vekselvirkning
 
@@ -134,6 +172,9 @@ To kategoriske forklarende variable og en kontinuert.
 
 **Statistisk model**
 $$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1x_2 + e_i $$
+
+hvor $e_i \texttt{ iid. } N(0, \sigma^2)$
+
 **Eksempel**
 ```{r}
 m2 <- lm(Kd ~ Treat + Lokation + Treat * Lokation, data = pestgolf)
@@ -166,6 +207,24 @@ drop1(m2, test="F")
 
 Vi forkaster ikke 0 hypotesen på et signifikansniveau på 95% da vi for en p-værdi på 0.0682 
 
+## ANCOVA (Flere rette linjer)
+**Data**
+De forklarende variabel består af en kontinuert variabel x [forklar X], og en kategorisk variabel grp [Forklar grp]. Respons variablen $y_i$ er kontinuert
+
+**Statistisk model**
+**Additativ**
+$$ y_i = \alpha_{\texttt{grp(i)}} + \beta \cdot x_i + \epsilon_i $$
+
+hvor $\epsilon_i \texttt{ iid. } N(0, \sigma^2)$
+
+Som det ses i formlen for middelværdien angivet overfor, er effekten af x ikke afhængig af gruppen. Således for vi en model med flere parallele linjer med hældningskoefficent $\beta$ og skæring $\alpha_{\texttt{grp(i)}}$
+
+**Parameter**
+Skæringen per gruppe $\alpha_{\texttt{grp(i)}}$, hældningen $\beta$ og spredningen $\sigma$ er alle ukende populationsparametre, som vi kan estimere.
+
+
+
+
 ## Multilineær regression / Multipel lineær regression
 Modeller med $d\geq2$ kvantitative forkl. variable.
 $$y_i = \alpha + \beta_1 x_{i1} + ... + \beta_d x_{id} + e_i$$
@@ -175,6 +234,7 @@ Tupler af data $(x_{11}, x_{11}, y_1), ... , (x_{n1}, x_{n1}, y_n) $ med forklar
 **Statistisk model** <br>
 Udgangspunkt i to forklarende variable:
 $$y_i = \alpha + \beta_1 x_{i1} + \beta_2 x_{i2} + e_i$$ 
+hvor $e_i \sim N(0, \sigma^2)$
 
 **De ukendte populationsparametre** <br> 
 De partielle hældninger $\beta_1$, $\beta_2$, skæring med y aksen $\alpha$ og spredningen $\sigma$ er populationsparametre som vi kan estimere: $\hat{\beta_1}, \hat{\beta_2}, \hat{\alpha}, \hat{\sigma} $
@@ -225,7 +285,7 @@ anova(m2, m1)
 ```
 Vi forkaster nulhypotesen med en signifikantsnivue på 95% med en p-værdi på 0.0025.  
 
-## Lineær normal model (Flere rette linjer)
+## Lineær normal model 
 TODO : Tilføj afsnit
 
 ## Binomial model
@@ -233,6 +293,110 @@ TODO : Tilføj afsnit
 
 ## Antalstabel / ro proportioner
 TODO : Tilføj afsnit
+
+# Kontrol af modelantagelser
+**kvadratisk regression, en stikprøve, ensidet ANOVA, lineær regression**
+Antagelser:
+ * $e_1, ..., e_n$ eller $y_1, ..., y_n$ er uafhængige
+ * Alle $e_i$ eller $y_i$ er normal fordelte
+ * Alle $e_i$ eller $y_i$ har samme spredning
+ * Middelværien har den rette form
+ 
+**Uafhængihed** <br>
+Antagelsen on uafhængighed er mest et spørgsmål om designet af eksperimentet eller dataindsamlingen.
+  * Er der flere målinger på samme eksperimentelle enhed?
+  * Er individerne i familie med hinanden?
+  * Hører observationerne naturligt sammen i grupper?
+
+Hvis ja, så er der måske problemer med uafhængighedsantagelsen,
+
+**Samme spredning** <br>
+Kontrolleres med residual plot
+```{r}
+plot(fitted(linreg), rstandard(linreg))
+abline(0,0, col = 'Red')
+
+```
+
+Der må være noget mønster i den lodrette variation
+  * Hvis vi kan se en kurve er middelværdien forkert. En parabel i overstående tilfælde vil formentlig betyde vi skal anvende kvadratisk regression
+  *  Punkterne udgør en slags trag, viser at spredningen stiger med middelværdien hvilket er et tegn på Variansinhomogenitet
+  
+Derudover kan det give mening at være opmærksom på outliers 95% af punkterne bør ligge indenfor (-2, 2)
+
+**Normalt fordelt** <br>
+```{r}
+qqnorm(rstandard(linreg))
+abline(0,1, lty=2)
+```
+
+Der må ikke være nogen systemeatisk afvigelse fra den ligefrem propotionelle linje. (Den er kun ligefrem propotionel fordi vi tester for residual spredningen)
+
+# Grafer og plots
+## Scatter
+```{r}
+linreg <- lm(Hwt ~ Bwt, data = cats) ### estimer regressionslinje (Kun nødvendig for abline)
+plot(cats$Bwt, cats$Hwt, xlab = "Bodyweight(kg)", ylab = "Heart weight (g)", main = "Cats data")
+abline(a = -0.3567, b = 4.0341, col = "red") # a = skæring, b = hældning
+```
+
+## QQplot
+```{r}
+qqnorm(cats$Bwt, main="Title")
+abline(mean(cats$Bwt), sd(cats$Bwt), lwd = 1, col = "red")
+
+```
+Kontroler efter systematisk afvigelse, hvis der sker en tydelig krumning skal data formentlig log-transformeres.
+
+
+## Normalfordeling
+Kan laves med r-plot
+```{r}
+hist(kData$hojde, prob = TRUE, xlab = "Hojde", main = "Kvinder", col = "lightgrey")
+f1 <- function(x) dnorm(x, mean = mean(kData$hojde), sd = sd(kData$hojde))
+plot(f1, 150, 190, col = "red", add = TRUE, lwd = 3)  
+```
+
+Men hvis det skal skraveres anvend GGplot
+
+```{r}
+data_mean = 41.5 
+data_sd = 1.4
+
+p_1 <- pnorm(q = c(42.2), sd = data_sd, mean = data_mean, lower.tail = TRUE) # Mindre end 42
+p_2 <- pnorm(q = c(40), sd = data_sd, mean = data_mean, lower.tail = TRUE) # Mindre end 40
+p_1 - p_2
+
+ggplot(data.frame(x = c(data_mean - 5, data_mean + 5)), aes(x)) +
+  stat_function(fun = dnorm, n = 1000, args = list(mean = data_mean, sd = data_sd)) +
+  # Coloring
+  stat_function(fun = dnorm, args = list(mean = data_mean, sd = data_sd),
+                xlim = c(40, 42.2), # Defines the interval
+                geom = "area", fill = "blue") +
+  labs(x = "Marginalskatteprocent", y = "Densitet")
+```
+
+
+
+## Boxplot
+```{r}
+# Kontinuert ~ kategorisk
+boxplot(cats$Hwt ~ cats$Sex)
+```
+
+En stor between-group variation er et tegn på der er forskel på gruppe gennemsnittene, men hvis within-group varaiationen også er stor, kan det være et tegn på at forskellen skyldes tilfældig variation.
+
+## Histogram
+```{r}
+hist(log(cats$Hwt), # Data
+     xlab="Body weight (kg)", # X label
+     main="Cats: Body weight", # Title
+     nclass=20, # Antal søjler
+     prob=TRUE, # Samlet areal = 1
+     col = "blue") # Farve
+
+```
+
 
 # Noter til quiz
 ## uge 2
