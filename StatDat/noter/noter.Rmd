@@ -11,6 +11,12 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Latex
+$$ \mu \: \:  \sigma \: \: \alpha \: \: \beta $$
+
+$$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$
+$$ x-\texttt{Ord} $$
+
 # Data
 Indlæsning
 ```{r}
@@ -397,6 +403,13 @@ hist(log(cats$Hwt), # Data
 
 ```
 
+# Generalt
+## Fejltyper
+Type 1 - Afvise nulhypotesen hvis den er sand
+Type 2 - Ikke afvise nulhypotesen hvis den er falsk
+
+Bemærk:
+"Vi konkluderer at der ikke er nogen sammenhæng mellem x og y, selvom der i virkeligheden er en sammenhæng" er en type 2 fejl. Fordi at konkludere at der ikke er nogen sammenhæng er det samme som ikke at afvise hyposten. Og at der er en sammenhæng er det samme som at 0-hypostesen er falsk.
 
 # Noter til quiz
 ## uge 2
@@ -527,3 +540,46 @@ k <- 1 # Antal grupper (I gruppe A)
 
 qt(0.975, df = n-1)
 ```
+## Uge 4
+### Konklusion af p-værdi givet f-fraktil og f-teststørrelse
+Man vil sammenligne grupperne i en ensidet ANOVA med 100 observationer og fire grupper med et F-test. Man beregner F-teststørrelsen til 4.19, og 95%-fraktilen i F(3,96) er 2.70. Hvad kan vi sige om p-værdien?
+
+Da
+$$ \texttt{p-value} = P(F \geq F_{obs}) $$
+
+har vi at siden F-teststørrelsen (4.19) er større end  fraktilsen (2.70) så er p-værdien er lavere end 0.05 og vi kan afvise at grupperne har samme middelværdi.
+
+### Konklusion af p-værdi givet to f-fraktil og f-teststørrelse
+Vi er i gang med at udføre et t-test og får en observeret teststørrelse på T = 1.99. I den relevante t-fordeling er 97.5% fraktilen lig 2.14, mens 95% fraktilen er 1.76.
+
+Da teststørrelse (1.99) ligger mellem 97.5% fraktilen (2.14) og 95% fraktilen er 1.76. (1.76) ligger p-værdien mellem 0.05 og 0.10
+
+  * Mindre end 97.5% fraktilen ==> Større end 0.05
+  * Større end 95% fraktilen ==> Mindre end 0.10
+
+### Bestem t-teststørrelsen og p-værdien for hypotesen i lineær regression
+
+```{r}
+beta = 3.19 #Hældning
+SE = .89 # Standard error
+n = 52 # Antal observationer
+hypotese = 0 # hypotesen om at "den sande hældning" er 0
+
+
+# Test af hypotesen H: beta=4
+T = (beta - hypotese) / SE
+
+# Beregning af p-vaerdi
+P = 2*(1-pt(T, df = n - 2))
+
+T
+P
+
+```
+### Sandsylighed for værdi lavere end givet mean og sd
+```{r}
+pnorm(0, mean = 4, sd = 2.8)
+
+```
+
+
