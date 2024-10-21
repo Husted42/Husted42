@@ -22,9 +22,9 @@ library(isdals) # Data
 # Latex
 
 ## Symbols
-
 $$ \mu \: \:  \sigma \: \: \alpha \: \: \beta $$ 
-$$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$ 
+$$ \hat{x} \: \: \overline{x} \: \: \frac{x}{y}$$
+
 requires type dataframe
 
 ```{r}

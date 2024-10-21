@@ -1,0 +1,132 @@
+---
+title: "opgaver_uge_7"
+output: html_document
+date: "2024-10-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Mandag
+## Opgave 11.1
+Beregning af sandsynligheder for udvalgte hændelser i en binomialfordeling
+
+Gender of bunnies. It can be difficult to determine the sex of baby rabbits younger than 2 months. A rabbit owner has just had a litter with 5 bunnies and because he seeks to sell them he wishes to estimate the probability that at least 4 of the 5 are males.
+
+1. Specify a statistical model that can accommodate the data from
+  the rabbit breeder. Assume for this exercise that it is known that
+  the probability of bucks is 0.55.
+
+Binomial fordeling med sandsylighed
+
+$$ P(Y=j) = \frac{n!}{j!(n-j)!} \cdot p^j \cdot (1-p)^{n-j} $$
+
+
+2. What is the probability of observing 3 males and 2 females?
+```{r}
+dbinom(3, size=5, prob=0.55) ## P(Y=3)
+```
+
+
+3. Estimate theprobability that the litter consists of at least 4 males.
+```{r}
+1 - pbinom(3, size=5, prob=0.55) ## P(Y>=4)
+```
+
+## HS 28
+Tyve personer, der alle mener at de bedre kan lide Coca Cola end Pepsi, har deltaget i et ekspe-
+riment. De smagte på begge slags cola og skulle udpege hvilken af smagsprøverne der var en
+Coca Cola. Tretten personer svarede korrekt. Vi antager at alle 20 personer har samme sand-
+synlighed for at svare korrekt, og denne sandsynlighed kaldes p
+
+### Opgave 1
+Forklar hvorfor binomialfordelingen kan bruges til beskrivelse af eksperimentet.
+
+Data : Vi har ikke nogen forklarende variabel, kun en binær responsvariabel. Nemlig om det var en Coca Cola. Dertil er en persons valg uafhængigt af den næste.
+
+### Opgave 2
+Bestem et estimat for p
+
+```{r}
+13/20
+```
+
+### Opgave 3
+Bestem to 95% konfidensintervaller for p: både det simple konfidensinterval givet ved
+formel (11.6) og „det forbedrede“ konfidensinterval vha. prop.test.
+
+$$ \hat{p} \pm 1.96 \cdot SE(\hat{p}) = \hat{p} \pm 1.96 \cdot \sqrt{\frac{\hat{p}(1-\hat{p})}{n}} $$
+
+```{r}
+p <- 0.65
+n <- 20
+p + c(-1, 1) * 1.96 * sqrt((p * (1-p) )/n)
+```
+
+```{r}
+?prop.test()
+prop.test(13, 20, p = 0.65, correct = FALSE)
+```
+
+```{r}
+result <- binom.test(13, 20, p = 0.5)
+result
+```
+
+### Opgave 4
+$$H_0 : p = 0.5$$
+Dette svare til tilfældigt gæt. Vi forkaster ikke hypotesen med en p-værdi med = 0.2632
+
+### Opgave 5
+
+```{r}
+for (x in 1:20) {
+  res <- binom.test(x, 20, p = 0.5)
+  cat(x, res$p.value)
+  cat("\n")
+}
+```
+Mindre end 5 eller flere end 15 skal have svaret rigtig
+
+
+## HS 29
+En undersøgelse holdt man øje med 600 virksomheder der var repræsentativt udvalgt blandt
+danske virksomheder. I løbet af et år gik 8 virksomheder konkurs.
+
+Bestem et estimat og et 95% konfidensinterval for konkursrisikoen blandt danske virk-
+somheder i det pågældene år.
+
+```{r}
+binom.test(8, 600)
+```
+
+Vi for et konfidens interval for sandsyligheden for konkurs på (0.0058, 0.0261)
+
+
+```{r}
+binom.test(4, 493)
+binom.test(10, 497)
+```
+
+```{r}
+(10 / 497) - (4 / 493)
+
+0.009689816 - 0.002214977
+0.036690693 - 0.020642826
+
+```
+
+
+### Opgave 3
+Udfør et hypotesetest hvor det undersøges om konkursrisikoen var den samme i to bra-
+cher det pågældende år. Husk at angive hypotesen
+
+```{r}
+prop.test(c(10,4), c(497,493), correct=FALSE)
+```
+
+Vi forkaster ikke 0 hypotsen om at der ikke er forskel $H_0 : \hat{p} = \hat{q}$
+
+
+
