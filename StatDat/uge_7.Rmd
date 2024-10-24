@@ -128,5 +128,258 @@ prop.test(c(10,4), c(497,493), correct=FALSE)
 
 Vi forkaster ikke 0 hypotsen om at der ikke er forskel $H_0 : \hat{p} = \hat{q}$
 
+# Tirsdag
+## Opgave HS.30
+### Opgave 1
+Forklar hvorfor den relevantehypotese er en hypotese om uafhængighed snarere end en
+hpotese om ens sandsynligheder i to binomialfordelinger
+
+kategorier er observeret for en enkelt population. Ved en bbinomialfordelinger kræver det vi har 2 poulationer. Derudover kender vi kun totalsummen n, og ikke række- eller søjlesummen.
 
 
+### Opgave 2
+```{r}
+sd1tabel <- matrix(c(14, 51, 52, 401), 2, 2)
+sd1tabel
+rownames(sd1tabel) <- c("m1-Stresset", "m1-Ikke stresset")
+colnames(sd1tabel) <- c("m2-Stresset", "m2-Ikke stresset")
+sd1tabel
+```
+
+```{r}
+chisq.test(sd1tabel, correct = FALSE)
+```
+
+Vi forkaster $h_0 : p_{i,j} = p_i \cdot p_j \forall i,j$ om at der er uafhængighed. Dataen taler altså for at der er en anden sandsylighed for at være stresset i måned 2 givet at de var stresset i måned 2.
+
+## Opgave 12.5
+ The incidence of three types of malaria in three tropical re
+gions is listed in the table below:
+
+```{r}
+sd2tabel <- matrix(c(451, 532, 27, 313, 28, 539, 145, 56, 456), 3, 3)
+rownames(sd2tabel) <- c("A", "B", "C")
+colnames(sd2tabel) <- c("South", "Asia", "Africa")
+sd2tabel
+```
+
+```{r}
+chisq.test(sd1tabel, correct = FALSE)
+```
+Vi forkaster $h_0 : p_{i,j} = p_i \cdot p_j \forall i,j$ om at der er uafhængighed.
+Altså afhænger sandsynligehdn for at have en type  Malaria af hvor man er fra.
+
+## Hs 32
+
+```{r}
+lyskilde <- read.table("data/lyskilde.txt", header = 1)
+head(lyskilde, n = 3)
+```
+
+### Opgave 1
+Opskriv en statistisk model der kan bruges til at undersøge om øjenfarven har betydning
+for en persons kritiske frekvens. Fit modellen i R og udfør modelkontrol. Lav herunder en
+skitse af de relevante figurer og kommentér graferne
+
+**Data:** <br>  responsvariablen $y_1, ..., y_n$ er lyskildens kritiske frekvens fra k = 3 (blå, brun og gørn) grupper med $n_j$ observationer i gruppe j.
+
+**Statistisk model:** <br>
+Vi antager at $y_1, ..., y_n$ er uafhængige og normalfordelte $\sim N(\mu_i, \sigma^2)$
+
+Dertil antager vi at middelværdien $\mu_i = \alpha_{g(i)} + e_i$ hvor
+$\epsilon_i \sim N(0, \sigma^2)$ afhænger af gruppen. Med samme spredning $\sigma$ i alle grupper. 
+
+**De ukendte populationsparametre** <br>
+Middelværdien for alle grupper $\alpha_{g(i)}$ og den ukendte spredningen $\sigma$
+
+```{r}
+linreg <- lm(frekvens ~ farve , data = lyskilde)
+```
+
+**Samme spredning** <br>
+Kontrolleres med residual plot
+```{r}
+plot(fitted(linreg), rstandard(linreg))
+abline(0,0, col = 'Red')
+
+```
+
+Vi ser ikke noget tydeligt mønster i den lodrette varaitaion. Dette peger på at vores antagelse om at spredningen i restledene er korrekt. Dertil taler det også for at vores middelværdi struktur er rigtig.
+
+Vi ser kun en enkelt observation, som ligger udenfor intervallet (-2, 2), hvilket stemmer over ens med forventnignen om at ca. 95% af data vil ligge inden for dette interval.
+
+**Normalt fordelt** <br>
+```{r}
+qqnorm(rstandard(linreg))
+abline(0,1, lty=2)
+```
+
+Vi ser ikke nogen systematisk afvigelse fra den ligefrem propotionelle linje. Hvilket er et tegn på at antagelsen om normal fordelte restled er korrekt.
+
+### Opgave 2
+Vi bruger f-test for at kunne teste hypoten 
+$$ H_0: \mu_1 = \mu_2 = \mu_3 $$
+
+Fullmodel : 1-sidet anova hvor vi beregner et gennemsnit for hver gruppe
+NullModel : Del model af fullModel hvor vi ikke inkludere grupperne
+
+```{r}
+nullModel <- lm(frekvens ~ 1 , data = lyskilde)
+
+anova(nullModel, linreg)
+```
+
+Vi forkaster nulhyposten på et signififikans nivue på 95% med en p-værdi på
+0.023. Data taler altså for at der er en sammenhæng mellem hvilken kritisk frekvens man kan se og hvilken øjenfarven man har.
+
+### Opgave 3
+
+```{r}
+confint(linreg)
+```
+
+```{r}
+-4.350729 - (-3.232984)
+-0.8076044 - (0.7396511)
+```
+
+
+Vi for et 5% konfidensinterval for forskellen mellem gennemsnittene på (-1.117745, -3.972635). Hvilket vil sige at den sande ukendte difference med 95% sikkerhed ligger indenfor intervallet.
+
+### Opgave 4
+Vi kan ud fra data sige at det sande ukendte populationsgennemsnit ligger mellem (26.82, 29.50) 
+
+
+## Januar 2018
+```{r}
+ss <- read.table("data/ss2017-18.txt", header = 1)
+head(ss, n = 3)
+```
+```{r}
+unique(ss$studie)
+```
+
+### Opgave 1
+Det er oplagt at anvende den tosidet variansanalyse fordi vi har to kategoriske forklarende variable og en kontinuert responsvariabel.
+
+
+```{r}
+m1 <- lm(figur2 ~ studie + kon, data = ss)
+m2 <- lm(log(figur2) ~ studie + kon + studie * kon, data = ss)
+```
+
+```{r}
+summary(m1)
+summary(m2)
+```
+
+Vi for en residual spredning på 74.27 for den første model uden log-transformation, og en spredning på 0.43 for den anden model med log-transformation. Hvilket også er forventligt, da værdierne i respons variablen er mindre i den log transformeret model.
+
+### Opgave 2
+Udfør modelkontrol for hver af de to modeller fra spørgsmål 1. Besvarelsen skal bestå af skitser af de relevante figurer og kommentarer til figurerne, herunder argumenter for at modellen med log(figur2) som responsvariabel er at foretrække.
+ 
+```{r}
+plot(fitted(m1), rstandard(m1))
+abline(0,0, col = 'Red')
+```
+
+Vi ser en systematisk afvigelse i den lodrette varians, der er en tendsns til at outliernes ligger på den positive side af den vandrette linje.
+
+```{r}
+plot(fitted(m2), rstandard(m2))
+abline(0,0, col = 'Red')
+```
+
+
+For den log-transformeret model ser plottet pænere ud, der er stadig en lille systematisk i residualerne, hvorved at der stadig er flest outliers på den positive side, men de er mindre markante end den første model.
+
+Vi ser også at fordelingen af punkter over og under den vandrette linje er nogenlunde ens. 
+
+
+
+```{r}
+qqnorm(rstandard(m1))
+abline(0,1, lty=2)
+```
+
+Er ser vi en tydelig systematisk afvigelse med en konveks krumning omkring den ligefrem propotionale linje.
+
+```{r}
+qqnorm(rstandard(m2))
+abline(0,1, lty=2)
+```
+
+Her ses ikke nogen markant systematisk afvigelse, hvilket taler for at modellen med den log transformeret data er at foretrække.
+
+### Opgave 3
+Vi andvender en anvoa til at teste hypotesen
+FullModel : Vores to-sidet anova med vekselvirkning
+NullModel : En to-sidet anova uden vekselvirkning
+
+
+```{r}
+Nullmodel <- lm(log(figur2) ~ studie + kon, data = ss)
+
+anova(Nullmodel, m2)
+
+```
+
+Vi forkaster ikke nul-hypotesen at der er vekselvirkning mellem køn og studie. Data taler altså for vekselvirkning.¨
+
+Siden vi benytter en log-transformeret responsvariabel vil det sige at vi skal projektetere data med eksponential funktionen for at få et estimat for medianen. (Altså ikke middelværdien)
+
+### Opgave 4
+
+Angiv et estimat og et 95% konfidensinterval for den forventede værdi af log(figur2) for kvindelige aktuarstuderende.
+
+Det sande antal punkter i figuren er 142. Tyder data på at kvindelige aktuarstuderede (som
+population) gætter for højt, for lavt, eller ingen af delene? Svaret skal begrundes, og du
+kan benytte at log(142) = 4.956.
+
+```{r}
+summary(Nullmodel)
+confint(Nullmodel)
+```
+
+
+Intercept : Kvinde Aktuar
+
+Estimatet for den forventede værdi af en kvindelige aktuar studerende er 4.82
+Den sande ukendte værdi ligger med 95% procent sikkerhed i intervallet (4.68, 4.98)
+
+Da 4.956 ligger indenfor vores interval gættes der hverken for høj eller for lavt. Også selvom vores forventede værdi var lidt lavere.
+
+### Opgave 5
+Siden at der er en additativ model kan det læses direkte i summary til at være -0.21
+
+```{r}
+exp(-0.3416929)
+```
+
+```{r}
+ exp(4.828164) / exp(4.828164 + -0.211680)
+```
+
+
+Kvinder gætter faktor 1.24
+
+### Opgave 6
+Undersøg med et enkelt hypotesetest om studerende fra de tre forskellige studier (som
+populationer) gætter forskelligt på antallet af punkter i figuren.
+
+FullModel : Den additative to-sidet anova
+Nullmodel : En sidet anova, hvor vi ikke tager højde for studie
+
+Givet fullmodel: 
+$$ y_i = \beta_0 + \beta_1 \cdot studie + \beta_2 \cdot køn $$
+
+
+```{r}
+FullModel <- lm(log(figur2) ~ studie + kon, data = ss)
+Nullmodel <- lm(log(figur2) ~ kon, data = ss)
+  
+anova(Nullmodel, FullModel)
+
+```
+
+Vi forkaster ikke nulhypotesen $\beta_1 = 0$, altså taler data for at der ikke er forskel på hvilket studie man går på.

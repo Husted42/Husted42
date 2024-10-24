@@ -84,7 +84,7 @@ Dertil antager vi at middelværdien $\mu_i = \alpha_{g(i)} + e_i$ hvor
 $\epsilon_i \sim N(0, \sigma^2)$ afhænger af gruppen. Med samme spredning $\sigma$ i alle grupper. 
 
 **De ukendte populationsparametre** <br>
-Middelværdien for alle grupper $\mu_1 ,..., \mu_k$ og den ukendte spredningen $\sigma$
+Middelværdien for alle grupper $\alpha_g(1) ,..., \alpha_g(k)$ og den ukendte spredningen $\sigma$
 
 ## 2-stikprøve T-test
 TODO : Tilføj afsnit
