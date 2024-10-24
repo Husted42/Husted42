@@ -233,16 +233,29 @@ Vi forkaster nulhyposten på et signififikans nivue på 95% med en p-værdi på
 0.023. Data taler altså for at der er en sammenhæng mellem hvilken kritisk frekvens man kan se og hvilken øjenfarven man har.
 
 ### Opgave 3
+-0,537
+3,202
 
 ```{r}
-confint(linreg)
+summary(linreg)
 ```
+
+
 
 ```{r}
--4.350729 - (-3.232984)
--0.8076044 - (0.7396511)
+head(lyskilde, n=3)
+lyskilde_grøn <- lyskilde
+lyskilde_grøn$farve <- factor(lyskilde_grøn$farve)
+lyskilde_grøn$farve <- relevel(lyskilde_grøn$farve, ref = 'brun')
 ```
 
+-0,537
+3,202
+
+```{r}
+linreg_g <- lm(frekvens ~ farve , data = lyskilde_grøn)
+confint(linreg_g)
+```
 
 Vi for et 5% konfidensinterval for forskellen mellem gennemsnittene på (-1.117745, -3.972635). Hvilket vil sige at den sande ukendte difference med 95% sikkerhed ligger indenfor intervallet.
 
@@ -360,7 +373,6 @@ exp(-0.3416929)
  exp(4.828164) / exp(4.828164 + -0.211680)
 ```
 
-
 Kvinder gætter faktor 1.24
 
 ### Opgave 6
@@ -379,7 +391,173 @@ FullModel <- lm(log(figur2) ~ studie + kon, data = ss)
 Nullmodel <- lm(log(figur2) ~ kon, data = ss)
   
 anova(Nullmodel, FullModel)
-
 ```
 
 Vi forkaster ikke nulhypotesen $\beta_1 = 0$, altså taler data for at der ikke er forskel på hvilket studie man går på.
+
+
+# Quiz 6
+```{r}
+0.35750 - 2.01 * .12596
+0.35750 + 2.01 * .12596
+```
+
+```{r}
+0.35750 - 0.33206 + 0.35750
+```
+
+```{r}
+ 1.52087 + 0.19055 - 0.12263
+```
+
+T-værdi i en linær regressions model
+```{r}
+# Esitmate / SE
+0.19055 /  0.09097
+```
+
+```{r}
+?pnorm()
+val <- 120
+mean <- 114.5
+sd <- 6.9
+
+1 - pnorm(val, mean = mean, sd = sd)
+```
+
+Afvise vekselvirkning hvis der er vekselvirkning
+
+# November 2023
+## Opgave 1
+### Opgave 1
+```{r}
+data1 <- read.table(file = "data/nov2023opg1.txt", header = T)
+head(data1, n=3)
+```
+
+```{r}
+m1 <- lm(length ~ age, data = data1)
+confint(m1)
+```
+
+### Opgave 2
+```{r}
+predict(m1, data.frame(age=3), interval='c')
+```
+
+Den ukendte sande gennemsnit længde for en fisk på 3 år ligger med 95% sikkerhed i intervallet (126, 133)
+
+
+### Opgave 3
+a)
+```{r}
+predict(m1, data.frame(age=3), interval='p')
+```
+Ja, det 100 ikke ligger indenfor prediktionsintervallet er det ikke en sædvanelig længde.
+
+b)
+
+```{r}
+confint(m1)
+```
+
+Nej, 20 ligger indenfor 95% intervallet for hældningen.
+
+### Opgave 4
+Hvis der ikke er nogen linær forskel så har vi
+$$ H_0 : \beta = 0 $$
+
+```{r}
+summary(m1)
+```
+
+Vi afviser 0-hypotesen på et signifikansnivue på 95% med en p-værdi på <2e-16
+
+## Opgave 2
+```{r}
+data2 <- read.table(file = "data/nov2023opg2.txt", header = T)
+head(data2, n = 3)
+```
+
+```{r}
+unique(data2$stamme)
+```
+
+### Opgave 1
+```{r}
+model1 <- lm(kryds ~ sex + stamme, data = data2)
+```
+
+$$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + e_i $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+**Modelkontrol** <br>
+Spredning: <br>
+Kontrolleres med residual plot
+```{r}
+plot(fitted(model1), rstandard(model1))
+abline(0,0, col = 'Red')
+
+```
+
+Vi ser ikke nogen specielle mønstre i den lodrette variation og den vosker ikke med middelværdien. Derudover ser vi at ca. 95% af dataen ligger mellem intervallet (-2, 2).
+
+**Normalt fordelt** <br>
+```{r}
+qqnorm(rstandard(model1))
+abline(0,1, lty=2)
+```
+
+Vi ser ikke nogen systematisk afvigelse fra den ligefrem propotionelle linje. 
+
+### Opgave 2
+
+```{r}
+predict(model1, data.frame(sex = 'F', stamme = 'normal'))
+predict(model1, data.frame(sex = 'F', stamme = 'transgen'))
+```
+
+Vi forventer 360 antal krydsninger for normal stamme
+Vi forventer 259 antal krydsninger for transgen stamme
+
+
+### Opgave 3
+Vi opstiller en nulmodel, som er en delmodel af linreg, hvor vi ikke anvender de forklarende variable
+
+
+```{r}
+NullModel <- lm(kryds ~ 1, data = data2)
+
+anova(NullModel, model1)
+```
+
+Vi forkaster nulhypotesen:
+$$ H_0 : \beta_1 = \beta_2 = 0  $$
+
+med et signifikansnivue på 95% med en p-værdi på 1.565e-05
+
+### Opgave 4
+Undersøg med et hypotesetest om der er vekselvirkning mellem variablene sex og
+stamme, og forklar i ord hvad konklusionen pa hypotestestet betyder.
+
+Ligesom før anvender vi en anova f-test.
+ * Fullmodel : 2-sidet Anova med vekselvirknignen
+ * Nullmodel : Additativ delmodel
+ 
+```{r}
+fullmodel <- lm(kryds ~ sex + stamme + sex*stamme, data = data2)
+nullmodel <- lm(kryds ~ sex + stamme, data = data2)
+
+anova(nullmodel, fullmodel)
+
+```
+
+$$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 \cdot x_2 + e_i $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi forkaster ikke nul-hypotesen $ H_0 : \beta_3 = 0 $ på et signifikansnivue på 95% med en p-værdi på 0.6913. Data taler altså for modellen med vekselvirkning.
+
+
+
+
+

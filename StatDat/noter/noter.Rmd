@@ -109,6 +109,8 @@ estimere: $\hat{\alpha},\hat{\beta},  \hat{\sigma}$
 ### Eksempel
 TODO : Eksempel
 
+### Linær regressions antagelse
+
 ## Kvadratisk regerssion
 **Data:** <br> Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
 kvantitative kontinuerte data, både for vores responsvariabel [y] og den
@@ -473,6 +475,10 @@ Type 2 - Ikke afvise nulhypotesen hvis den er falsk
 
 Bemærk:
 "Vi konkluderer at der ikke er nogen sammenhæng mellem x og y, selvom der i virkeligheden er en sammenhæng" er en type 2 fejl. Fordi at konkludere at der ikke er nogen sammenhæng er det samme som ikke at afvise hyposten. Og at der er en sammenhæng er det samme som at 0-hypostesen er falsk.
+
+## Konfindensintervaller
+TODO: For forskel
+TODO: For enkelt stikprøve
 
 # Noter til quiz
 ## uge 2
