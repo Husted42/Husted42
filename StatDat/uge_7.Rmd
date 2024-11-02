@@ -237,27 +237,48 @@ Vi forkaster nulhyposten på et signififikans nivue på 95% med en p-værdi på
 3,202
 
 ```{r}
-summary(linreg)
+anova_result <- summary(linreg)
+anova_result
 ```
-
 
 
 ```{r}
 head(lyskilde, n=3)
 lyskilde_grøn <- lyskilde
 lyskilde_grøn$farve <- factor(lyskilde_grøn$farve)
-lyskilde_grøn$farve <- relevel(lyskilde_grøn$farve, ref = 'brun')
+lyskilde_grøn$farve <- relevel(lyskilde_grøn$farve, ref = 'groen')
 ```
 
--0,537
-3,202
 
 ```{r}
 linreg_g <- lm(frekvens ~ farve , data = lyskilde_grøn)
 confint(linreg_g)
 ```
 
-Vi for et 5% konfidensinterval for forskellen mellem gennemsnittene på (-1.117745, -3.972635). Hvilket vil sige at den sande ukendte difference med 95% sikkerhed ligger indenfor intervallet.
+Vi for et 95% konfidensinterval for forskellen mellem gennemsnittene på (-1.117745, -3.972635). Hvilket vil sige at den sande ukendte difference med 95% sikkerhed ligger indenfor intervallet.
+
+```{r}
+# Del datasættet i to
+lys_grøn <- subset(lyskilde, farve=="groen")
+lys_brun <- subset(lyskilde, farve=="brun")
+
+
+# Beregning af hvert gennemsnit
+mean_1 <- mean(lys_grøn$frekvens)
+mean_2 <- mean(lys_brun$frekvens)
+
+s <- 1.547
+
+# Differencer
+mean_diff <- mean_1 - mean_2
+SE_diff <- s * sqrt( (1 / length(lys_grøn)) + (1 / length(lys_brun)) )
+
+t_value <- qt(0.975, 16)
+
+mean_diff + c(-1, 1) * t_value * SE_diff
+
+```
+
 
 ### Opgave 4
 Vi kan ud fra data sige at det sande ukendte populationsgennemsnit ligger mellem (26.82, 29.50) 
@@ -440,6 +461,12 @@ m1 <- lm(length ~ age, data = data1)
 confint(m1)
 ```
 
+```{r}
+summary(m1)
+```
+
+$$ \hat{\alpha} = 62.6, \hat{\beta} = 22.3, \hat{\sigma} = 12.51 $$
+
 ### Opgave 2
 ```{r}
 predict(m1, data.frame(age=3), interval='c')
@@ -464,6 +491,8 @@ confint(m1)
 Nej, 20 ligger indenfor 95% intervallet for hældningen.
 
 ### Opgave 4
+(Her skulle Anova imod en anden model være anvendt?)
+
 Hvis der ikke er nogen linær forskel så har vi
 $$ H_0 : \beta = 0 $$
 
@@ -552,7 +581,7 @@ anova(nullmodel, fullmodel)
 
 ```
 
-$$ y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 \cdot x_2 + e_i $$
+$$ y_i = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 \cdot x_2 + e_i $$
 hvor $\epsilon_i \sim N(0, \sigma^2)$
 
 Vi forkaster ikke nul-hypotesen $ H_0 : \beta_3 = 0 $ på et signifikansnivue på 95% med en p-værdi på 0.6913. Data taler altså for modellen med vekselvirkning.

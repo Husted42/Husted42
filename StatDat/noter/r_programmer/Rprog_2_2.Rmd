@@ -405,7 +405,7 @@ Vi vælger altså at analysere _den naturlige logarime til gættene_! Mere præc
 
 * Lad os kalde middelværdien i fordelingen af log(antal) for $\gamma$ (gamma) for at kunne skelne den fra middelværdien af de ikke-transformerede gæt. 
 
-* Man skal holde tungen lige i munden mht. fortolkningen af middelværdiparameteren $\gamma$. Det er altså populationsmiddelværdien for logaritmen til antal gæt. Vi bruger også ordet _den forventede værdi_ (expected value) for log(gæt) og skriver
+* Man skal holde tungen lige i munden mht. fortolkn ingen af middelværdiparameteren $\gamma$. Det er altså populationsmiddelværdien for logaritmen til antal gæt. Vi bruger også ordet _den forventede værdi_ (expected value) for log(gæt) og skriver
 $$
   E \bigl( log(gæt) \bigr) = \gamma
 $$
