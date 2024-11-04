@@ -114,8 +114,8 @@ Beregning af modelparametre:
 m1 <- lm(bodyfat ~ hip, data = data_johnson)
 summary(m1)
 ```
-Ud fra summary kan vi se skæring og hældning 
-$$ \hat{\alpha} = 3.72, \hat{\beta} = 0.46 $$
+Ud fra summary kan vi se estimater skæring, hældning og residualspredningen
+$$ \hat{\alpha} = -53.45, \hat{\beta} = 0.73, \hat{\sigma} = 5.85  $$
 
 
 ### Linær regressions antagelse
@@ -489,6 +489,10 @@ abline(0,1, lty=2)
 
 Der må ikke være nogen systemeatisk afvigelse fra den ligefrem propotionelle linje. (Den er kun ligefrem propotionel fordi vi tester for residual spredningen)
 
+## Forklaring på pæne plots
+**QQ-plot** <br>
+Der er ikke nogen systematisk afvigelse fra linjen i QQ-plottet, hvilket betyder at data ligger i de kvartiler, som vi forventer ved en normalfordelingen.
+
 # Grafer og plots
 ## Scatter
 ```{r}
@@ -555,6 +559,8 @@ hist(log(cats$Hwt), # Data
 ```
 
 # Generalt
+## Beregning af sandsyligheder pbinorm
+TODO : Skriv afsnit, inkluder at man ikke tager f.eks 10 med en værdi mellem 15 og 10 = P(X<= 15) - P(X<=9)
 ## Fejltyper
 Type 1 - Afvise nulhypotesen hvis den er sand
 Type 2 - Ikke afvise nulhypotesen hvis den er falsk
@@ -771,6 +777,7 @@ pnorm(val, mean = 4, sd = 2.8)
 
 ## Nov2021
 ### konfidensinterval for ANOVA givet summary
+Svar : C
 ```{r}
 # Give et summary : 
 ##                        Estimate  Std. Error  t value   Pr(>|t|)

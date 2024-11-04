@@ -1,0 +1,263 @@
+---
+title: "nov2021"
+output: html_document
+date: "2024-11-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Opgave 1
+```{r}
+data1 <- read.table(file = "data/nov2021opg1.txt", header = T)
+```
+
+Form ̊alet med denne opgave er at undersøge sammenhængen mellem puls og omgangs-
+tider (tid) p ̊a løbeture i Parc Montsouris i Paris.
+
+Hver datalinje indeholder bl.a. omgangstiden i sekunder (tid) p ̊a en løberute p ̊a ca.
+1460 meter og den gennemsnitlige puls (enhed: slag per minut) p ̊a omgangen
+
+```{r}
+mod1 <- lm(tid ~ puls, data = data1)
+```
+
+## Opgave 1.1
+Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel omgangstid og den
+forklarende variabel puls.
+
+**Statistisk model:** <br> 
+$$ y_i = \mu_i + \epsilon_i  $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ (ret linje)
+med spredning $\sigma$.
+
+**De ukendte populationsparametre** <br> Skæringen $\alpha$, hældningen
+$\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan
+estimere: $\hat{\alpha},\hat{\beta},\hat{\sigma}$
+
+
+```{r}
+summary(mod1)
+```
+
+Ud fra summary kan vi se estimater skæring, hældning og residualspredningen
+$$ \hat{\alpha} = 819.16, \hat{\beta} = -2.54, \hat{\sigma} = 17.14  $$
+## Opgave 1.2
+**der er evidens for, at der er en sammenhæng mellem puls og omgangstid**
+
+Vi afviser hypotesen om $H_0 : \beta = 0$ med met et signifikansniveau en p-værdi på 6.944555e-19 < 0.05. Så data taler altså for sammenhæng
+
+**der er evidens for, at der er en sammenhæng mellem puls og omgangstid**
+
+```{r}
+?confint
+confint(mod1) / 1.46
+```
+
+Da -2 ikke ligger i intevallet for hældningen afviser vi $h_0 : \beta = 2$, altså gælder tommelfinger reglen ikke.
+
+## 1.3
+```{r}
+predict(mod1, newdata = data.frame(puls = 160), interval = 'p')
+```
+
+Den forventede omgangstid for en person med en puls på 160 er 412.2 <br>
+Vi for et 95%-prediktionsinterval på (377.79, 446.63)
+
+## 1.4
+Vi tester modelantagelserne om normalfordelte residualer (Og dermed også data) er normalt fordelt ved hjælp af et qq-plot og et residualplot
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+# Man kan ikke se det i R-output, men den plotter begge funktioner ved siden af hindanden når man har knit'et
+plot(fitted(mod1), rstandard(mod1))
+abline(0,0, col = 'Red')
+
+qqnorm(rstandard(mod1))
+abline(0,1, lty=2)
+```
+
+
+På residualplottet kigger vi efter, om residualerne ligger symmetrisk omkring 0 for alle
+prædikterede værdier, og om der er varianshomogenitet.
+
+Vi ser at data fordeler nogenlunde symmetrisk omkring 0. Der er ikke problemer med varianshomonigitets antagelsen da der ikke er nogen signifikant ændiring i spredning når middelværdien stiger.
+
+På QQ-plottet ser vi efter om der er systematiske afvigelser imellem punkterne og den
+rette linje.
+
+Vi ser ikke nogen systematisk afvigelse fra den linjen, hvilket tyder på at data er pænt normaltfordelt.
+
+Vi vurdere at det er rimeligt at anvende modellen til at beskrive sammenhængen mellem puls og id.
+
+TODO : Test for linær antagelse.
+
+## Opgaave 1.5
+**Data**
+De forklarende variabel består af en kontinuert variabel puls, og en kategorisk variabel grp tid_på_dagen. Respons variablen $y_i$ er kontinuert
+
+**Statistisk model**
+**Additativ**
+$$ y_i = \alpha_{\texttt{grp(i)}} + \beta \cdot x_i + \epsilon_i $$
+
+hvor $\epsilon_i \texttt{ iid. } N(0, \sigma^2)$
+
+Som det ses i formlen for middelværdien angivet overfor, er effekten af x ikke afhængig af gruppen. Således for vi en model med flere parallele linjer med hældningskoefficent $\beta$ og skæring $\alpha_{\texttt{grp(i)}}$
+
+**Parameter**
+Skæringen per gruppe $\alpha_{\texttt{grp(i)}}$, hældningen $\beta$ og spredningen $\sigma$ er alle ukende populationsparametre, som vi kan estimere.
+
+```{r}
+unique(data1$tid_paa_dag)
+```
+
+
+```{r}
+mod2 <- lm(tid ~ puls + tid_paa_dag, data = data1)
+summary(mod2)
+```
+
+Ud fra summary kan vi se at modellen estimere en 12.18 sekunders hurtige omgangstid om formiddagen.
+
+## Opgave 1.6
+```{r}
+predict(mod2, newdata = data.frame(tid_paa_dag = "formiddag", puls = 160))
+```
+
+Den forventede tid for en løber om formiddagen med en puls på 160 er 408.19.
+
+# Opgave 2
+
+```{r}
+data2 <- read.table(file = "data/nov2021opg2.txt", header = T)
+```
+
+## opgave 2.1
+**Data:** <br> 
+$y_1, ..., y_n$ er differencen mellem week12 og week0 fra k grupper treat med $n_j$ observationer i gruppe j.
+
+**Statistisk model:** <br>
+Vi antager at $y_1, ..., y_n$ er uafhængige og normalfordelte $\sim N(\mu_i, \sigma^2)$
+
+Dertil antager vi at middelværdien $\mu_i = \alpha_{g(i)} + e_i$ hvor
+$\epsilon_i \sim N(0, \sigma^2)$ afhænger af gruppen. Med samme spredning $\sigma$ i alle grupper. 
+
+**De ukendte populationsparametre** <br>
+Middelværdien for alle grupper $\alpha_g(1) ,..., \alpha_g(k)$ og den ukendte spredningen $\sigma$
+
+```{r}
+m1 <- lm(week12 - week0 ~ treat, data = data2)
+summary(m1)
+```
+residualspredningen
+$$ \hat{\sigma} = 3.924 $$
+forventede ændring i håndgrebsstyrken for en
+patient som modtager standardbehandlingen
+
+$$\alpha_{\texttt{control}} = -0.428$$
+
+## Opgave 2.2
+
+```{r}
+confint(m1)
+```
+
+Vi ser at 0 ikke ligger i 95%-konfidensintervallet (0.431, 3.515)
+
+## opgave 2.3
+```{r}
+head(data2, n = 3)
+```
+
+```{r}
+unique(data2$diagnose)
+```
+Diagnosen indflydelse på difference afhænger af treat, og modellen er derfor ikke addativ, men med vekselvirkning. Vi kontrollere om dette er rigtigt med en f-teststørrelse ved hjælp af ANOVA
+
+$$ y_i = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_1 x_2+ e_i $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+```{r}
+fullmodel <- lm(week12 - week0 ~ treat + diagnose + treat*diagnose , data = data2)
+nullmodel <- lm(week12 - week0 ~ treat + diagnose , data = data2)
+
+anova(nullmodel, fullmodel)
+```
+
+Vi forkaster ikke hypotesen $H_0 : \beta_3 = 0$ altså taler data for at det er en model med vekselvirknign.
+
+## Opgave 2.4
+
+```{r}
+m4 <- lm(week12 - week0 ~ treat + diagnose, data = data2)
+summary(m4)$coef
+```
+```{r}
+-1.015524 + 2.310833 # For bugspytkirtel
+
+-1.015524 + 2.31083 + 1.174799 # For lunge
+```
+
+## Opgave 2.5
+Hvis der ikke sker noget over de 12 uger, svare det til at middelværdien for differencen mellem uge 0 og uge 12 er 0. Dette kan vi teste ved at se om 0 ligger i 95%-konfidensintervallet for begge grupper.
+
+```{r}
+confint(m1)
+```
+Vi ser at der er ikke signifiant evidens for at control gruppen for en forbedret håndgrebsstyrke da 0 ligger i intervallet (-1.82, 0.96). Men for intervention taler data for en signifikant stigning idet 0 ikke ligger i intervallet (0.43 3.51)
+
+## Opgave 2.6
+
+# Opgave 3
+Svar : B
+```{r}
+mu = 8.07 # Middelværdi
+s = 2.1 # Spredning
+upper = 9 # Til
+lower = 7 # Fra
+
+pnorm(upper, mean = mu, sd = s) 
+pnorm(lower, mean = mu, sd = s)
+cat("\n")
+
+pnorm(upper, mean = mu, sd = s) - pnorm(lower, mean = mu, sd = s)
+```
+
+## 3.2
+SVAR : B
+```{r}
+mu = 8.07 # Middelværdi
+s = 2.1 # Spredning
+qnorm(0.9, mean = mu, sd = s)
+```
+
+## Opgave 3.3
+Svar : C
+```{r}
+estimat <- 5.8858
+n <- 179
+k <- 3
+std_error <- 0.1131
+
+conf <- estimat + c(-1, 1) * qt(0.975, df = n - k) * std_error
+
+
+exp(conf[1])
+exp(conf[2])
+```
+
+
+## Opgave 3.5
+Svar : C
+```{r}
+pbinom(2, size=6, prob=0.2) ## P(Y<=2)
+
+dbinom(2, size=6, prob=0.2) + dbinom(1, size=6, prob=0.2) + dbinom(0, size=6, prob=0.2)
+```
+
+## Opgave 3.6
+Svar D
