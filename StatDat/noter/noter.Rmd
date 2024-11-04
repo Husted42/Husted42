@@ -27,6 +27,7 @@ library(ggplot2)
 data_johnson <- read.table("../data/johnson-fatpct.txt", header = 1)
 pestgolf <- read.table("../data/pestgolf.txt", header = 1)
 lyskilde <- read.table("data/lyskilde.txt", header = 1)
+data2 <- read.table(file = "../data/feb2022opg2.txt", header = T)
 
 # xls
 library(readxl)
@@ -87,12 +88,6 @@ $\epsilon_i \sim N(0, \sigma^2)$ afhænger af gruppen. Med samme spredning $\sig
 
 **De ukendte populationsparametre** <br>
 Middelværdien for alle grupper $\alpha_g(1) ,..., \alpha_g(k)$ og den ukendte spredningen $\sigma$
-
-### Eksempel
-
-
-## 2-stikprøve T-test
-TODO : Tilføj afsnit
 
 ## Linær regression
 
@@ -156,7 +151,11 @@ Skæringen $\alpha$, hældningenskoeficienter $\beta_1, \beta_2$  og spredningen
 estimere: $\hat{\alpha},\hat{\beta_1}, \hat{\beta_2}, \hat{\sigma}$
 
 **Eksempel**
-TODO : Eksempel
+```{r}
+mod2 <- lm(length ~ omkreds + I(omkreds^2), data = data2)
+summary(mod2)
+```
+
 
 
 
@@ -396,16 +395,41 @@ $$ \hat{p} - \hat{q} \pm 1.96 \cdot \sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{\
 
 Vi kan med konfidenintervallet groft teste $H_0 : p = q$ ved at kotrollere om 0 ligger i intervallet
 
-**Test af hypotese i R**
+## Test af hypotese i R
 ```{r}
 prop.test(c(26,12), c(50,50), correct=FALSE)
 ```
 
+eller
+
+```{r}
+success <- 20
+trials <- 56
+
+binom.test(success, trials, p = 0.5)
+```
+
 
 ## Antalstabel / ro proportioner
-TODO : Tilføj afsnit
+### Test af uafhænighed
+```{r}
+sd1tabel <- matrix(c(14, 51, 52, 401), 2, 2)
+sd1tabel
+rownames(sd1tabel) <- c("m1-Stresset", "m1-Ikke stresset")
+colnames(sd1tabel) <- c("m2-Stresset", "m2-Ikke stresset")
+sd1tabel
+```
+
+```{r}
+chisq.test(sd1tabel, correct = FALSE)
+```
+
+Vi forkaster $h_0 : p_{i,j} = p_i \cdot p_j \forall i,j$ om at der er uafhængighed. Dataen taler altså for at der er en anden sandsylighed for at være stresset i måned 2 givet at de var stresset i måned 2.
+
+TODO : Kan vi antage andelen kan antages at være ens givet om vi forkaster hypotesen?
 
 # Kontrol af modelantagelser
+Søgeord : model antagelse
 ```{r}
 linreg <- lm(bodyfat ~ hip, data = data_johnson) # Fit
 ```
@@ -453,7 +477,7 @@ abline(0,0, col = 'Red')
 
 Der må være noget mønster i den lodrette variation
   * Hvis vi kan se en kurve er middelværdien forkert. En parabel i overstående tilfælde vil formentlig betyde vi skal anvende kvadratisk regression
-  *  Punkterne udgør en slags trag, viser at spredningen stiger med middelværdien hvilket er et tegn på Variansinhomogenitet
+  *  Punkterne udgør en slags trag, viser at spredningen stiger med middelværdien hvilket er et tegn på varianshomogenitet.
   
 Derudover kan det give mening at være opmærksom på outliers 95% af punkterne bør ligge indenfor (-2, 2)
 
@@ -745,4 +769,32 @@ pnorm(val, mean = 4, sd = 2.8)
 
 ```
 
+## Nov2021
+### konfidensinterval for ANOVA givet summary
+```{r}
+# Give et summary : 
+##                        Estimate  Std. Error  t value   Pr(>|t|)
+## (Intercept)            5.8858    0.1131      52.0573   0.0000
+## Studiehusdyrvidenskab  0.0874    0.1765      0.4953    0.6210
+## Studiejordbrugsøkonomi 0.2340    0.1818      1.2869    0.1999
+## Studienaturressourcer  0.2214    0.1464      1.5120    0.1324
 
+
+
+estimat <- 5.8858
+n <- 179
+k <- 3
+std_error <- 0.1131
+
+conf <- estimat + c(-1, 1) * qt(0.975, df = n - k) * std_error
+
+
+exp(conf[1])
+exp(conf[2])
+```
+
+Det er her værd at bemærke at Studiejordbrugsøkonomi : 0.2340 betyder at:
+exp(0.2340) = 1..263 angiver at medianen estimeres til at være ca. 26.3 % højere for JØ-studerendes gæt end BB-studerendes gæt.
+
+### F-test fra summary 1-sidet ANOVA
+F-statiscic omkring de allesammen middelværdier er ens

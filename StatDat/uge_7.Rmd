@@ -201,7 +201,6 @@ Kontrolleres med residual plot
 ```{r}
 plot(fitted(linreg), rstandard(linreg))
 abline(0,0, col = 'Red')
-
 ```
 
 Vi ser ikke noget tydeligt mønster i den lodrette varaitaion. Dette peger på at vores antagelse om at spredningen i restledene er korrekt. Dertil taler det også for at vores middelværdi struktur er rigtig.

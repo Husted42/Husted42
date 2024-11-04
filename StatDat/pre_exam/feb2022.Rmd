@@ -1,0 +1,433 @@
+---
+title: "feb2022"
+output: html_document
+date: "2024-11-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Opgave 1
+```{r}
+library(readxl)
+data1 <- read_excel(path = "../data/feb2022opg1.xlsx")
+```
+
+```{r}
+head(data1, n =3)
+```
+
+
+## Opgave 1.1
+```{r}
+anova_ <- lm(tid ~ type - 1, data = data1)
+summary(anova_)
+```
+
+Vi kan ud fra summary estimere en residualspredningen på $\hat{\sigma} =  0.29 $.
+
+Den forventede middelspiringstid for arten symphony er $\hat{\alpha_{\texttt{symphony}}} =4.44 $
+
+## Opgave 1.2 
+Vi opstille en hypotesetest
+$$ H_0 : \alpha_{g(1)} = ... = \alpha_{g(3)} $$
+
+Vi anvender en F-test til at teste hele hypotesen:
+  * Fullmodel: Vores fittede 1-sidet ANOVA
+  * Nulmodel: Submodel uden forklarende variable (test for enkelt stikprøve)
+  
+```{r}
+fullmodel <- lm(tid ~ type, data = data1)
+nullmodel <- lm(tid ~ 1, data = data1)
+
+anova(nullmodel, fullmodel)
+```
+
+Vi aviser nulhypotesen om at alle gruppegennemsnittene er ens på et signifikansniveau på 0.95% med en p-værdi < 0.0001 < 0.05. Data taler altså for en statisktisk signifinkant forskel i middelværdien indenfor minimum 1 af grupperne.
+
+
+## Opgave 1.3
+
+```{r}
+data1_sym <- data1
+data1_sym$type <- relevel(factor(data1_sym$type), ref = 'symphony')
+anova_1 <- lm(tid ~ type, data = data1_sym)
+summary(anova_1)
+```
+
+Vi aflæser et estimat for forskellen i den forventede middelspringstid for frø af arternesmirna og symphony på 0.489.
+
+Vi ser at forskellen er statistisk signifikant og afivser 0-hypotesen om at den ikke er med en p-værdi < 0.001 < 0.05. Dette vil altså betyder at 95% intervallet for forskellen ikke indeholder 0:
+
+```{r}
+confint(anova_1)
+```
+
+Hvilket det ikke gør.
+(0.28 0.70)
+
+# Opgave 2
+```{r}
+data2 <- read.table(file = "../data/feb2022opg2.txt", header = T)
+head(data2, n = 3)
+unique(data2$variety)
+```
+
+## Opgave 2.1
+**Data:** <br> 
+Par $(x_1, y_1), ..., (x_n, y_n)$ bestående af
+kvantitative kontinuerte data, både for vores responsvariabel length  og den
+forklarende variabel omkreds.
+
+**Statistisk model:** <br> 
+$$ y_i = \mu_i + \epsilon_i  $$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ (ret linje)
+med spredning $\sigma$.
+
+**De ukendte populationsparametre** <br> Skæringen $\alpha$, hældningen
+$\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan
+estimere: $\hat{\alpha},\hat{\beta},\hat{\sigma}$
+
+```{r}
+mod1 <- lm(length ~ omkreds, data = data2)
+summary(mod1)
+```
+
+Vi aflæser estimat for skæring, hældning og residual spredning:
+$$ \hat{\alpha} = -0.96, \hat{\beta} = 1.19, \hat{\sigma} = 1.2 $$
+
+## Opgave 2.2
+```{r}
+predict(mod1, newdata = data.frame(omkreds = 6.28), interval = "p")
+```
+
+Den forventede længde af en gulerod med en omkreds på 6.28 er 6.52
+
+Da 8 ligger i prediktionsintervallet (4.10, 8.93) vil det ikke være usædvanligt at en gulerod med en diameter på 2 cm har en længde på 8 cm.
+
+### Opgave 2.3
+
+Vi skal her teste nulhypotesen 
+$$ H_0 : \alpha = 0, \beta= \frac{3}{\pi} $$
+
+```{r}
+# 0 fortæller R at linjen skal skære i origo
+# Offset tvinger parameteren til en bestet værdi
+nullmodel <- lm(length ~ 0 + offset((3/pi) * omkreds), data = data2)
+summary(mod1)
+```
+
+Vi anvender en F-test via. anova til at teste hele hypotesen:
+  * Fullmodel: mo1 -> Den linæeare regressionsmodel
+  * Nulmodel: Modellen med parametre angivet i H_0
+  
+```{r}
+anova(nullmodel, mod1)
+```
+
+Vi aviser 0-hypotesn med en p-værdi på 0.00031. 
+Data taler altså ikke for at længden på en gullerod er $\frac{3}{\pi} \cdot \texttt{Omkreds}$
+
+## Opgave 2.4
+Vi opstiller en kvadratisk linæer regressionsmodel i R
+```{r}
+mod2 <- lm(length ~ omkreds + I(omkreds^2), data = data2)
+summary(mod2)
+```
+
+**Statistisk model:**
+$$y_i = \alpha + \beta_1 x_{i} + \beta_2 x_{i}^2 + e_i$$
+hvor $\epsilon_i \sim N(0, \sigma^2)$
+
+Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
+normaltfordelt med middelværdi $y_i = \alpha + \beta_1 x_{i} + \beta_2 x_{i}^2 + e_i$ (Andengrads polynomial)
+med spredning $\sigma$.
+
+Vi angiver estimaterne udfra summary:
+
+$\hat{\alpha} = 0.32 ,\hat{\beta_1} = 0.80, \hat{\beta_2} = 0.28, \hat{\sigma} = 1.206 $
+
+**Regressions antagelse** <br>
+Vi kan ved brug af Anova afgøre om 0-hypotesten $ \beta_2 = 0 $.
+
+Hvis vi ikke kan afvise denne hypotese, taler data for at den forventede
+længde af en gulerod er en lineær funktion af omkredsen. (TODO : Test hypotesen)
+
+## Opgave 2.5
+```{r, figures-side, fig.show="hold", out.width="50%"}
+# Man kan ikke se det i R-output, men den plotter begge funktioner ved siden af hindanden når man har knit'et
+plot(fitted(mod1), rstandard(mod1))
+abline(0,0, col = 'Red')
+
+qqnorm(rstandard(mod1))
+abline(0,1, lty=2)
+```
+På residualplottet kigger vi efter, om residualerne ligger symmetrisk omkring 0 for alle
+prædikterede værdier, og om der er varianshomogenitet.
+
+Data ligger nogenlude symetrisk omkring 0 for alle værdier, selvom man kunne argumentere for at de klumper sig lidt samme i to grupper for værdier større end 9. Dette kan dog sagtens skydels tilfædlig varaiation. Der ser ikke ud til at være problemer med antagelsen om varianshomogenitet, idet spredningen ikke stiger med middelværdien. Der ser dertil også ud til at ca. 95% af værdierne falder indenfor intervallet (-2, 2) hvilket vi forventer ved en normalfordeling.
+
+På QQ-plottet ser vi efter om der er systematiske afvigelser imellem punkterne og den
+rette linje.
+
+Vi ser ingen systematisk afvigelse fra den ligefrem propotionnalle linje i i QQ-plottet
+
+
+```{r}
+mod3 <- lm(log(length) ~ log(omkreds), data = data2)
+plot(fitted(mod3), rstandard(mod3))
+abline(0,0, col = 'Red')
+
+qqnorm(rstandard(mod3))
+abline(0,1, lty=2)
+
+```
+
+Vi ser ikke nogen frobedring i residualplottet.
+
+QQ-plottet ser en smule pænere ud, så man kan herfra argumentere for at man kunne fortrække mod3 fremfor mod1, idet antagelsen om normalfordeling er mere sikker. Vi skal dog være opmærksom på at vi i den logtranformerede model predektere medianen og ikke middelværdien.
+
+
+## Opgave 2.6
+Her giver det mening at anvende en ancova model, som er en statistisk model. Jeg vælger at anvende modellen uden vekselvirkning, således at vi for en model med flere rette parallel linjer.
+
+**Data**
+De forklarende variabel består af en kontinuert variabel omkreds, og en kategorisk variabel variaty. Respons variablen længde $y_i$ er kontinuert
+
+**Statistisk model**
+**Additativ**
+$$ y_i = \alpha_{\texttt{grp(i)}} + \beta \cdot x_i + \epsilon_i $$
+
+hvor $\epsilon_i \texttt{ iid. } N(0, \sigma^2)$
+
+Som det ses i formlen for middelværdien angivet overfor, er effekten af x ikke afhængig af gruppen. Således for vi en model med flere parallele linjer med hældningskoefficent $\beta$ og skæring $\alpha_{\texttt{grp(i)}}$
+
+**Parameter**
+Skæringen per gruppe $\alpha_{\texttt{grp(i)}}$, hældningen $\beta$ og spredningen $\sigma$ er alle ukende populationsparametre, som vi kan estimere.
+
+```{r}
+mod4 <- lm(length ~ omkreds + variety - 1, data = data2)
+summary(mod4)
+```
+
+Hældning som er ens for alle grupper er givet ved $ \hat{\beta} = 1.11 $
+
+Skæringen for hver gruppe er givet ved
+$$ \hat{\alpha_{\texttt{gul}}} = -0.14, \:\: \hat{\alpha_{\texttt{orange}}} = -0.62, \:\: \hat{\alpha_{\texttt{rød}}} = -0.77  $$
+
+## Opgave 2.7
+Opgave misforstået, man skulle bare kontrollere om skæringerne er forskellige.
+
+Vi vil gerne teste om hældningen er ens for all grupper. Dette kan vi gøre ved at teste vores model op i mod en ANCOVA med vekselvirkning. 
+
+For modellen
+$$ y_i = \alpha_{\texttt{grp(i)}} + \beta_{\texttt{grp(i)}} \cdot x_i + \epsilon_i $$
+hvor $\epsilon_i \texttt{ iid. } N(0, \sigma^2)$
+
+Vi ønsker at teste  
+$$ H_0 : \hat{\beta_{\texttt{gul}}} = \hat{\beta_{\texttt{orange}}} = \hat{\beta_{\texttt{rød}}} $$
+
+Vi anvender en f-test til at teste hele hypotesen
+```{r}
+fullModel <- lm(length ~ omkreds + variety + omkreds * variety , data = data2) # Med vekselvirkning
+nullModel <- lm(length ~ omkreds + variety , data = data2) # Additativ
+
+anova(nullModel, fullModel)
+```
+
+Vi forkaster 0-hypotesen med F-værdi på 0.57 og en p-værdi på 0.57. Data taler altså for, at sorten af guleroden (variety) har betydning for sammenhængen
+mellem længde og omkreds af en gulerod.
+
+# Opgave 3
+## opgave 1
+Svar : E
+```{r}
+mu = 6.31 # Middelværdi
+s = 1.47 # Spredning
+upper = 8 # Til
+lower = 3 # Fra
+
+
+pnorm(upper, mean = mu, sd = s) 
+pnorm(lower, mean = mu, sd = s)
+cat("\n")
+pnorm(upper, mean = mu, sd = s) - pnorm(lower, mean = mu, sd = s)
+```
+
+## Opgave 2
+Svar : D
+```{r}
+mu = 6.31 # Middelværdi
+s = 1.47 # Spredning
+pnorm(8.73, mean = mu, sd = s) # A
+
+1 - pnorm(9.19, mean = mu, sd = s) # B 
+
+1 - pnorm(8.73, mean = mu, sd = s) 
+
+1 - pnorm(7.08, mean = mu, sd = s) 
+
+pnorm(7.08, mean = mu, sd = s) 
+```
+## Opgave 3
+Svar : C
+```{r}
+success <- 20
+trials <- 56
+
+binom.test(success, trials, p = 0.5)
+```
+
+## Opgave 4
+Svar : B
+
+```{r}
+# Opstil data : R læser kollonevis
+sd1tabel <- matrix(c(115, 86, 47, 62, 15, 29), 2, 3) # rows x columns
+sd1tabel
+
+chisq.test(sd1tabel, correct = FALSE)
+
+```
+
+## Opgave 5
+Svar : D
+
+## Opgave 6
+Svar : C
+
+# Nov 2021 quix
+## Opgave 3.3
+Svar : C
+konfidensinterval for ANOCA givet summary
+```{r}
+# Give et summary : 
+##                        Estimate  Std. Error  t value   Pr(>|t|)
+## (Intercept)            5.8858    0.1131      52.0573   0.0000
+## Studiehusdyrvidenskab  0.0874    0.1765      0.4953    0.6210
+## Studiejordbrugsøkonomi 0.2340    0.1818      1.2869    0.1999
+## Studienaturressourcer  0.2214    0.1464      1.5120    0.1324
+
+
+
+estimat <- 5.8858
+n <- 179
+k <- 3
+std_error <- 0.1131
+
+conf <- estimat + c(-1, 1) * qt(0.975, df = n - k) * std_error
+
+
+exp(conf[1])
+exp(conf[2])
+```
+
+## Opgave 3.4
+Svar : D
+
+## Opgave 3.5
+Svar : A
+Binomail 1/5 sandsynlighed, ialt 6 træk, hvad er sandsyligehedn for at få 2 rigtige
+```{r}
+dbinom(2, size=6, prob=0.2)
+```
+
+## Opgave 3.6
+Svar : D
+# Opstil data : R læser kollonevis
+```{r}
+sd1tabel <- matrix(c(74, 75, 7, 23), 2, 2) # rows x columns
+sd1tabel
+
+chisq.test(sd1tabel, correct = FALSE)
+```
+
+# Opgave Nov2023
+## Opgave 3.1
+Svar : C
+```{r}
+mu = 6.8 # Middelværdi
+s = 0.8 # Spredning
+obs = 190 #Observation
+
+# Under
+pnorm(obs, mean = mu, sd = s)
+
+#Over
+pnorm(8, mean = mu, sd = s) - pnorm(6, mean = mu, sd = s)
+```
+
+## Opgave 3.2
+Svar : C
+```{r}
+mu = 6.8 # Middelværdi
+s = 0.8 # Spredning
+obs = 190 #Observation
+
+# Under
+1 - pnorm(8.1, mean = mu, sd = s)
+
+qnorm(0.05, mean = mu, sd = s)
+```
+## Opggave 3.3
+Svar : E
+TODO : Pbinorm noter
+```{r}
+pbinom(15, size=25, prob=0.5) ## P(Y>=15) -  P(Y>=10)
+pbinom(10, size=25, prob=0.5)
+
+pbinom(15, size=25, prob=0.5) - pbinom(9, size=25, prob=0.5)
+```
+
+## Opggave 3.4
+Svar : C
+```{r}
+sd1tabel <- matrix(c(10, 16, 11, 8, 6, 4, 8, 13), 2, 4)
+sd1tabel
+```
+
+```{r}
+chisq.test(sd1tabel, correct = FALSE)
+```
+Afviser uafhænighed, så de er ikke ens : s ̊a andelen kan antages at være ens for de 4
+grupper af studerende.
+
+## Opgave 3.5
+Svar : C
+
+28.82, 
+
+```{r}
+28.82 -14.180
+```
+
+## Opgave 3.6
+Svar : E
+
+F-statiscic omkring de allesammen middelværdier er ens
+
+## Opgave 3.7
+Svar : A
+
+
+```{r}
+n = 25 # Antal observationer
+beta = 1.234 # Hældning
+SE = 0.543 # Standard error
+hypotese = 0 # hypotesen om at "den sande hældning" er 0
+
+
+# Test af hypotesen H: beta=4
+T = (beta - hypotese) / SE
+
+# Beregning af p-vaerdi
+P = 2*(1-pt(T, df = n - 2))
+
+T
+P
+```
+
