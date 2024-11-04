@@ -477,7 +477,7 @@ abline(0,0, col = 'Red')
 
 Der må være noget mønster i den lodrette variation
   * Hvis vi kan se en kurve er middelværdien forkert. En parabel i overstående tilfælde vil formentlig betyde vi skal anvende kvadratisk regression
-  *  Punkterne udgør en slags trag, viser at spredningen stiger med middelværdien hvilket er et tegn på varianshomogenitet.
+  *  Punkterne udgør en slags trag, viser at spredningen stiger med middelværdien hvilket er et tegn på variansinhomogenitet.
   
 Derudover kan det give mening at være opmærksom på outliers 95% af punkterne bør ligge indenfor (-2, 2)
 
@@ -490,8 +490,13 @@ abline(0,1, lty=2)
 Der må ikke være nogen systemeatisk afvigelse fra den ligefrem propotionelle linje. (Den er kun ligefrem propotionel fordi vi tester for residual spredningen)
 
 ## Forklaring på pæne plots
+**Residualplot** <br>
+Vi ser ikke nogen vertikal systematisk afvigelse omkring 0, der er ca. samme mængde punkter over og under linjen. Vi ser dertil også at ca. 95% af datapunkterne ligger indenfor 2 og -2, ligesom vi forventer ved en normalfordeling. Der er helle ikke nogle tegn på variansinhomoginitet.
+
 **QQ-plot** <br>
 Der er ikke nogen systematisk afvigelse fra linjen i QQ-plottet, hvilket betyder at data ligger i de kvartiler, som vi forventer ved en normalfordelingen.
+
+Ud fra dette, kan vi se at antagelsen om normalfordelte residulaler er korrekt. Og det bekræfter os i at middelværdi antagelsen er korrekt (Altså at vi har valgt den rigtige statistiske model).
 
 # Grafer og plots
 ## Scatter
@@ -559,8 +564,17 @@ hist(log(cats$Hwt), # Data
 ```
 
 # Generalt
-## Beregning af sandsyligheder pbinorm
-TODO : Skriv afsnit, inkluder at man ikke tager f.eks 10 med en værdi mellem 15 og 10 = P(X<= 15) - P(X<=9)
+## Beregning af sandsyligheder pnorm
+```{r}
+mu <- 8 
+s <- 5
+#Mellem 15 og 10 P(X<= 15) - P(X<=9)
+pnorm(15, mu, s) - pnorm(9, mu, s)
+pnorm(15, mu, s) # P(X<= 15)
+dnorm(15, mu, s) # P(X = 15)
+```
+
+
 ## Fejltyper
 Type 1 - Afvise nulhypotesen hvis den er sand
 Type 2 - Ikke afvise nulhypotesen hvis den er falsk

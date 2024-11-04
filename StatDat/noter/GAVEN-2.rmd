@@ -1,0 +1,591 @@
+---
+title: "GAVEN pt.2"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+UGE 1: 
+#Beskrivelse og indlæsning af data 
+Altid start med at finde/downloade dit datasæt ved "import datasat" eller downloade en pakke. 
+```{r}
+library(MASS)
+data(cats)
+```
+Viser de tre variable der findes i datasættet: 
+```{r}
+head(cats)
+```
+
+Hvis jeg kun vil forhold mig til en af variablerne: 
+```{r}
+bwt <- cats$Bwt
+```
+
+Stikprøvestørrelser: 
+```{r}
+middelværdi <- mean(cats$Bwt)
+spredning <- sd(cats$Bwt)
+varians <- var(cats$Bwt)
+median <- median(cats$Bwt)
+summary <- summary(cats$Bwt)
+```
+
+#Tabeller: 
+Laver en tabel kun for kønnet
+```{r}
+table(cats$Sex)
+```
+
+#Visualisering: 
+SCATTERPLOT, bruges til sammenhængen mellem to numeriske/kontinuerte variable 
+```{r}
+scatter <- plot(cats$Hwt ~ cats$Bwt)
+```
+
+BOXPLOT: 
+Viser de numriske målinger der markerer 25%, medianen og 75%
+```{r}
+boxplot(cats$Hwt, main="Heart Weight", col="lightgray")
+```
+
+HISTOGRAM: 
+Bruges til at vise fordelingen af numerisk/kontinuert/kvantitativ variabel i en teststørrelse 
+```{r}
+par(mfrow=c(1,2)) #placerer dem ved siden af hinanden 
+hist(cats$Bwt)
+hist(cats$Hwt)
+```
+
+#Lineær regression 
+Hvis Bwt er nyttig, for at kunne forudsige Hwt, derfor bruger jeg regressionsanalyse, for at kunne beskrive sammenhængen mellem to kvantitative variable. Responsvar: Hwt og forklar.var: Bwt 
+
+LIGNINGEN: y = a*x+b 
+y = Hwt og x = Bwt 
+
+```{r}
+linreg <- lm(Hwt ~ Bwt, data = cats) #estimerer regressionslinjen
+linreg
+```
+Kan ud fra dette se, at estimatet for linjens skæring som er intercept = -0.3567 
+Linjens hældning, som er Bwt = 4.0341 
+Fortolkning: Hver gang kropsvægten øges med 1 kg, vil hjertevægten forøges med 4.0341 g i gennemsnit 
+
+Bruger abline, for at indtegne den fittede reglinje og indsætter mine estimater: 
+```{r}
+plot(cats$Bwt, cats$Hwt)
+abline(-0.3567, 4.0341) 
+```
+Kan her også lave summary, og confint, for at se alle værdierne og 95%-konfidensinterval
+
+#Korrelationer
+Disse bruges, for at forklare sammenhængen mellem x og y. 
+Den er 0, hvis der ikke er en sammenhæng 
++1 eller -1, hvis der er perfekt sammenhæng 
+```{r}
+cor(cats$Bwt, cats$Hwt)
+```
+
+#Beregning af estimat og konfidensinterval for punkt på linjen 
+
+Eksempel: Vi er interesseret i estimat og KI for hjertevægt med en kropsvægt på 2,5 kg. 
+For at beregne estimatet, skal man lave et fiktivt datapunkt ved x=2.5: 
+```{r}
+newdata <- data.frame(Bwt=2.5)
+```
+Og for at findes estimatet ved dette, bruges predict: 
+```{r}
+predict(linreg, newdata)
+```
+For at finde estimaetet og 95%-konfidensinterval bruges også predict: 
+```{r}
+predict(linreg, newdata, interval="confidence", level=0.95)
+```
+Den gennemsnitslige hjertevægt blandt katte på 2.5 kg estimeres til 9.72 g med 95% konfidensinterval (9.46, 9.99). Bemærk at dette interval udtaler sig om gennemsnittet (af hjertevægten) for katte med kropsvægt på 2.5 kg - ikke om værdien for en enkelt kat. Konfidensintervallet skal ikke fortolkes sådan, at det vil indeholde ca. 95 % af fremtidige målinger for katte med kropsvægt på 2.5 kg.
+
+#t.test for lineær regression
+
+Hypotesen om at der ikke er sammenhæng mellem kropsvægt og hjertevægt, H0:β=0, testes med et t-test.
+```{r}
+summary(linreg)
+```
+Vi får en p-værdi som er under 2⋅10−16, (hvilket i praksis er 0!), så hypotesen forkastes. Der er stærk evidens for at der er en sammenhæng, hvilket næppe er særligt overraskende.
+
+
+#Ensidet variansanalyse
+
+Værdien er målt af en kvantitiav variabel og målingens grupper er inddelt af en kategorisk variable - vil man se, om responsvariablen er ens i de forskellige grupper 
+```{r}
+library(isdals)
+data(antibio)
+```
+Vil forklare variationen i mængden af organisk stof(org) ud fra en forklarende variable(type)
+
+Starter ALTID med at visualisere med at boxplot 
+```{r}
+figur1 <- boxplot(antibio$org ~ antibio$type)
+```
+
+#Ensidet ANOVA 
+Fokuserer på sammenligning af gruppegennemsnit
+```{r}
+lm(org ~ type -1, data=antibio)
+```
+
+
+
+UGE 2: 
+#Indlæsning af data 
+Her udvælger jeg kun to variable fra datasættes: 
+```{r}
+library(readxl)
+studData2 <- stud2017_v2 <- read_excel("Downloads/stud2017-v2.xls")
+studData2 <- studData2[, c("kon", "hojde")]
+```
+Det hænder, at den ikke vil downloade den sådane, men så ændrer den til "read_excel("stud2017-v2.xls)
+
+*SUBSET*
+
+Hvis jeg vil opdele mænd og kvinder: 
+```{r}
+kData <- subset(studData2, kon == "Kvinde")
+mData <- subset(studData2, kon == "Mand")
+```
+
+Hvis der er missin value og den giver NA, hvis du vil finde spredningen for kvinders højde f.eks: 
+```{r}
+sd(kData$hojde) #forkerte måde 
+```
+```{r}
+sdK <- sd(kData$hojde, na.rm = T)
+```
+
+#Beregning af sandsynligheder og fraktiler i en normalfordeling 
+
+Laver et histogram og prob=TRUE, da det sikrer at arealet er lig 1 alle steder 
+```{r}
+hist(kData$hojde, prob = TRUE)
+```
+Udregner forskellige sandsynligheder for y, hvis jeg ved at mean = 168.63 og spredning = 6.64
+```{r}
+#hvis P(y <= 160)
+pnorm(160, mean=168.63, sd=6.64)
+```
+Hvis jeg vil finde 90%-fraktilen, hvis b=0,096 
+```{r}
+qnorm(0.09685211, mean=168.63, sd=6.64)
+```
+
+rnorm bruges, når man skal simulere et datasæt ud fra normalfordelt data 
+
+#QQ-plot 
+Viser om data er en normalfordeling 
+```{r}
+qqnorm(kData$hojde)
+abline(168.63, 6.64)
+```
+Her kan man se, at de ligner flot på en ret linje og derfor kan man med rimelighed beskrive varationen af vores data ved en normalfordeling 
+
+UGE 3: 
+#Ensidet ANOVA 
+Hvordan estimerer man parametrerene, ergo hvordan finder man punktestimaterne - bruger igen antibio 
+
+Laver en model, der parametriserer de seks gennemsnit: 
+```{r}
+model1 <- lm(org ~ type -1, data=antibio)
+summary(model1)
+```
+```{r}
+confint(model1)
+```
+Hvis jeg ikke havde skrevet "-1", så vil referencegruppen være den der kommer først i alfabetet. 
+
+#skift af referencegruppe 
+```{r}
+antibio$type <- relevel(antibio$type, ref="Control")
+model2 <- lm(org ~ type, data=antibio)
+summary(model2)
+```
+
+#t.test for parvise sammenligninger i ensidet ANOVA 
+t-test for sammenligning med referencegruppen foretages automatisk i summary. Hvis vi fitter modellen med kontrolgruppen som reference, udføres testene for sammenligning med kontrollen altså for hver af de fem typer antibiotium.
+
+Lad os som eksempel se på Fenbendazole og undersøge hypotesen om at den forventede værdi er den samme for denne gruppe og kontrolgruppen, αFenb=αCtrl
+Vi aflæser p-værdien til 0.0028, så der er evidens i data for at der er forskel mellem de to grupper.(ses i summary ovenfor)
+
+#F-test ved ensidet ANOVA 
+
+##Sammenligning af tre eller flere grupper 
+Vi beskriver variationen i målingerne af organisk stof ved en ensidet variansanalysemodel. Vi antager således, at målingerne i hver gruppe er normalfordelte med samme varians, men at middelværdien kan være forskellig i de forskellige grupper. Alle målinger antages at være uafhængige.
+
+Vi kalder populationsmiddelværdierne i de 6 grupper (givet ved fodertype) for α1,α2,…,α6. Vi ønsker at teste en hypotese om, at middelværdierne er ens i alle grupper
+H0:α1=α2=…=α6
+
+F-test: 
+```{r}
+drop1(model2, test="F")
+```
+HUSK, denne kun virker, hvis der ikke er "-1" i ligningen. Hvis der er dette, så brug summary. 
+Vi konkluderer at F-teststørrelsen bliver 7.97 med en tilhørende p-værdi på 8.953e−05. 
+
+##Samme middelværdi for alle grupper pånær kontrolgruppen? 
+Vi kunne i stedet være interesseret i at undersøge, om middelværdien er ens for alle grupper, bortset fra kontrolgruppen. Dette kan formuleres som
+
+H0:αAlfacyp=αEnroflox=αFenbenda=αIvermectin=αSpiramyc - men der ikke er nogle restriktioner på middelværdien hørende til kontrolgruppen.
+
+Vi kan teste hypotesen som en F-test ud fra
+
+en fuld model: hvor de 6 gruppemiddelværdier tillades at være forskellige
+en nulmodel: med kun to forskellige gruppemiddelværdier for hhv. kontrolgruppen og en (fælles) værdi for de øvrige 5 grupper
+
+Den fulde model er her blot vores ensidet variansanalyse model, mens nul modellen kan fittes i R ved at lave en ny faktor med to niveauer, som holder styr på om målingerne stammer fra kontrolgruppe eller ej.
+
+Variablen typeControl som laves her neden for antager to værdier: TRUE for målinger fra kontrolgruppen og FALSE for alle øvrige målinger.
+```{r}
+antibio$typeControl <- (antibio$type == "Control")
+fullModel <- lm(org ~ type, data = antibio)
+nullModel2 <- lm(org ~ typeControl, data = antibio)
+anova(nullModel2, fullModel)
+```
+Konklusion:  Nulhypotesen forkastes: F = 4.5056 svarende til en p-værdi på 0.006171. Datasættet understøtter dermed ikke en hypotese om, at middelværdien er ens for alle grupper pånær kontrolgruppen.
+
+#Bonferri-korrektion: multiple t-test: 
+
+Kigger på summary over model 2. Ved Bonferroni-korrektion ganges p-værdierne med antallet af test (her 5) før man foretager en vurdering af, om p-værdien er under signifikansniveauet (fx. 5 %). For dette eksempel er der stadig 4 af de 5 nederste p-værdier som holder sig under 5 %, selvom vi betragter de Bonferroni-korrigerede p-værdier! Vi føler os derfor ret sikre på, at alle grupper/fodertyper (pånær Fenbenda), fører til et forhøjet indhold af organisk materiale i gødningen.
+
+
+#Analyse af to uafhængige(uparrede) stikprøver: 
+
+```{r}
+library(isdals)
+data("salmon")
+```
+data er fra to laksepopulationer, som begge blev inficeret med en parasit. Er interesseret i at se forskellen mellem de to populationer 
+
+Laver et boxplot, for at kunne bedømme graden af variationen
+```{r}
+boxplot(parasites~stock, data=salmon)
+```
+Udfra boxplottet, virker det fornuftigt at antage der er ens spredninger, men laver alligevel analysen fra begge populationer: 
+```{r}
+sverige <- subset(salmon, stock=="atran")
+skotland <- subset(salmon, stock=="conon")
+sd(sverige$parasites)
+```
+```{r}
+sd(skotland$parasites)
+```
+
+Antagelse for at spredningen er ens: 
+laver derfor en t.test. Default for t.test er (uparret) analyse af to stikprøver med forskellige spredninger, så vi skal eksplicit angive det hvis vi ønsker ens spredninger.
+```{r}
+t.test(sverige$parasites, skotland$parasites, var.equal = TRUE)
+```
+
+Antagelse for at spredningen ikke er ens: H0 = beta er lig 0 
+```{r}
+t.test(sverige$parasites, skotland$parasites)
+```
+Nul er ikke inkluderet i konfidensintervallerne, så en populationsforskel på 0 er ikke i overensstemmelse med data på 95% konfidensniveau. Det tyder således på at laks fra Atran og Conon reagerer forskelligt på infektion med en parasit af denne type
+
+#Analyse af to parrede stikprøver 
+
+Eksempel med heste, hvor vi gerne vil finde forskellen i populationsmiddelværdi for raske og halte heste 
+Data er parrede, da der er to observationer fra de samme heste - de kan ikke antages at være uafhængige. 
+Hypotesen er at middelværdien for forskellen er nul, altså H0:μ=0
+
+```{r}
+data("lameness")
+```
+
+Analysen fortages på forskellen mellem de to målinger, ved brug af t.test: 
+```{r}
+t.test(lameness$lame - lameness$healthy)
+```
+Ved denne model, antager jeg dog at jeg bruger forskellen som argument til min t.test 
+Nul ligger i ikke konfidensintervallet, så denne værdi af populationsforskel er ikke i overensstemmelse med data. Det tyder således på at symmetriscoren faktisk ændrer sig når heste bliver halte.
+Samtidig, er min p-værdi=0,00031% som ligger langt undfer 0,05% og derfor forkastes hypotesen 
+
+MODELKONTROL: 
+#Modelkontrol for lineær regression 
+
+Den grundlæggende antagelse er at målingerne af hjertevægt (y = Hwt) for en fast kropsvægt (x = Bwt) i gennemsnit ligger på en ret linje: E(y)=α+β⋅x
+
+og at variation omkring regressionslinjen kan beskrives ud fra fejl-led (eng: remainder terms) e1,…,en som: - har middelværdi 0
+- har samme spredning
+- er normalfordelt
+- er uafhængige
+Vi kontrollerer modelantagelserne ved at se på de standardiserede residualer. Følgende figurer kan være relevante:
+- et residualplot af de standardiserede residualer mod de fittede værdier
+- et residualplot af de standardiserede residualer mod den forklarende variabel x (dvs. Bwt)
+- et QQ-plot af de standardiserede residualer
+
+##Residualplot: 
+```{r}
+plot(fitted(linreg), rstandard(linreg))
+abline(h=0, lty=2)
+plot(cats$Bwt, rstandard(linreg))
+abline(h=0, lty=2)
+
+```
+Vi konkluderer at:
+gennemsnittet af residualerne er ca. 0 uanset værdien af gruppegennemsnittet (predicted values)
+der er ca. samme spredning af residualerne i alle grupper (varianshomogenitet)
+
+##QQ-plot: 
+```{r}
+qqnorm(rstandard(linreg))
+abline(0, 1, lwd=2)
+```
+På baggrund af QQ-plottet konkluderes at:
+punkterne afviger ikke systematisk fra den rette linje
+dette fortolkes som at de standardiserede residualer med god tilnærmelse kan antages at følge en standardnormalfordeling (med middelværdi 0 og varians 1)
+
+##Prædiktions- og konfidensintervaller: 
+```{r}
+con <-  predict(linreg, newdata, interval="c") #confidens
+pre <- predict(linreg, newdata, interval="p") #prædiktions
+```
+
+#Modelkontrol for ensidet ANOVA 
+
+Den grundlæggende antagelse er at målingernes variation omkring gruppegennemsnittet kan beskrives ud fra fejlled (eng: remainder terms) e1,…,en som
+- har middelværdi 0
+- har samme spredning
+- er normalfordelt
+- er uafhængige
+I praksis undersøges modelantagelserne ved at udregne residualerne, som kan udtrækkes fra den ensidede variansanalysemodel med resid().
+
+```{r}
+resid(model2)
+```
+Kan ikke bruges disse, da det kun er observationer af organisk stof fratrukket gennemsnittet for fodertype. 
+Skal derfor finde de standardiserede residualer: 
+```{r}
+rstandard(model2)
+```
+
+Skal igen lave et residualplot og et QQ-plot, ligesom der gøres i lineære og kvardratisk regression (se ovenover)
+
+
+#MODELKONTROL for tosidet ANOVA 
+
+Laver først residualplot: 
+```{r}
+plot(fitted(modelulog), rstandard(modelulog), pch = 16, main = "ANOVA", cex.main = 1.5, cex.lab = 1.5)
+abline(h = 0, lty = 2)
+```
+
+Laver derefter QQ-plot: 
+```{r}
+qqnorm(rstandard(modelulog), main="QQ-plot for ANOVA", pch = 16)
+abline(0, 1, lwd = 2, lty = 2)
+```
+
+
+#Multipel lineær regression på utransformerede data 
+
+```{r}
+library(isdals)
+data(trees)
+```
+Data indeholder tre kontinuerte variable: 
+Volume: træets volumen i cubit feet (respons)
+Height: træets højde i feet (forklarende variabel)
+Girth: træets diamenter i inches (forklarende variabel)
+
+Fitter først en multipel lineær regressionsmodel
+```{r}
+multipell <- lm(Volume ~ Height + Girth, data=trees)
+summary(multipell)
+
+```
+Fortolkning: 
+Kan se ud fra summary, at modellen udtrykker at det forventede volume kan udtrykkes ved ligningen: 
+𝚅𝚘𝚕𝚞𝚖𝚎=α+β1⋅𝙷𝚎𝚒𝚐𝚑𝚝+β2⋅𝙶𝚒𝚛𝚝𝚑
+
+De tre datalinjer (under Coefficients) vedrører:
+(Intercept): estimat, SE, test for parameteren α
+Height: estimat, SE, test for parameteren 1
+Girth: estimat, SE, test for parameteren β2
+Specielt kan vi af outputtet læse at det forventede volumen øges med 4.71 (cubic feet) hvis træets diameter øges med 1 inch (hvis ellers højden er uændret) 
+
+
+#Multipel lineær regression på logtransformerede data 
+
+```{r}
+multipel2 <- lm(log(Volume) ~ log(Height) + log(Girth), data=trees)
+summary(multipel2)
+```
+Fortolkning: Modellen udtrykker at det forventede log(Volume) kan udtrykkes ved en ligning af formen
+𝚕𝚘𝚐(𝚅𝚘𝚕𝚞𝚖𝚎)=α+β1⋅𝚕𝚘𝚐(𝙷𝚎𝚒𝚐𝚑𝚝)+β2⋅𝚕𝚘𝚐(𝙶𝚒𝚛𝚝𝚑)
+
+De tre datalinjer (under Coefficients) vedrører
+
+(Intercept): estimat, SE, test for parameteren α
+log(Height): estimat, SE, test for parameteren β1
+log(Girth): estimat, SE, test for parameteren β2
+Specielt kan vi af outputtet læse den gennemsnitlige værdi af log(Volume) øges med 1.98 (cubic feet) hvis logaritmen til træets diameter (dvs. log(Girth)) øges med 1 inch (hvis ellers højden er uændret)
+medianen af Volume øges med en faktor exp(1.983) = 7.265 hvis logaritmen til træets diameter (dvs. log(Girth)) øges med 1 (hvis ellers højden er uændret).
+
+Vi bliver ikke nødvendigvis så meget klogere af tallene ovenfor, fordi det kan være svært at vurdere, hvad det egentlig betyder, at log(Girth) øges med 1. En mulig fortolkning er dog følgende
+Hvis Girth bliver dobbelt så stor, så øges log(Girth) med log(2)=0.693, og så øges medianen for Volume med en faktor exp(0.693*1.983)=3.95. I grove træk vil en fordobling (x 2) af diameteren (Girth) altså modsvares af en firdobling (x 4) af medianen for Volume (hvis ellers højden er uændret)
+
+##Test af nulhypotese β1=1, β2=2 
+
+Vi interesserer os for, om sammenhængen ml. Volume og (Height, Girth) kan beskrives ved en ligning af formen
+
+𝚅𝚘𝚕𝚞𝚖𝚎=c⋅𝙷𝚎𝚒𝚐𝚑𝚝⋅𝙶𝚒𝚛𝚝𝚑2
+
+Dette svarer (efter log-transformation) til en ligning af formen 𝚕𝚘𝚐(𝚅𝚘𝚕𝚞𝚖𝚎)=log(c)+1⋅𝚕𝚘𝚐(𝙷𝚎𝚒𝚐𝚑𝚝)+2⋅𝚕𝚘𝚐(𝙶𝚒𝚛𝚝𝚑)
+
+Dette kan opfattes som en restriktion af parametrene i den multiple lineære regressionsmodel
+𝚕𝚘𝚐(𝚅𝚘𝚕𝚞𝚖𝚎)i=α+β1⋅𝚕𝚘𝚐(𝙷𝚎𝚒𝚐𝚑𝚝)i+β2⋅𝚕𝚘𝚐(𝙶𝚒𝚛𝚝𝚑)i+ei
+hvor vi sætter β1=1 og β2=2
+vi kan teste hypotesen H0:β1=1,β2=2 ved at fortage en sammenligne (med anova()) af
+en fuld model: den multiple lineære regressionsmodel (kaldet multipel2 ovenfor)
+en nul model: den multiple lineære regressionsmodel, hvor vi tvinger β1 til at være 1 og β2 til at være 2 (men hvor α stadig kan estimeres frit)
+
+Bruger offset, for at tvinge et led ned over modellen, som har en bestem form. Tvinger leddet således: 1⋅𝚕𝚘𝚐(𝙷𝚎𝚒𝚐𝚑𝚝)i+2⋅𝚕𝚘𝚐(𝙶𝚒𝚛𝚝𝚑)i
+R vil derfor kun estimere intercept. 
+
+Jeg sammenligner derfor den estimerede model, som er min nulmodel med den fulde model
+```{r}
+naiv <- lm(log(Volume) ~ offset(1*log(Height) + 2*log(Girth)), data=trees)
+anova(naiv, multipel2)
+```
+Konklusion: Kan se, at vi har en p-værdi på 0,85% og derfor vælger vi acceptere nulhypotesen. 
+
+
+#Teste en lineær regressionsmodel mod en ensidet ANOVA model 
+
+**Udfør et statistisk test, hvor du sammenligner model1 og model2. Forklar hvad man kan konkludere ud fra dette**
+
+De to modeller kan testes ved en F-test: 
+```{r}
+anova(model1, model2)
+```
+P-værdien ligger på 0,14% og ligger derfor under signifikansniveauet. Derfor forkastes modellen, som udtrykker, at der en lineær sammenhæng mellem tilsat nitratmængde og mængden af tørstof.
+
+
+#Tosidet ANOVA med og uden vekselvirkning 
+
+- Hvorfor skal man benytte en tosidet variansanalyse? 
+Det ville være oplagt at skulle bruge en tosidet variansanalyse, da jeg har en kontinuert responsvariabel og to kategoriske forklarende variabler. 
+
+#MED vekselvirkning: 
+
+Estimer en R-kode; 
+```{r}
+modelulog <- lm(figur2 ~ studie+kon+studie*kon, data=ss2017_18)
+```
+
+- Undersøg med et hypotesetest om der er vekselvikrning mellem køn og studie
+Nulhypotese: Der er ikke vekselvirkning mellem køn og studie. 
+
+Laver en F-test: 
+```{r}
+drop1(modelmlog, test="F")
+```
+Kan se, at jeg får en p-værdi på 0,07% og derfor vælger jeg at acceptere min nulhypotese og der er derfor ikke vekselvirkning mellem køn og studie. 
+
+#UDEN vekselvirkning 
+
+Estimer model: 
+```{r}
+nymodel <- lm(log(figur2) ~ studie+kon, data=ss2017_18)
+```
+
+- Find estimat og 95% konfidensinterval
+Estimat: 
+```{r}
+summary(nymodel)
+```
+
+95% konfidensinterval: 
+```{r}
+confint(nymodel)
+```
+
+
+- Angiv et estimat for forskellen mellem kvinder og mænd i forventet værdi af log(figur2)
+Kan ud fra summary aflæse, at der er en forskel på -0.211680 
+
+Skal finde faktoren, så bruger exp: 
+```{r}
+exp(-0.211680)
+```
+Dette er faktoren for mænds gæt er lavere end kvinder er derfor  0.8092236.
+
+
+**Uafhængighedstest**
+
+*Forklar hvorfor den relevantehypotese er en hypotese om uafhængighed snarere end en hypotese om ens sandsynligheder i to binomialfordelinger*
+
+Det er en homogenitetsanalyse, da det omhandler om der er samme sandsynlighed for at ende i de samme responsgrupper 
+
+*Udfør et test for uafhængighed, og forklar hvad resultatet siger om forekomsten af stress i virksomheder. Forekommer det tilfældigt over tid eller snarere i "i klumper".*
+
+Nulhypotese: Der er ingen sammenhæng/uafhængige mellem stressniveauet i måned 1 og måned 2
+```{r}
+stress <- matrix(c(14, 51, 52, 401), 2,2)
+stress
+```
+Laver en test for uafhængighed: 
+```{r}
+chisq.test(stress, correct= TRUE)
+```
+Da vi har en p-værdi på 0,03% skal den derfor forkastes, og man kan derfor påpege, at der er en sammenhæng/ikke uafhængige mellem stressniveauet i de to måneder. 
+
+
+**Binomial**
+
+1. *Forklar hvorfor bionomialfordelingen skal bruges til dette*
+Da der er en vis sandsynlighed for, enten at gætte rigtigt eller gætte forkert og netop da antallet er optalt og derfor er diskrete tal 
+
+2. *Bestem et estimat for p* 
+```{r}
+#p = antal sucesser/ antal forsøg 
+ 13/20
+```
+Så estimatet for p = 0,65
+
+3. *Bestem to 95% konfidensintervaller for p: både det simple og det forbedrede Det simple: 
+```{r}
+0.65-1.96*sqrt((0.65*(1-0.65))/20)
+```
+```{r}
+0.65+1.96*sqrt((0.65*(1-0.65))/20)
+```
+Det simple interval er derfor [0.4409589 , 0.8590411]
+
+Det forbedrede interval: 
+```{r}
+prop.test(13, 20, correct=FALSE)
+```
+Forbedrede interval [0.4328543 , 0.8188082]
+
+4.*Hvilken hypotese svarer til at personerne ikke kan smage forskel på de to colaer? test ved binom.test - hvad er konklusionen?*
+
+Nulhypotese= p=1/2 
+```{r}
+binom.test(13, 20, p=1/2)
+```
+P-værdien ligger på 0,26% og derfor accepterer jeg nulhypotesen om, at min p=1/2 er korrekt, hvis de gættede.
+
+
+**pbinom og dbinom**
+
+dbinom viser sandsynlighed for bestemt antal succeser
+og pbinom viser sadsynlighed for at få bestemt antal succeser eller mindre. 
+
+*I 2019 var 40% af de studerende indskrevet til biotek. Hvad lodtrækning udvælges 10 studerende - hvad er sandsynligheden for, at der er højst 5 studerende fra biotek som udvælges?*
+
+```{r}
+pbinom(5, size=10, prob=0.40)
+```
+
+HUSK: 
+Hvis du skal have fire rigtige ud af 10, så skal man bruge PNORM. 
+Men hvis du skal have fire eller flere rigtige ud af 10, så skal du bruge 1- pnorm 
+
