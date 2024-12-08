@@ -104,7 +104,6 @@ Vi antager $y_1 ,..., y_n$ er uafhængihed, og at alle $y_i$ er
 normaltfordelt med middelværdi $\mu_i = \alpha + \beta x_i$ (ret linje)
 med spredning $\sigma$.
 
-**De ukendte populationsparametre** <br> Skæringen $\alpha$, hældningen
 $\beta$ og spredningen $\sigma$ er alle ukendte parametre, som vi kan
 estimere: $\hat{\alpha},\hat{\beta},\hat{\sigma}$
 
