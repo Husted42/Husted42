@@ -1,5 +1,4 @@
-
---- Job trnsport.gms Start 12/12/24 10:24:35 48.4.0 d74fe9ea WEX-WEI x86 64bit/MS Windows
+--- Job trnsport.gms Start 12/10/24 18:01:41 48.4.0 d74fe9ea WEX-WEI x86 64bit/MS Windows
 --- Applying:
     C:\GAMS\48\gmsprmNT.txt
 --- GAMS Parameters defined
@@ -20,7 +19,7 @@ Processor information: 1 socket(s), 16 core(s), and 22 thread(s) available
 GAMS 48.4.0   Copyright (C) 1987-2024 GAMS Development. All rights reserved
 --- Starting compilation
 --- trnsport.gms(66) 3 Mb
---- Starting execution: elapsed 0:00:00.058
+--- Starting execution: elapsed 0:00:00.009
 --- trnsport.gms(43) 4 Mb
 --- Generating LP model transport
 --- trnsport.gms(64) 4 Mb
@@ -29,7 +28,7 @@ GAMS 48.4.0   Copyright (C) 1987-2024 GAMS Development. All rights reserved
 --- RHS       [min, max] : [ 2.750E+02, 6.000E+02] - Zero values observed as well
 --- Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 --- Matrix    [min, max] : [ 1.260E-01, 1.000E+00]
---- Executing CPLEX (Solvelink=2): elapsed 0:00:00.229
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.017
 
 IBM ILOG CPLEX   48.4.0 d74fe9ea Nov 27, 2024          WEI x86 64bit/MS Window
 
@@ -65,7 +64,7 @@ Optimal solution found
 Objective:          153.675000
 
 --- Reading solution for model transport
---- Executing after solve: elapsed 0:00:00.567
+--- Executing after solve: elapsed 0:00:00.081
 --- trnsport.gms(66) 4 Mb
 *** Status: Normal completion
---- Job trnsport.gms Stop 12/12/24 10:24:36 elapsed 0:00:00.567
+--- Job trnsport.gms Stop 12/10/24 18:01:41 elapsed 0:00:00.081

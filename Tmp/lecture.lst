@@ -1,0 +1,261 @@
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1   
+   2  sets
+   3      i 'Factories' /factory_1, factory_2, factory_3/
+   4      j 'Markets' /market_1, market_2, market_3, market_4/;
+   5   
+   6  Parameters
+   7      a(i) 'Supplier_capacity' /factory_1 300, factory_2 450, factory_3 1000/
+   8      b(j) 'Market_demand' /market_1 325, market_2 300, market_3 275, market_4 250/;
+   9   
+  10  Table d(i,j) 'Distance'
+  11                  market_1    market_2    market_3    market_4
+  12      factory_1   2.5         1.7         1.8         2.0
+  13      factory_2   2.5         1.9         1.4         2.4
+  14      factory_3   2.5         1.9         1.4         2.0;
+  15   
+  16  Scalar
+  17      c1 'transport_constatn' /90/
+  18      c2 'fixed_cost' /1100/;
+  19   
+  20   
+  21  Parameter c(i,j) 'cost';
+  22      c(i,j) = c2 + d(i,j) * c1;
+  23   
+  24  Variables
+  25      z 'Total transportation cost'
+  26      x(i,j) 'Amount transported from i to j';
+  27   
+  28  Free variables z;
+  29  Positive Variable x;
+  30   
+  31  Equation
+  32      cost 'Objective function'
+  33      supply(i) 'Supply from factory i'
+  34      demand(j) 'Demand from market i';
+  35   
+  36  cost.. z =e= sum((i,j), c(i,j)*x(i,j));
+  37   
+  38  supply(i).. sum(j, x(i,j)) =l= a(i);
+  39   
+  40  demand(j).. sum(i, x(i,j)) =g= b(j);
+  41   
+  42  model transport /cost, supply, demand/;
+  43   
+  44  Solve transport using lp minimizing z;
+  45   
+  46  Display z.l, x.l, supply.m, supply.m
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  48.4.0 d74fe9ea WEX-WEI
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE transport Using LP From line 44
+
+
+---- cost  =E=  Objective function
+
+cost..  z - 1325*x(factory_1,market_1) - 1253*x(factory_1,market_2) - 1262*x(factory_1,market_3) - 1280*x(factory_1,market_4) - 1325*x(factory_2,market_1) - 1271*x(factory_2,market_2) - 1226*x(factory_2,market_3) - 1316*x(factory_2,market_4) - 1325*x(factory_3,market_1) - 1271*x(factory_3,market_2) - 1226*x(factory_3,market_3) - 1280*x(factory_3,market_4) =E= 0 ; (LHS = 0)
+     
+
+---- supply  =L=  Supply from factory i
+
+supply(factory_1)..  x(factory_1,market_1) + x(factory_1,market_2) + x(factory_1,market_3) + x(factory_1,market_4) =L= 300 ; (LHS = 0)
+     
+supply(factory_2)..  x(factory_2,market_1) + x(factory_2,market_2) + x(factory_2,market_3) + x(factory_2,market_4) =L= 450 ; (LHS = 0)
+     
+supply(factory_3)..  x(factory_3,market_1) + x(factory_3,market_2) + x(factory_3,market_3) + x(factory_3,market_4) =L= 1000 ; (LHS = 0)
+     
+
+---- demand  =G=  Demand from market i
+
+demand(market_1)..  x(factory_1,market_1) + x(factory_2,market_1) + x(factory_3,market_1) =G= 325 ; (LHS = 0, INFES = 325 ****)
+     
+demand(market_2)..  x(factory_1,market_2) + x(factory_2,market_2) + x(factory_3,market_2) =G= 300 ; (LHS = 0, INFES = 300 ****)
+     
+demand(market_3)..  x(factory_1,market_3) + x(factory_2,market_3) + x(factory_3,market_3) =G= 275 ; (LHS = 0, INFES = 275 ****)
+     
+REMAINING ENTRY SKIPPED
+
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE transport Using LP From line 44
+
+
+---- z  Total transportation cost
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       cost
+
+
+---- x  Amount transported from i to j
+
+x(factory_1,market_1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -1325       cost
+        1       supply(factory_1)
+        1       demand(market_1)
+
+x(factory_1,market_2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -1253       cost
+        1       supply(factory_1)
+        1       demand(market_2)
+
+x(factory_1,market_3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -1262       cost
+        1       supply(factory_1)
+        1       demand(market_3)
+
+REMAINING 9 ENTRIES SKIPPED
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE transport Using LP From line 44
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 2.500E+02, 1.000E+03] - Zero values observed as well
+Bound     [min, max] : [        NA,        NA] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 1.325E+03]
+
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE transport Using LP From line 44
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           13
+NON ZERO ELEMENTS            37
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE transport Using LP From line 44
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   transport           OBJECTIVE  z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  44
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE          1463675.0000
+
+ RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ ITERATION COUNT, LIMIT         7    2147483647
+*** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.1.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.02 ticks)
+
+
+Optimal solution found
+Objective:      1463675.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU cost                .              .              .             1.0000      
+
+  cost  Objective function
+
+---- EQU supply  Supply from factory i
+
+                 LOWER          LEVEL          UPPER         MARGINAL
+
+factory_1        -INF          300.0000       300.0000         EPS         
+factory_2        -INF          450.0000       450.0000         EPS         
+factory_3        -INF          400.0000      1000.0000          .          
+
+---- EQU demand  Demand from market i
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+market_1       325.0000       325.0000        +INF         1325.0000      
+market_2       300.0000       300.0000        +INF         1253.0000      
+market_3       275.0000       275.0000        +INF         1226.0000      
+market_4       250.0000       250.0000        +INF         1280.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF      1463675.0000        +INF             .          
+
+  z  Total transportation cost
+
+---- VAR x  Amount transported from i to j
+
+                          LOWER          LEVEL          UPPER         MARGINAL
+
+factory_1.market_1          .              .            +INF            EPS         
+factory_1.market_2          .           300.0000        +INF             .          
+factory_1.market_3          .              .            +INF           36.0000      
+factory_1.market_4          .              .            +INF             .          
+factory_2.market_1          .           175.0000        +INF             .          
+factory_2.market_2          .              .            +INF           18.0000      
+factory_2.market_3          .           275.0000        +INF             .          
+factory_2.market_4          .              .            +INF           36.0000      
+factory_3.market_1          .           150.0000        +INF             .          
+factory_3.market_2          .              .            +INF           18.0000      
+factory_3.market_3          .              .            +INF            EPS         
+factory_3.market_4          .           250.0000        +INF             .          
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     46 VARIABLE z.L                   =  1463675.000  Total transportation cost
+
+----     46 VARIABLE x.L  Amount transported from i to j
+
+             market_1    market_2    market_3    market_4
+
+factory_1                 300.000
+factory_2     175.000                 275.000
+factory_3     150.000                             250.000
+
+
+----     46 EQUATION supply.M  Supply from factory i
+
+factory_1 EPS,    factory_2 EPS
+
+
+----     46 EQUATION supply.M  Supply from factory i
+
+factory_1 EPS,    factory_2 EPS
+
+
+
+EXECUTION TIME       =        0.063 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+
+
+USER: GAMS Demo, for EULA and demo limitations see   G241001/0001CB-GEN
+      https://www.gams.com/latest/docs/UG%5FLicense.html         DC0000
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\Husted42\Documents\GitHub\Husted42\Tmp\lecture.gms
+Output     C:\Users\Husted42\Documents\GitHub\Husted42\Tmp\lecture.lst
