@@ -1,5 +1,4 @@
-
---- Job lecture.gms Start 12/12/24 11:37:04 48.4.0 d74fe9ea WEX-WEI x86 64bit/MS Windows
+--- Job lecture.gms Start 12/13/24 10:43:14 48.4.0 d74fe9ea WEX-WEI x86 64bit/MS Windows
 --- Applying:
     C:\GAMS\48\gmsprmNT.txt
 --- GAMS Parameters defined
@@ -20,7 +19,7 @@ Processor information: 1 socket(s), 16 core(s), and 22 thread(s) available
 GAMS 48.4.0   Copyright (C) 1987-2024 GAMS Development. All rights reserved
 --- Starting compilation
 --- lecture.gms(46) 3 Mb
---- Starting execution: elapsed 0:00:00.008
+--- Starting execution: elapsed 0:00:00.004
 --- lecture.gms(22) 4 Mb
 --- Generating LP model transport
 --- lecture.gms(44) 4 Mb
@@ -29,7 +28,7 @@ GAMS 48.4.0   Copyright (C) 1987-2024 GAMS Development. All rights reserved
 --- RHS       [min, max] : [ 2.500E+02, 1.000E+03] - Zero values observed as well
 --- Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 --- Matrix    [min, max] : [ 1.000E+00, 1.325E+03]
---- Executing CPLEX (Solvelink=2): elapsed 0:00:00.026
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.098
 
 IBM ILOG CPLEX   48.4.0 d74fe9ea Nov 27, 2024          WEI x86 64bit/MS Window
 
@@ -61,14 +60,14 @@ Iteration      Dual Objective            In Variable           Out Variable
      7         1463675.000000  x(factory_3,market_4)  x(factory_1,market_1)
 
 --- LP status (1): optimal.
---- Cplex Time: 0.00sec (det. 0.02 ticks)
+--- Cplex Time: 0.02sec (det. 0.02 ticks)
 
 
 Optimal solution found
 Objective:      1463675.000000
 
 --- Reading solution for model transport
---- Executing after solve: elapsed 0:00:00.081
+--- Executing after solve: elapsed 0:00:00.292
 --- lecture.gms(46) 4 Mb
 *** Status: Normal completion
---- Job lecture.gms Stop 12/12/24 11:37:05 elapsed 0:00:00.089
+--- Job lecture.gms Stop 12/13/24 10:43:14 elapsed 0:00:00.292

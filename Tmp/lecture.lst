@@ -1,4 +1,4 @@
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 1
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -52,7 +52,7 @@ C o m p i l a t i o n
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  48.4.0 d74fe9ea WEX-WEI
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 2
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE transport Using LP From line 44
 
@@ -81,7 +81,7 @@ demand(market_3)..  x(factory_1,market_3) + x(factory_2,market_3) + x(factory_3,
      
 REMAINING ENTRY SKIPPED
 
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 3
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Column Listing      SOLVE transport Using LP From line 44
 
@@ -114,7 +114,7 @@ x(factory_1,market_3)
         1       demand(market_3)
 
 REMAINING 9 ENTRIES SKIPPED
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 4
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Range Statistics    SOLVE transport Using LP From line 44
 
@@ -125,7 +125,7 @@ RHS       [min, max] : [ 2.500E+02, 1.000E+03] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 1.325E+03]
 
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 5
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE transport Using LP From line 44
 
@@ -137,8 +137,8 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES           13
 NON ZERO ELEMENTS            37
 
 
-GENERATION TIME      =        0.016 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 6
+GENERATION TIME      =        0.093 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE transport Using LP From line 44
 
@@ -153,7 +153,7 @@ Solution Report     SOLVE transport Using LP From line 44
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE          1463675.0000
 
- RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
  ITERATION COUNT, LIMIT         7    2147483647
 *** This solver runs with a demo license. No commercial use.
 --- GMO setup time: 0.00s
@@ -164,7 +164,7 @@ Solution Report     SOLVE transport Using LP From line 44
 
 
 --- LP status (1): optimal.
---- Cplex Time: 0.00sec (det. 0.02 ticks)
+--- Cplex Time: 0.02sec (det. 0.02 ticks)
 
 
 Optimal solution found
@@ -221,7 +221,7 @@ factory_3.market_4          .           250.0000        +INF             .
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 11:37:04 Page 7
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/13/24 10:43:14 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
@@ -248,7 +248,7 @@ factory_1 EPS,    factory_2 EPS
 
 
 
-EXECUTION TIME       =        0.063 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+EXECUTION TIME       =        0.296 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
 
 
 USER: GAMS Demo, for EULA and demo limitations see   G241001/0001CB-GEN
