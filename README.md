@@ -23,4 +23,4 @@
 
 ---
 ### 🏆 GitHub Trophies :
-![](https://github-profile-trophy.vercel.app/?username=Husted42&theme=matrix&no-frame=false&no-frame=True&no-bg=true&margin-w=4&&rank=SSS,SS,S,AAA,AA,A,B,C)
+![trophy](https://github-profile-trophy.vercel.app/?username=Husted42&theme=matrix&no-frame=false&no-frame=True&no-bg=true&margin-w=4&&rank=SSS,SS,S,AAA,AA,A,B,C)
