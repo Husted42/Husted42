@@ -1,4 +1,4 @@
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 1
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 1
 A Transportation Problem (TRNSPORT,SEQ=1)
 C o m p i l a t i o n
 
@@ -69,7 +69,7 @@ C o m p i l a t i o n
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  48.4.0 d74fe9ea WEX-WEI
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 2
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 2
 A Transportation Problem (TRNSPORT,SEQ=1)
 Equation Listing    SOLVE transport Using LP From line 64
 
@@ -94,7 +94,7 @@ demand(chicago)..  x(seattle,chicago) + x(san-diego,chicago) =G= 300 ; (LHS = 0,
      
 demand(topeka)..  x(seattle,topeka) + x(san-diego,topeka) =G= 275 ; (LHS = 0, INFES = 275 ****)
      
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 3
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 3
 A Transportation Problem (TRNSPORT,SEQ=1)
 Column Listing      SOLVE transport Using LP From line 64
 
@@ -127,7 +127,7 @@ z
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       cost
 
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 4
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 4
 A Transportation Problem (TRNSPORT,SEQ=1)
 Range Statistics    SOLVE transport Using LP From line 64
 
@@ -138,7 +138,7 @@ RHS       [min, max] : [ 2.750E+02, 6.000E+02] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.260E-01, 1.000E+00]
 
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 5
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 5
 A Transportation Problem (TRNSPORT,SEQ=1)
 Model Statistics    SOLVE transport Using LP From line 64
 
@@ -150,8 +150,8 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES            7
 NON ZERO ELEMENTS            19
 
 
-GENERATION TIME      =        0.172 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 6
+GENERATION TIME      =        0.000 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 6
 A Transportation Problem (TRNSPORT,SEQ=1)
 Solution Report     SOLVE transport Using LP From line 64
 
@@ -226,7 +226,7 @@ san-diego.topeka            .           275.0000        +INF             .
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/12/24 10:24:35 Page 7
+GAMS 48.4.0  d74fe9ea Nov 27, 2024          WEX-WEI x86 64bit/MS Windows - 12/10/24 18:01:41 Page 7
 A Transportation Problem (TRNSPORT,SEQ=1)
 E x e c u t i o n
 
@@ -248,7 +248,7 @@ san-diego       0.009
 
 
 
-EXECUTION TIME       =        0.500 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
+EXECUTION TIME       =        0.063 SECONDS      4 MB  48.4.0 d74fe9ea WEX-WEI
 
 
 USER: GAMS Demo, for EULA and demo limitations see   G241001/0001CB-GEN
