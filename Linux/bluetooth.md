@@ -18,3 +18,6 @@ systemctl start bluetooth.service
 
 # With bluez-tools
 `sudo apt-get install bluez-tools`
+
+`bt-device -l`
+ 
