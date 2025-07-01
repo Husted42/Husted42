@@ -1,7 +1,7 @@
 # Audio
-```
-alsamixer
-```
+For bluetooth install bluemann (See bluetooth.md)
+For audio control install pavucontrol
+
 
 # File manegement
 Create a file
