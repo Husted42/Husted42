@@ -6,4 +6,5 @@
  [] Run a game in steam
  [] Mount onedrive
  [] Setup the beer website locally
- [] Run a job on hendrix
+ [x] Run a job on hendrixgate cluster
+ [x] Setup blootooth an audio control
