@@ -22,3 +22,19 @@ mv <src> <dest>
 
 File manager
  - Just open nautilus
+
+# Package mangement
+Install package
+```
+sudo dpkg -i <file.deb>
+```
+
+Solve missing dependencies
+```
+sudo apt-get install -f
+```
+
+
+
+
+
