@@ -1,5 +1,7 @@
 # Audio
-For audio control install pavucontrol
+```
+pavucontrol
+```
 
 # File manegement
 Create a file
@@ -95,6 +97,13 @@ nmcli networking on
 ```
 nmcli connection show
 ```
+
+# Image stuff
+### Convert jpg to png
+convert filename.jpg filename.png
+
+### Resize an image
+convert filename.png --resize 3200x2000 filename.png
 
 
 
