@@ -1,8 +1,0 @@
-DROP TABLE test02;
-CREATE TABLE test02 (
-  ID INT,
-  var15 VARCHAR(15),
-  number INT,
-  PRIMARY KEY (ID)
-);
-
