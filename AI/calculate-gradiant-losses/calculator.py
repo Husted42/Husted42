@@ -64,55 +64,33 @@ def calculate_gradients(functions, variables, values, loss_name="L"):
     loss_symbol = sp.Symbol(loss_name)
     loss = expanded[loss_symbol]
 
-    divider = "-" * 60
-
-    print(divider)
-    print("Initial variables")
-    print(divider)
-    for symbol, value in values.items():
-        print(f"  {str(symbol):<6} = {value}")
-
+    print("Expanded loss:")
+    print(sp.simplify(loss))
     print()
-    print(divider)
-    print("Expanded loss")
-    print(divider)
-    print(f"  {loss_name} = {sp.simplify(loss)}")
 
-    print()
-    print(divider)
-    print("Forward pass")
-    print(divider)
+    print("Forward pass:")
     for name in functions:
         symbol = sp.Symbol(name)
 
         if symbol in expanded:
-            result = sp.N(expanded[symbol].subs(values), 6)
-            print(f"  {str(name):<6} = {result}")
+            result = expanded[symbol].subs(values)
+            print(f"{name} = {result}")
 
-    print()
-    print(divider)
-    print("Numeric result")
-    print(divider)
-    print(f"  {loss_name} = {sp.N(expanded[loss_symbol].subs(values), 6)}")
-
-    print()
-    print(divider)
-    print("Gradients")
-    print(divider)
+    print("\nGradients:")
 
     gradients = {}
     gradient_values = {}
 
     for variable in variables:
         gradient = sp.diff(loss, variable)
-        gradient_value = sp.N(gradient.subs(values), 6)
+        gradient_value = gradient.subs(values)
 
         gradients[variable] = gradient
         gradient_values[variable] = gradient_value
 
-        print(f"  d{loss_name}/d{variable} = {gradient_value}")
-        print(f"    symbolic: {gradient}")
-    print()
+        print(f"dL/d{variable}")
+        print(f"  symbolic: {gradient}")
+        print(f"  numeric:  {gradient_value}")
 
     return {"gradients": gradients, "gradient_values": gradient_values}
 
@@ -124,11 +102,9 @@ def run_config(config):
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_path = LOG_DIR / f"{name}_{timestamp}.log"
-KJHGFDSAZ<>ZXCVBNM,.-
-    with open(log_path  , "w") as log_file, redirect_stdout(Tee(sys.stdout, log_file)):
-        print("=" * 60)
-        print(f"Config: {name}")
-        print("=" * 60)
+
+    with open(log_path, "w") as log_file, redirect_stdout(Tee(sys.stdout, log_file)):
+        print(f"########## {name} ##########")
         results = calculate_gradients(
             functions=config["functions"],
             variables=config["variables"],
@@ -189,13 +165,10 @@ def main():
 
     summary = [run_config(config) for config in configs]
 
-    print("\n" + "=" * 60)
-    print("Summary (all configs)")
-    print("=" * 60)
+    print("\n########## Summary ##########")
     for entry in summary:
-        print(f"{entry['name']}:")
-        for var, val in entry["gradient_values"].items():
-            print(f"    dL/d{var} = {val}")
+        gradients_str = ", ".join(f"d/d{var}={val}" for var, val in entry["gradient_values"].items())
+        print(f"{entry['name']}: {gradients_str}")
 
 if __name__ == "__main__":
     main()
