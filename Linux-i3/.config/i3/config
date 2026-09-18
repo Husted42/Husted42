@@ -25,8 +25,8 @@ font pango:monospace 8
 # Only the terminal should open automatically.
 # exec --no-startup-id dex --autostart --environment i3
 
-# Disable compositor startup; no desktop apps should launch on login.
-# exec_always --no-startup-id picom --config /home/husted42/Documents/github/Husted42/Linux-i3/.config/picom/picom.conf
+# Enable compositor startup for window effects such as fading.
+exec_always --no-startup-id picom --config /home/husted42/Documents/github/Husted42/Linux-i3/.config/picom/picom.conf
 
 # Bluetooth
 # Turn on bluetooth bus thingy. Turns out it is important for a lot of gnome stuff.
@@ -216,6 +216,17 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
         tray_output primary
+        font pango:monospace 10
+        colors {
+                background #05070b
+                statusline #dfefff
+                separator #1e90ff
+
+                focused_workspace #07131f #07131f #7dd3fc
+                active_workspace #0b1220 #0b1220 #cbd5e1
+                inactive_workspace #05070b #05070b #7a8aa5
+                urgent_workspace #2f0b14 #2f0b14 #f87171
+        }
 }
 
 ##### ----- Added by Husted42 ----- #####
