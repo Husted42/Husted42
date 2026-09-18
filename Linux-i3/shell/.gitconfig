@@ -1,0 +1,26 @@
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[user]
+	name = Husted42
+	email = alx2608@gmail.com
+[core]
+	editor = vim
+	autocrlf = input
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[fetch]
+	prune = true
+[color]
+	ui = auto
+[alias]
+	st = status -sb
+	co = checkout
+	br = branch
+	ci = commit
+	lg = log --oneline --graph --decorate --all

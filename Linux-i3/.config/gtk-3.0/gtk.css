@@ -1,0 +1,42 @@
+/* Black/blue hacker theme tuned for Diodon's GTK menu popup. */
+
+menu,
+.menu,
+popover,
+popover.background {
+    background-color: #020409;
+    color: #8fd3ff;
+    border: 1px solid #2563eb;
+}
+
+menu menuitem,
+.menu menuitem,
+popover modelbutton,
+popover button {
+    background: transparent;
+    color: #8fd3ff;
+    border-radius: 0;
+    padding: 6px 10px;
+}
+
+menu menuitem:hover,
+menu menuitem:focus,
+.menu menuitem:hover,
+.menu menuitem:focus,
+popover modelbutton:hover,
+popover modelbutton:focus,
+popover button:hover,
+popover button:focus {
+    background-color: #1e3a8a;
+    color: #e0f2fe;
+}
+
+menu separator,
+.menu separator,
+popover separator {
+    background-color: #1d4ed8;
+}
+
+scrollbar slider {
+    background-color: #2563eb;
+}

@@ -10,6 +10,8 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
+set $terminal alacritty
+set $screen_script /home/husted42/Documents/github/Husted42/Linux-i3/scripts/screen_adjust.sh
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -19,27 +21,30 @@ font pango:monospace 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
-# Start XDG autostart .desktop files using dex. See also
-# https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
+# Disable XDG autostart to keep i3 startup minimal.
+# Only the terminal should open automatically.
+# exec --no-startup-id dex --autostart --environment i3
+
+# Disable compositor startup; no desktop apps should launch on login.
+# exec_always --no-startup-id picom --config /home/husted42/Documents/github/Husted42/Linux-i3/.config/picom/picom.conf
 
 # Bluetooth
 # Turn on bluetooth bus thingy. Turns out it is important for a lot of gnome stuff.
-exec --no-startup-id eval "$(dbus-launch --sh-syntax)"
+# exec --no-startup-id eval "$(dbus-launch --sh-syntax)"
 
 # Start blueman
-exec --no-startup-id blueman-applet
+# exec --no-startup-id blueman-applet
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
+# exec --no-startup-id nm-applet
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -56,7 +61,7 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec $terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -164,8 +169,20 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# session and power mode
+set $mode_system System: [l] lock, [o] logout, [s] suspend, [r] reboot, [p] poweroff
+mode "$mode_system" {
+        bindsym l exec --no-startup-id i3lock, mode "default"
+        bindsym o exec --no-startup-id i3-msg exit, mode "default"
+        bindsym s exec --no-startup-id sh -c 'loginctl lock-session && systemctl suspend', mode "default"
+        bindsym r exec --no-startup-id systemctl reboot, mode "default"
+        bindsym p exec --no-startup-id systemctl poweroff, mode "default"
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+e mode "$mode_system"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -213,6 +230,14 @@ bindsym $mod+Shift+v exec diodon
 # Rofi - Application Launcher
 bindsym $mod+space exec rofi -show combi
 
+# Screen setup
+bindsym $mod+p exec --no-startup-id $screen_script
+bindsym XF86Display exec --no-startup-id $screen_script
+
+# Lock and suspend
+bindsym $mod+Shift+x exec --no-startup-id i3lock
+bindsym $mod+Shift+s exec --no-startup-id sh -c 'loginctl lock-session && systemctl suspend'
+
 # Start with terminal
-exec --no-startup-id gnome-terminal
+exec --no-startup-id alacritty
 

@@ -1,0 +1,10 @@
+i3
+i3status
+rofi
+picom
+git
+vim
+htop
+curl
+flameshot
+diodon

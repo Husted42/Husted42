@@ -1,0 +1,77 @@
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding = { x = 12, y = 12 }
+dynamic_padding = true
+opacity = 0.96
+startup_mode = "Windowed"
+decorations = "Full"
+
+[scrolling]
+history = 20000
+multiplier = 4
+
+[font]
+size = 11.5
+
+[font.normal]
+family = "DejaVu Sans Mono"
+style = "Book"
+
+[font.bold]
+family = "DejaVu Sans Mono"
+style = "Bold"
+
+[font.italic]
+family = "DejaVu Sans Mono"
+style = "Oblique"
+
+[font.bold_italic]
+family = "DejaVu Sans Mono"
+style = "Bold Oblique"
+
+[selection]
+save_to_clipboard = true
+
+[cursor]
+unfocused_hollow = true
+
+[cursor.style]
+shape = "Block"
+blinking = "Always"
+
+[mouse]
+hide_when_typing = true
+
+[colors.primary]
+background = "#020409"
+foreground = "#8fd3ff"
+
+[colors.cursor]
+text = "#020409"
+cursor = "#59c2ff"
+
+[colors.selection]
+text = "#020409"
+background = "#4cc9ff"
+
+[colors.normal]
+black = "#0b1220"
+red = "#1e3a8a"
+green = "#0ea5e9"
+yellow = "#38bdf8"
+blue = "#2563eb"
+magenta = "#1d4ed8"
+cyan = "#67e8f9"
+white = "#bfe8ff"
+
+[colors.bright]
+black = "#1e293b"
+red = "#2563eb"
+green = "#38bdf8"
+yellow = "#7dd3fc"
+blue = "#60a5fa"
+magenta = "#3b82f6"
+cyan = "#a5f3fc"
+white = "#e0f2fe"
