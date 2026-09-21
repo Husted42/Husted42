@@ -8,3 +8,4 @@ htop
 curl
 flameshot
 diodon
+network-manager-gnome
