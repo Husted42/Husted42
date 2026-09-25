@@ -1,5 +1,4 @@
-```markdown
-# Hi there, I'm Alexander 👋
+# husted 42
 
 🎓 MSc Business Analytics  
 🎓 BSc Business Analytics  
@@ -142,4 +141,3 @@
 <p align="center">
   <i>Turning questionable data into slightly less questionable decisions.</i>
 </p>
-```
