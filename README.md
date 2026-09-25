@@ -79,5 +79,5 @@
 
 
 <p align="center">
-  <i>Turning questionable data into slightly less questionable decisions.</i>
+  <i>Turning questionable data into slightly less questionable data.</i>
 </p>
