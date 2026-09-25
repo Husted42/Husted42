@@ -1,10 +1,8 @@
 # husted 42
 
-🎓 MSc Business Analytics  
-
-🎓 BSc Data Science and Machine Learning 
-
-📊 Interested in Data Science, Machine Learning, Data Engineering and Finance  
+🎓 MSc Business Analytics  <br>
+🎓 BSc Data Science and Machine Learning <br>
+📊 Interested in Data Science, Machine Learning, Data Engineering and Finance  <br>
 🇩🇰 Copenhagen, Denmark
 
 
