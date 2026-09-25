@@ -1,17 +1,15 @@
 # husted 42
 
 🎓 MSc Business Analytics  
-🎓 BSc Business Analytics  
+🎓 BSc Data Science and Machine Learning 
 📊 Interested in Data Science, Machine Learning, Data Engineering and Finance  
 🇩🇰 Copenhagen, Denmark
 
----
 
 ## 🐢 Readme Joke
 
 ![Jokes Card](https://readme-jokes.vercel.app/api?hideBorder)
 
----
 
 ## 🚜 Languages
 
@@ -28,7 +26,6 @@
        title="CSS" alt="CSS" width="40" height="40"/>&nbsp;
 </div>
 
----
 
 ## 🏗️ Tools
 
@@ -37,8 +34,6 @@
        title="PyTorch" alt="PyTorch" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/tensorflow/tensorflow-original.svg"
        title="TensorFlow" alt="TensorFlow" width="40" height="40"/>&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-original.svg"
-       title="PostgreSQL" alt="PostgreSQL" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/docker/docker-original.svg"
        title="Docker" alt="Docker" width="40" height="40"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/kubernetes/kubernetes-original.svg"
@@ -69,7 +64,6 @@
        src="https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&layout=compact&hide_border=true" />
 </p>
 
----
 
 ## 🔥 GitHub Streak
 
@@ -77,16 +71,12 @@
   <img src="https://streak-stats.demolab.com?user=Husted42&hide_border=true" />
 </p>
 
----
-
 ## 🏆 GitHub Trophies
 
 <p align="center">
   <img src="https://github-profile-trophy.vercel.app/?username=Husted42&row=1&column=6&no-frame=true&margin-w=15" />
 </p>
 
-
----
 
 <p align="center">
   <i>Turning questionable data into slightly less questionable decisions.</i>
