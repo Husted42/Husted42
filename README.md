@@ -18,10 +18,8 @@
 <div>
   <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg"
        title="Python" alt="Python" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-original.svg"
        title="SQL / PostgreSQL" alt="PostgreSQL" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/r/r-original.svg"
        title="R" alt="R" width="40" height="40"/>&nbsp;
 
@@ -34,13 +32,10 @@
 <div>
   <img src="https://github.com/devicons/devicon/blob/master/icons/pandas/pandas-original.svg"
        title="Pandas" alt="Pandas" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/numpy/numpy-original.svg"
        title="NumPy" alt="NumPy" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/pytorch/pytorch-original.svg"
        title="PyTorch" alt="PyTorch" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/tensorflow/tensorflow-original.svg"
        title="TensorFlow" alt="TensorFlow" width="40" height="40"/>&nbsp;
 </div>
@@ -56,16 +51,12 @@
 <div>
   <img src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-original.svg"
        title="PostgreSQL" alt="PostgreSQL" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/docker/docker-original.svg"
        title="Docker" alt="Docker" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/kubernetes/kubernetes-original.svg"
        title="Kubernetes" alt="Kubernetes" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/azure/azure-original.svg"
        title="Azure" alt="Azure" width="40" height="40"/>&nbsp;
-
   <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original.svg"
        title="Git" alt="Git" width="40" height="40"/>&nbsp;
 </div>
