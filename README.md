@@ -1,4 +1,4 @@
-# husted 42
+# Husted42
 
 🎓 MSc Business Analytics  <br>
 🎓 BSc Data Science and Machine Learning <br>
