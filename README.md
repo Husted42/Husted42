@@ -54,30 +54,9 @@
 
 <br>
 
-## 📈 GitHub Stats
-
-<p align="center">
-  <img height="170"
-       src="https://github-readme-stats.vercel.app/api?username=Husted42&show_icons=true&hide_border=true&count_private=true" />
-
-  <img height="170"
-       src="https://github-readme-stats.vercel.app/api/top-langs/?username=Husted42&layout=compact&hide_border=true" />
-</p>
-
 
 ## 🔥 GitHub Streak
 
 <p align="center">
   <img src="https://streak-stats.demolab.com?user=Husted42&hide_border=true" />
-</p>
-
-## 🏆 GitHub Trophies
-
-<p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=Husted42&row=1&column=6&no-frame=true&margin-w=15" />
-</p>
-
-
-<p align="center">
-  <i>Turning questionable data into slightly less questionable data.</i>
 </p>
