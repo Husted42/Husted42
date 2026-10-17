@@ -26,6 +26,7 @@ cp -r .config/alacritty ~/.config/
 cp -r .config/rofi ~/.config/
 cp -r .config/picom ~/.config/
 cp -r .config/gtk-3.0 ~/.config/
+cp -r .config/flameshot ~/.config/
 mkdir -p ~/.config/Code/User
 cp .config/Code/User/settings.json ~/.config/Code/User/settings.json
 
