@@ -1,5 +1,17 @@
 import streamlit as st
 import pandas as pd
+from pages.plots import dailies_heatmap, training_barchart
+from pages.utils import build_daily_task_frame
+
+#### ----- Variables ----- #####
+daily_tasks = ["Use Habitica", "Up before 8", "Creatin", "Vitamin", "10 min oprydning"]
+WEEK_NUMBER = 41
+YEAR = 2026
+
+
+#### ----- Read data ----- #####
+data_history = pd.read_csv("data/habitica_task_history.csv")
+df_daily = build_daily_task_frame(data_history, daily_tasks, YEAR)
 
 st.set_page_config(
     page_title="Personal Dashboard",
@@ -8,37 +20,26 @@ st.set_page_config(
 )
 
 st.title("Personal Dashboard")
-st.caption("Your personal analytics hub")
+st.caption("Weekly report based on habitica data")
 
-# Sidebar
+##### ----- Page row 1 ----- #####
+col1_1, col1_2 = st.columns([1.4, 1])
+height_1 = 400
+with col1_1:
+    st.subheader(f"Dailies - Week {WEEK_NUMBER}, {YEAR}")
+    heatmap = dailies_heatmap(df_daily, WEEK_NUMBER, YEAR, daily_tasks, height=height_1)
+    st.altair_chart(heatmap, width='stretch')
+with col1_2:
+    st.subheader(f"Training - Week {WEEK_NUMBER}, {YEAR}")
+    exercise_task = ['Exercise']
+    chart = training_barchart(df_daily, WEEK_NUMBER, YEAR, exercise_task, height=height_1)
+    st.altair_chart(chart, width='stretch')
+
+
+##### ----- Side bar ----- #####
 with st.sidebar:
     st.title("Navigation")
     st.radio(
         "Select page",
-        ["Overview", "Habitica", "Statistics"]
+        ["Overview", "Weekly", "Monthly"]
     )
-
-# Metrics
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric("Tasks Completed", 24, "+5")
-
-with col2:
-    st.metric("Completion Rate", "82%", "+4%")
-
-with col3:
-    st.metric("Current Streak", "12 days")
-
-# Example chart
-st.subheader("Weekly Activity")
-
-df = pd.DataFrame({
-    "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    "Completed": [5, 7, 4, 8, 6, 9, 7]
-})
-
-st.bar_chart(df, x="Day", y="Completed")
-
-st.subheader("Task History")
-st.dataframe(df, use_container_width=True)
