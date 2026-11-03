@@ -38,6 +38,10 @@ mv <src> <dest>
 File manager
  - Just open nautilus
 
+# Notifications
+Send yourself a custom notification with rofi:
+`Super+Shift+n`
+
 ### Nautilus configuration
 Nautilus stores settings in dconf/gsettings, so this repo applies those via script instead of a plain dotfile.
 

@@ -3,6 +3,8 @@ i3status
 rofi
 picom
 nautilus
+dunst
+libnotify-bin
 git
 vim
 htop

@@ -35,6 +35,7 @@ exec --no-startup-id nm-applet
 exec --no-startup-id eval "$(dbus-launch --sh-syntax)"
 exec --no-startup-id blueman-applet
 exec --no-startup-id gsettings set net.launchpad.Diodon.plugins active-plugins "[]"
+exec_always --no-startup-id sh -c 'pkill dunst || true; dunst'
 exec --no-startup-id diodon
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -241,6 +242,7 @@ bindsym $mod+Shift+v exec diodon
 
 # Rofi - Application Launcher
 bindsym $mod+space exec rofi -show combi
+bindsym $mod+Shift+n exec --no-startup-id bash /home/husted42/Documents/github/Husted42/Linux-i3/scripts/rofi_notify.sh
 
 # Screen setup
 bindsym $mod+p exec --no-startup-id $screen_script
