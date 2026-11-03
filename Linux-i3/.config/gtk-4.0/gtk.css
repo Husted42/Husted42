@@ -1,0 +1,43 @@
+/* Dark blue hacker GTK4 accents for Nautilus and GTK4 apps. */
+
+window,
+window.background,
+.navigation-sidebar,
+view,
+list,
+columnview,
+scrolledwindow {
+    background-color: #020409;
+    color: #8fd3ff;
+}
+
+headerbar,
+.titlebar,
+.toolbar {
+    background: #0b1220;
+    color: #8fd3ff;
+    border-bottom: 1px solid #1d4ed8;
+}
+
+button {
+    background: #07131f;
+    color: #8fd3ff;
+    border: 1px solid #2563eb;
+}
+
+button:hover,
+button:focus {
+    background: #1e3a8a;
+    color: #e0f2fe;
+}
+
+row:selected,
+item:selected,
+selection {
+    background-color: #1e3a8a;
+    color: #e0f2fe;
+}
+
+scrollbar slider {
+    background-color: #2563eb;
+}

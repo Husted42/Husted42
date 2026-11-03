@@ -2,6 +2,7 @@ i3
 i3status
 rofi
 picom
+nautilus
 git
 vim
 htop

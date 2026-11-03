@@ -38,6 +38,21 @@ mv <src> <dest>
 File manager
  - Just open nautilus
 
+### Nautilus configuration
+Nautilus stores settings in dconf/gsettings, so this repo applies those via script instead of a plain dotfile.
+
+Run:
+```
+bash scripts/configure_nautilus.sh
+```
+
+This is also executed by the installer.
+
+Theme details applied by script:
+- Forces dark mode via `org.gnome.desktop.interface color-scheme='prefer-dark'`
+- Sets GTK theme to `Adwaita-dark`
+- Uses the repo's blue/black GTK4 CSS for Nautilus accents
+
 # Package mangement
 Install package
 ```
